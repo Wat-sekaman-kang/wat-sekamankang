@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="lo" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ວັດເຊກະໝານກາງ - ສູນລວມຈິດໃຈແລະສືບທອດພຣະພຸດທະສາສະໜາ</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Noto Sans Lao -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        temple: {
+                            gold: '#D4AF37',
+                            goldlight: '#F4D03F',
+                            maroon: '#6A1B1A',
+                            maroondark: '#4A1212',
+                        }
+                    },
+                    fontFamily: {
+                        lao: ['"Noto Sans Lao"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Noto Sans Lao', sans-serif; 
+        }
+        
+        .hero-bg {
+            background-image: linear-gradient(rgba(106, 27, 26, 0.75), rgba(15, 15, 15, 0.85)), url('https://images.unsplash.com/photo-1590393802688-e21b19904cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .card-zoom-image {
+            transition: transform 0.5s ease;
+        }
+        .group:hover .card-zoom-image {
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased font-lao selection:bg-temple-gold selection:text-temple-maroondark">
+
+    <!-- Header & Navigation -->
+    <nav class="bg-temple-maroon text-white fixed w-full z-50 shadow-md top-0 left-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <!-- Logo & Brand Title -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+                    <i class="fa-solid fa-dharmachakra text-3xl text-temple-gold animate-spin-slow"></i>
+                    <div>
+                        <h1 class="font-bold text-xl md:text-2xl tracking-wide text-white">ວັດເຊກະໝານກາງ</h1>
+                        <p class="text-xs text-gray-300 font-light">ສູນລວມຈິດໃຈພຸດທະສາສະນິກະຊົນ</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation Menu -->
+                <div class="hidden md:flex items-center space-x-6 text-sm lg:text-base font-medium">
+                    <a href="#home" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ໜ້າຫຼັກ</a>
+                    <a href="#about" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ປະຫວັດວັດ</a>
+                    <a href="#dhamma" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຄຳສອນທຳມະ</a>
+                    <a href="#news" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຂ່າວສານ/ກິດຈະກຳ</a>
+                    <a href="#donation" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຮ່ວມເຮັດບຸນ</a>
+                    <a href="#contact" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຕິດຕໍ່/ແຜນທີ່</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button type="button" id="mobile-menu-btn" aria-label="Toggle menu" class="inline-flex items-center justify-center p-2 rounded-lg text-white hover:text-temple-gold hover:bg-temple-maroondark focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div class="md:hidden hidden bg-temple-maroondark border-t border-red-900/50" id="mobile-menu">
+            <div class="px-4 pt-3 pb-4 space-y-2">
+                <a href="#home" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ໜ້າຫຼັກ</a>
+                <a href="#about" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ປະຫວັດວັດ</a>
+                <a href="#dhamma" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຄຳສອນທຳມະ</a>
+                <a href="#news" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຂ່າວສານ/ກິດຈະກຳ</a>
+                <a href="#donation" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຮ່ວມເຮັດບຸນ</a>
+                <a href="#contact" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຕິດຕໍ່/ແຜນທີ່</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center pt-20 px-4">
+        <div class="text-center max-w-4xl mx-auto py-12">
+            <div class="inline-block mb-3 px-4 py-1 rounded-full bg-temple-gold/20 backdrop-blur-md border border-temple-gold/40">
+                <span class="text-temple-gold text-sm md:text-base font-medium">ຂໍນອບນ້ອມແດ່ພຣະຣັດຕະນະໄຕຣ</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                ຍິນດີຕ້ອນຮັບສູ່<br/>
+                <span class="text-temple-gold">ວັດເຊກະໝານກາງ</span>
+            </h1>
+            <p class="text-gray-200 text-lg md:text-xl mb-10 max-w-2xl mx-auto drop-shadow leading-relaxed font-light">
+                ສະຖານທີ່ສະຫງົບສຳລັບການປະຕິບັດທຳ, ຈະເລີນສະຕິປັນຍາ ແລະ ສືບທອດພຣະພຸດທະສາສະໜາໃຫ້ຍືນຍົງສືບໄປ
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#about" class="w-full sm:w-auto bg-temple-gold hover:bg-temple-goldlight text-temple-maroondark font-bold py-3.5 px-8 rounded-full transition duration-300 shadow-xl transform hover:-translate-y-1 text-center">
+                    ຮູ້ຈັກວັດຂອງພວກເຮົາ
+                </a>
+                <a href="#donation" class="w-full sm:w-auto bg-black/40 hover:bg-temple-gold border-2 border-temple-gold text-temple-gold hover:text-temple-maroondark font-bold py-3.5 px-8 rounded-full transition duration-300 shadow-xl transform hover:-translate-y-1 text-center">
+                    ຮ່ວມບຸນສົມທົບທຶນ
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ປະຫວັດຄວາມເປັນມາ</h2>
+                <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="w-full lg:w-1/2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl group">
+                        <img src="https://images.unsplash.com/photo-1551104443-162e2402d73f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="ພຣະພຸດທະຮູບປະທານ" class="w-full h-[400px] object-cover card-zoom-image">
+                        <div class="absolute inset-0 border-4 border-temple-gold/60 rounded-2xl m-3 pointer-events-none"></div>
+                    </div>
+                </div>
+                
+                <div class="w-full lg:w-1/2 space-y-5 text-gray-600 leading-relaxed text-base md:text-lg">
+                    <p>
+                        <strong class="text-temple-maroon font-semibold text-xl">ວັດເຊກະໝານກາງ</strong> ເລີ່ມກໍ່ຕັ້ງຂຶ້ນດ້ວຍແຮງສັດທາຂອງຊາວບ້ານໃນຊຸມຊົນທີ່ຕ້ອງການສະຖານທີ່ສຳລັບຍຶດໜ່ຽວຈິດໃຈ ແລະ ປະກອບສາສະນະກິດ ເພື່ອສືບທອດຮີດຄອງປະເພນີອັນດີງາມຂອງຊາວພຸດ.
+                    </p>
+                    <p>
+                        ພາຍໃນວັດມີພື້ນທີ່ກວ້າງຂວາງ, ຮົ່ມເຢັນໄປດ້ວຍຕົ້ນໄມ້ນ້ອຍໃຫຍ່ ເໝາະແກ່ການເຂົ້າມາພັກຜ່ອນຢ່ອນໃຈທາງທຳ. ສິມ (ອຸໂບສົດ) ຂອງວັດສ້າງດ້ວຍສະຖາປັດຕະຍະກຳທີ່ຜະສົມຜະສານລະຫວ່າງສິລະປະພື້ນບ້ານແລະຄວາມຮ່ວມສະໄໝ, ປະດິດສະຖານພຣະພຸດທະຮູບສັກສິດເຊິ່ງເປັນທີ່ເຄົາລົບສັກກາລະຂອງພຸດທະສາສະນິກະຊົນທົ່ວໄປ.
+                    </p>
+                    <p>
+                        ປັດຈຸບັນ, ວັດເຊກະໝານກາງ ບໍ່ພຽງແຕ່ເປັນສະຖານທີ່ເຮັດບຸນຕັກບາດຕາມປະເພນີ ແຕ່ຍັງເປີດເປັນສູນກາງການຮຽນຮູ້ພຣະພຸດທະສາສະໜາ ມີການຈັດອົບຮົມວິປັດສະນາກຳມະຖານສຳລັບເຍົາວະຊົນ ແລະ ປະຊາຊົນທົ່ວໄປຢ່າງຕໍ່ເນື່ອງ.
+                    </p>
+                    
+                    <div class="pt-4 grid grid-cols-2 gap-4">
+                        <div class="bg-amber-50/60 p-4 rounded-xl border-l-4 border-temple-gold shadow-sm">
+                            <i class="fa-solid fa-users text-2xl text-temple-maroon mb-1"></i>
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">ພຣະພິກຂຸ/ສາມະເນນ</h4>
+                            <p class="text-2xl font-bold text-temple-gold">໒໕ <span class="text-xs font-normal text-gray-500">ອົງ</span></p>
+                        </div>
+                        <div class="bg-amber-50/60 p-4 rounded-xl border-l-4 border-temple-gold shadow-sm">
+                            <i class="fa-solid fa-tree text-2xl text-temple-maroon mb-1"></i>
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">ພື້ນທີ່ລານທຳ</h4>
+                            <p class="text-2xl font-bold text-temple-gold">໑໕ <span class="text-xs font-normal text-gray-500">ໄລ່</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dhamma Quotes Section -->
+    <section id="dhamma" class="py-24 bg-temple-maroon text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <i class="fa-solid fa-leaf text-4xl text-temple-gold mb-3"></i>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-3">ຄຳສອນ ແລະ ຄຳຄົມທຳມະ</h2>
+                <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full"></div>
+                <p class="mt-4 text-gray-300 text-base md:text-lg font-light">ຂໍ້ຄິດເຕືອນໃຈ ເພື່ອການດຳເນີນຊີວິດຢ່າງມີສະຕິ ແລະ ສະຫງົບສຸກ</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Quote 1 -->
+                <div class="bg-temple-maroondark/90 p-8 rounded-2xl shadow-xl border border-red-900/50 relative flex flex-col justify-between hover:border-temple-gold/50 transition">
+                    <i class="fa-solid fa-quote-left text-4xl text-temple-gold opacity-40 absolute top-6 left-6"></i>
+                    <p class="text-lg md:text-xl leading-relaxed mt-8 mb-6 relative z-10 font-light">
+                        "ຄວາມສຸກທີ່ແທ້ຈິງ ບໍ່ໄດ້ເກີດຈາກການມີຊັບສິນເງິນທອງຫຼວງຫຼາຍ ແຕ່ເກີດຈາກໃຈທີ່ປ່ອຍວາງ ແລະ ຮູ້ຈັກພໍ."
+                    </p>
+                    <div class="text-right text-xs text-temple-gold font-medium">— ຂໍ້ຄິດເຕືອນໃຈ</div>
+                </div>
+
+                <!-- Quote 2 -->
+                <div class="bg-temple-maroondark/90 p-8 rounded-2xl shadow-xl border border-red-900/50 relative flex flex-col justify-between hover:border-temple-gold/50 transition">
+                    <i class="fa-solid fa-quote-left text-4xl text-temple-gold opacity-40 absolute top-6 left-6"></i>
+                    <p class="text-lg md:text-xl leading-relaxed mt-8 mb-6 relative z-10 font-light">
+                        "ເຮັດດີໄດ້ດີ ເຮັດຊົ່ວໄດ້ຊົ່ວ ນີ້ຄືກົດແຫ່ງກຳທີ່ບໍ່ເຄີຍປ່ຽນແປງ ຈົ່ງໝັ່ນສ້າງແຕ່ຄຸນງາມຄວາມດີໄວ້ເຖີດ."
+                    </p>
+                    <div class="text-right text-xs text-temple-gold font-medium">— ຂໍ້ຄິດເຕືອນໃຈ</div>
+                </div>
+
+                <!-- Quote 3 -->
+                <div class="bg-temple-maroondark/90 p-8 rounded-2xl shadow-xl border border-red-900/50 relative flex flex-col justify-between hover:border-temple-gold/50 transition">
+                    <i class="fa-solid fa-quote-left text-4xl text-temple-gold opacity-40 absolute top-6 left-6"></i>
+                    <p class="text-lg md:text-xl leading-relaxed mt-8 mb-6 relative z-10 font-light">
+                        "ເວລາໃນຊີວິດຂອງຄົນເຮົາມີຈຳກັດ ຈົ່ງໃຊ້ເວລາທີ່ເຫຼືອຢູ່ ໄປກັບການສ້າງບຸນກຸສົນ ແລະ ເຮັດປະໂຫຍດແກ່ສ່ວນລວມ."
+                    </p>
+                    <div class="text-right text-xs text-temple-gold font-medium">— ຂໍ້ຄິດເຕືອນໃຈ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Events Section -->
+    <section id="news" class="py-24 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ຂ່າວສານ ແລະ ກິດຈະກຳ</h2>
+                    <div class="w-20 h-1 bg-temple-gold rounded-full"></div>
+                </div>
+                <a href="#" class="hidden sm:inline-flex items-center text-temple-maroon font-bold hover:text-temple-gold transition gap-2">
+                    ເບິ່ງທັງໝົດ <i class="fa-solid fa-arrow-right text-sm"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition duration-300 flex flex-col">
+                    <div class="relative overflow-hidden h-56">
+                        <img src="https://images.unsplash.com/photo-1542642594-e0b4a4574cc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ງານບຸນກະຖິນ" class="w-full h-full object-cover card-zoom-image">
+                        <div class="absolute top-4 right-4 bg-temple-maroon text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
+                            ໑໕ ພະຈິກ
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-temple-maroon transition">ຂໍເຊີນຮ່ວມເປັນເຈົ້າພາບທອດກະຖິນສາມັກຄີ</h3>
+                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">ເພື່ອສົມທົບທຶນບູລະນະປະຕິສັງຂອນເສນາສະນະພາຍໃນວັດທີ່ຊຳລຸດຊຸດໂຊມ ແລະ ສ້າງສາລາປະຕິບັດທຳຫຼັງໃໝ່.</p>
+                        </div>
+                        <a href="#" class="text-temple-gold font-bold text-sm inline-flex items-center hover:underline gap-1">
+                            ອ່ານລາຍລະອຽດ <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition duration-300 flex flex-col">
+                    <div class="relative overflow-hidden h-56">
+                        <img src="https://images.unsplash.com/photo-1627918549646-3b60ba95ebcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ປະຕິບັດທຳ" class="w-full h-full object-cover card-zoom-image">
+                        <div class="absolute top-4 right-4 bg-temple-maroon text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
+                            ທຸກວັນອາທິດ
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-temple-maroon transition">ໂຄງການປະຕິບັດທຳວັນອາທິດ</h3>
+                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">ສູດມົນ, ຈະເລີນສະມາທິພາວະນາ ແລະ ຟັງພຣະທຳມະເທສະໜາ ຕັ້ງແຕ່ເວລາ 09:00 - 15:00 ນ. (ບໍ່ມີຄ່າໃຊ້ຈ່າຍ)</p>
+                        </div>
+                        <a href="#" class="text-temple-gold font-bold text-sm inline-flex items-center hover:underline gap-1">
+                            ອ່ານລາຍລະອຽດ <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition duration-300 flex flex-col">
+                    <div class="relative overflow-hidden h-56">
+                        <img src="https://images.unsplash.com/photo-1542385151-efd9000785a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ງານປະເພນີ" class="w-full h-full object-cover card-zoom-image">
+                        <div class="absolute top-4 right-4 bg-temple-maroon text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
+                            ໄວໆນີ້
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-temple-maroon transition">ງານບຸນປະເພນີອອກພັນສາປະວໍລະນາ</h3>
+                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">ຂໍເຊີນຮ່ວມງານບຸນປະເພນີອອກພັນສາປະວໍລະນາ, ຕັກບາດເທໂວໂຣຫະນະ ແລະ ວຽນທຽນອ້ອມສິມ.</p>
+                        </div>
+                        <a href="#" class="text-temple-gold font-bold text-sm inline-flex items-center hover:underline gap-1">
+                            ອ່ານລາຍລະອຽດ <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 text-center sm:hidden">
+                 <a href="#" class="inline-block bg-white text-temple-maroon px-6 py-2.5 rounded-full font-bold border border-temple-maroon shadow-sm text-sm">ເບິ່ງຂ່າວສານທັງໝົດ</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section id="donation" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <i class="fa-solid fa-hand-holding-heart text-4xl text-temple-gold mb-3"></i>
+            <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ຮ່ວມເຮັດບຸນສົມທົບທຶນ</h2>
+            <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full mb-6"></div>
+            <p class="text-gray-600 mb-10 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                ທ່ານສາມາດຮ່ວມເປັນສ່ວນໜຶ່ງໃນການບຳລຸງຮັກສາວັດ ແລະ ສະໜັບສະໜູນກິດຈະກຳທາງພຣະພຸດທະສາສະໜາ<br class="hidden md:block"/>
+                ອານິສົງແຫ່ງບຸນກຸສົນນີ້ ຈົ່ງດົນບັນດານໃຫ້ທ່ານ ແລະ ຄອບຄົວມີແຕ່ຄວາມສຸກ ຄວາມຈະເລີນ.
+            </p>
+
+            <div class="bg-gray-50 rounded-3xl shadow-lg p-6 sm:p-10 text-left border border-gray-100">
+                <div class="flex flex-col md:flex-row gap-8 items-center justify-between">
+                    <!-- Bank Details -->
+                    <div class="w-full md:w-3/5 space-y-5">
+                        <div>
+                            <h3 class="text-2xl font-bold text-temple-maroon mb-1">ບັນຊີຮັບບໍລິຈາກຫຼັກຂອງວັດ</h3>
+                            <p class="text-gray-500 text-sm">ສຳລັບສົມທົບທຶນຄ່ານ້ຳ, ຄ່າໄຟ ແລະ ບຳລຸງເສນາສະນະ</p>
+                        </div>
+                        
+                        <div class="bg-white border-l-4 border-red-600 p-5 rounded-r-xl shadow-sm">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-building-columns text-red-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-medium">ທະນາຄານການຄ້າຕ່າງປະເທດລາວ ມະຫາຊົນ (BCEL)</p>
+                                    <p class="text-lg sm:text-xl font-bold text-gray-800 tracking-wider font-mono">010 120 001 234 567 001</p>
+                                </div>
+                            </div>
+                            <p class="text-base text-gray-700">ຊື່ບັນຊີ: <span class="font-bold text-temple-maroondark">ວັດເຊກະໝານກາງ</span></p>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="copyAccount()" class="inline-flex items-center gap-2 bg-temple-maroon text-white hover:bg-temple-maroondark transition font-bold text-sm py-2.5 px-5 rounded-xl shadow-sm">
+                                <i class="fa-regular fa-copy"></i> ກັອບປີ້ເລກບັນຊີ
+                            </button>
+                            <span id="copy-msg" class="text-green-600 text-sm font-medium hidden">
+                                <i class="fa-solid fa-check-circle"></i> ກັອບປີ້ເລກບັນຊີແລ້ວ!
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Placeholder -->
+                    <div class="w-full md:w-2/5 flex flex-col items-center">
+                        <div class="bg-white p-5 rounded-2xl border-2 border-red-600 shadow-md w-full max-w-[220px] aspect-square flex flex-col items-center justify-center relative">
+                            <i class="fa-solid fa-qrcode text-8xl text-gray-800 mb-2"></i>
+                            <span class="text-red-600 font-bold text-xs uppercase tracking-wider">BCEL OnePay</span>
+                        </div>
+                        <p class="mt-3 text-xs text-gray-500 text-center">ສາມາດໃຊ້ແອັບ BCEL One ຫຼື ແອັບທະນາຄານອື່ນ ສະແກນເພື່ອຮ່ວມເຮັດບຸນໄດ້ທັນທີ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Map Section -->
+    <section id="contact" class="py-24 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ຕິດຕໍ່ສອບຖາມ / ແຜນທີ່ການເດີນທາງ</h2>
+                <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Info Column -->
+                <div class="w-full lg:w-1/3 space-y-6">
+                    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-md border border-gray-100">
+                        <h3 class="font-bold text-xl mb-6 text-gray-800 border-b pb-4">ຂໍ້ມູນການຕິດຕໍ່</h3>
+                        
+                        <ul class="space-y-5">
+                            <li class="flex items-start gap-4">
+                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot w-4 h-4 flex justify-center items-center"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">ທີ່ຢູ່</h4>
+                                    <p class="text-gray-600 text-sm mt-0.5 leading-relaxed">ວັດເຊກະໝານກາງ,<br/>ເມືອງ ສາມັກຄີໄຊ, ແຂວງ ອັດຕະປື</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
+                                    <i class="fa-solid fa-phone w-4 h-4 flex justify-center items-center"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">ເບີໂທຕິດຕໍ່</h4>
+                                    <p class="text-gray-600 text-sm mt-0.5">020 9767 1723</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
+                                    <i class="fa-brands fa-facebook-f w-4 h-4 flex justify-center items-center"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">Facebook Page</h4>
+                                    <a href="#" class="text-blue-600 text-sm hover:underline mt-0.5 block">ວັດເຊກະໝານກາງ</a>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
+                                    <i class="fa-regular fa-clock w-4 h-4 flex justify-center items-center"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">ເວລາເປີດ-ປິດ</h4>
+                                    <p class="text-gray-600 text-sm mt-0.5">ເປີດທຸກມື້ ເວລາ 06:00 - 18:00 ນ.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Google Maps Placeholder / Embed -->
+                <div class="w-full lg:w-2/3">
+                    <div class="bg-gray-200 w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-md relative flex items-center justify-center group border border-gray-300">
+                        <div class="text-center z-10 px-6 py-8 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg max-w-md mx-4">
+                            <i class="fa-solid fa-map-location-dot text-5xl text-temple-maroon mb-3"></i>
+                            <h3 class="font-bold text-lg text-gray-800 mb-1">ແຜນທີ່ Google Maps</h3>
+                            <p class="text-gray-600 text-xs leading-relaxed">
+                                ພື້ນທີ່ສຳລັບຝັງ (Embed) ໂຄດແຜນທີ່ຈາກ Google Maps<br/>ເພື່ອນຳທາງມາຍັງ ວັດເຊກະໝານກາງ
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-800 pb-8 mb-8 gap-6">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-dharmachakra text-2xl text-temple-gold"></i>
+                    <h2 class="font-bold text-xl">ວັດເຊກະໝານກາງ</h2>
+                </div>
+                <div class="flex gap-3">
+                    <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-temple-gold hover:text-gray-900 transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-temple-gold hover:text-gray-900 transition"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="text-center text-gray-400 text-sm">
+                <p>&copy; 2026 ວັດເຊກະໝານກາງ (Wat Sekkhaman Klang). ຂໍສະຫງວນລິຂະສິດ.</p>
+                <p class="mt-2 text-xs text-gray-500">ເວັບໄຊນີ້ຈັດທຳຂຶ້ນເພື່ອເຜີຍແຜ່ຂໍ້ມູນຂ່າວສານຂອງທາງວັດເທົ່ານັ້ນ.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-xmark');
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            });
+        });
+
+        // Copy Account Number Function
+        function copyAccount() {
+            const accNumber = "010120001234567001";
+            navigator.clipboard.writeText(accNumber).then(() => {
+                showCopyMessage();
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = accNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showCopyMessage();
+                } catch (err) {
+                    console.error('Failed to copy text', err);
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function showCopyMessage() {
+            const msg = document.getElementById('copy-msg');
+            msg.classList.remove('hidden');
+            setTimeout(() => {
+                msg.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Dynamic Navbar Background on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-lg', 'bg-temple-maroon/95', 'backdrop-blur-md');
+            } else {
+                nav.classList.remove('shadow-lg', 'bg-temple-maroon/95', 'backdrop-blur-md');
+            }
+        });
+    </script>
+</body>
+</html>
