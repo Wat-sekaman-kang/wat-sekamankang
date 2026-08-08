@@ -416,7 +416,35 @@
             </div>
         </div>
     </section>
+<!-- ກັອບປີ້ໂຄດລຸ່ມນີ້ ໄປວາງໄວ້ໃນໄຟລ໌ໜ້າທຳອິດ (ເຊັ່ນ index.html) ບ່ອນທີ່ທ່ານຕ້ອງການໃຫ້ສະແດງປຸ່ມ -->
 
+<style>
+    /* ເພີ່ມເອັບເຟັກແສງແລ່ນຜ່ານປຸ່ມ */
+    @keyframes shimmer-btn {
+        0% { transform: translateX(-150%) skewX(-15deg); }
+        100% { transform: translateX(150%) skewX(-15deg); }
+    }
+</style>
+
+<div class="text-center my-12 flex justify-center px-4">
+    <a href="temple_members.html" 
+       class="group relative inline-flex items-center justify-center gap-3 px-8 md:px-12 py-5 bg-gradient-to-b from-[#4A1C1C] to-[#2A0C0C] text-[#F3E5AB] text-base md:text-lg font-bold rounded-full overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(212,175,55,0.4)] border-2 border-[#D4AF37]">
+        
+        <!-- ເອັບເຟັກແສງແລ່ນຜ່ານ (Shine Effect) -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-full h-full -translate-x-[150%] skew-x-[-15deg] group-hover:animate-[shimmer-btn_1.5s_infinite]"></div>
+        
+        <!-- ລວດລາຍປະດັບ (Ornament) ເບື້ອງຊ້າຍ-ຂວາ ທີ່ຊ່ອນຢູ່ແລະຈະສະແດງຕອນຊີ້ເມົາສ໌ -->
+        <i class="fa-solid fa-dharmachakra absolute left-4 opacity-10 text-3xl transform -rotate-45 group-hover:rotate-90 group-hover:opacity-30 transition-all duration-700 hidden md:block"></i>
+        <i class="fa-solid fa-dharmachakra absolute right-4 opacity-10 text-3xl transform rotate-45 group-hover:-rotate-90 group-hover:opacity-30 transition-all duration-700 hidden md:block"></i>
+        
+        <!-- ໄອຄອນຫຼັກ -->
+        <i class="fa-solid fa-users text-2xl md:text-3xl group-hover:scale-125 group-hover:text-white transition-all duration-300 relative z-10"></i>
+        
+        <!-- ຂໍ້ຄວາມ -->
+        <span class="relative z-10 tracking-wide">ເຂົ້າເບິ່ງທຳນຽບສະມາຊິກພາຍໃນວັດ</span>
+        
+    </a>
+</div>
     <!-- Footer -->
     <footer class="bg-gray-900 text-white pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
