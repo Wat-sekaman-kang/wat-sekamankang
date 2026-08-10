@@ -174,11 +174,7 @@
     .slide-image { width: 100%; height: 100%; min-height: 500px; object-fit: cover; opacity: .96; transform: scale(1.025); will-change: opacity, transform, filter; transition: opacity .5s ease, transform 7s cubic-bezier(.16, 1, .3, 1), filter .5s ease; animation: slide-ken-burns 12s ease-out both; }
     .slide-stage.is-changing .slide-image { opacity: .1; transform: scale(1.08); filter: saturate(.7) blur(1px); }
     @keyframes slide-ken-burns { from { transform: scale(1.025); } to { transform: scale(1.1); } }
-    .image-wash { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(19, 3, 6, .84), rgba(19, 3, 6, .23) 65%, rgba(19, 3, 6, .1)); pointer-events: none; }
-    .slide-info { position: absolute; z-index: 2; right: 35px; bottom: 38px; left: 35px; max-width: 650px; color: #fff; }
-    .slide-kicker { margin: 0 0 6px; color: var(--gold-light); font-size: .8rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
-    .slide-info h3 { max-width: 600px; margin: 0; font-size: clamp(1.6rem, 4vw, 2.5rem); line-height: 1.28; text-shadow: 0 2px 12px rgba(0, 0, 0, .48); }
-    .slide-info p { max-width: 580px; margin: 9px 0 0; color: #fff6e1; font-size: .96rem; text-shadow: 0 1px 7px rgba(0, 0, 0, .6); }
+    
     .slide-number { position: absolute; z-index: 3; top: 22px; right: 24px; padding: 7px 10px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 8px; background: rgba(0, 0, 0, .35); color: #fff; font-size: .78rem; font-variant-numeric: tabular-nums; }
     .slider-controls { position: absolute; z-index: 4; top: 50%; right: 18px; left: 18px; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; }
     .slider-controls button {
@@ -197,17 +193,20 @@
         transition: background .2s ease, transform .2s ease;
     }
     .slider-controls button:hover { background: var(--wine); transform: scale(1.06); }
-    .slider-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 18px; background: #fffdfa; }
+    
+    /* ปรับส่วนคำบรรยายให้อยู่ด้านล่างภาพ และสีเข้ากับพื้นขาว */
+    .slide-info { padding: 25px 35px 15px; color: var(--ink); background: #fffdfa; }
+    .slide-kicker { margin: 0 0 6px; color: #b28d1b; font-size: .8rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+    .slide-info h3 { margin: 0; color: var(--wine); font-size: clamp(1.4rem, 3.5vw, 1.8rem); line-height: 1.28; }
+    .slide-info p { margin: 6px 0 0; color: var(--muted); font-size: .96rem; }
+
+    .slider-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 18px 20px; background: #fffdfa; }
     .slider-dots { display: flex; flex-wrap: wrap; gap: 7px; }
     .slider-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: #d9cdbd; transition: width .25s ease, background .25s ease, transform .2s ease; }
     .slider-dots button:hover { transform: scale(1.2); background: #b28d1b; }
     .slider-dots button.active { width: 25px; border-radius: 8px; background: var(--wine); }
     .pause-button { padding: 6px 9px; color: var(--wine); border: 1px solid #dac9ae; border-radius: 7px; background: #fff; font-size: .78rem; font-weight: 700; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
     .pause-button:hover { background: #fff7df; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(87, 18, 27, .12); }
-
-    /* แก้ไขส่วนนี้: เพิ่มการห่อบรรทัด และเจาะจงเฉพาะลูกศรให้เป็นกรอบสี่เหลี่ยม */
-    .instructions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin: 15px 0 0; color: var(--muted); font-size: .83rem; line-height: 1.4; }
-    .instructions span:not([data-i18n]) { display: inline-grid; flex-shrink: 0; width: 25px; height: 25px; place-items: center; color: var(--wine); border: 1px solid #dccba8; border-radius: 6px; background: #fff; font-weight: 700; }
 
     .thumbnail-section { margin-top: 43px; }
     .thumbnail-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
@@ -262,7 +261,7 @@
         .section-heading { display: block; }
         .section-heading p { margin-top: 6px; text-align: left; }
         .slide-stage, .slide-image { min-height: 405px; }
-        .slide-info { right: 22px; bottom: 28px; left: 22px; }
+        .slide-info { padding: 20px 20px 10px; }
         .slide-number { top: 14px; right: 15px; }
         .slider-controls { right: 11px; left: 11px; }
         .slider-controls button { width: 40px; height: 40px; }
@@ -329,25 +328,25 @@
             <div class="slider" role="region" aria-roledescription="carousel" aria-label="ສະໄລດ໌ຮູບພາບກິດຈະກຳ">
                 <div class="slide-stage" id="slideStage" tabindex="0">
                     <img id="slideImage" class="slide-image" src="images/events/event1.jpg" alt="">
-                    <div class="image-wash"></div>
                     <div class="slide-number" id="slideNumber" aria-live="polite">01 / 05</div>
-                    <div class="slide-info">
-                        <p class="slide-kicker" data-i18n="slideLabel">ຄັງຮູບພາບ</p>
-                        <h3 id="slideTitle"></h3>
-                        <p id="slideDescription"></p>
-                    </div>
                     <div class="slider-controls" aria-label="ປຸ່ມຄວບຄຸມສະໄລດ໌">
                         <button id="previousSlide" type="button" aria-label="ຮູບກ່ອນໜ້າ">‹</button>
                         <button id="nextSlide" type="button" aria-label="ຮູບຖັດໄປ">›</button>
                     </div>
                 </div>
+                
+                <div class="slide-info">
+                    <p class="slide-kicker" data-i18n="slideLabel">ຄັງຮູບພາບ</p>
+                    <h3 id="slideTitle"></h3>
+                    <p id="slideDescription"></p>
+                </div>
+
                 <div class="slider-bottom">
                     <div class="slider-dots" id="sliderDots" aria-label="ເລືອກຮູບສະໄລດ໌"></div>
                     <button class="pause-button" id="pauseButton" type="button" data-i18n="pause">ຢຸດການເລື່ອນອັດຕະໂນມັດ</button>
                 </div>
             </div>
 
-            <p class="instructions"><span>←</span><span>→</span><span data-i18n="keyboardHelp">ກົດລູກສອນຊ້າຍ/ຂວາ ຫຼື ປຸ່ມເທິງໜ້າຈໍເພື່ອເລື່ອນຮູບ</span></p>
         </section>
 
         <section class="thumbnail-section" aria-labelledby="all-photos-heading">
