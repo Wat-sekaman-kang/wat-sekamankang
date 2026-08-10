@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ຄັງຮູບພາບ ແລະ ກິດຈະກຳຂອງວັດເຊກະໝານກາງ">
+    <meta name="theme-color" content="#57121b">
+    <title>ຄັງຮູບພາບ | ວັດເຊກະໝານກາງ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wine: #57121b;
+            --wine-dark: #2d080e;
+            --gold: #d4af37;
+            --gold-light: #f8e8ab;
+            --cream: #fbf8f0;
+            --ink: #2e2522;
+            --muted: #6f625b;
+            --surface: #ffffff;
+            --line: #eadfcb;
+            --shadow: 0 18px 45px rgba(45, 8, 14, .14);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            min-width: 320px;
+            color: var(--ink);
+            background: var(--cream);
+            font-family: "Noto Sans Lao", "Noto Sans Thai", Tahoma, sans-serif;
+            line-height: 1.6;
+        }
+
+        button, a { font: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; }
+        img { display: block; max-width: 100%; }
+        :focus-visible { outline: 3px solid #1769aa; outline-offset: 3px; }
+
+        .skip-link {
+            position: fixed;
+            z-index: 100;
+            top: -100px;
+            left: 16px;
+            padding: 10px 16px;
+            color: #fff;
+            background: var(--wine-dark);
+            border-radius: 0 0 12px 12px;
+        }
+        .skip-link:focus { top: 0; }
+
+        .site-header {
+            position: sticky;
+            z-index: 20;
+            top: 0;
+            border-bottom: 2px solid rgba(212, 175, 55, .7);
+            color: #fff;
+            background: rgba(87, 18, 27, .97);
+            box-shadow: 0 5px 18px rgba(28, 4, 8, .24);
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            max-width: 1200px;
+            min-height: 76px;
+            margin: 0 auto;
+            padding: 10px 24px;
+        }
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .brand img {
+            width: 45px;
+            height: 45px;
+            padding: 3px;
+            object-fit: cover;
+            background: var(--gold-light);
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+        }
+        .brand-text { display: grid; line-height: 1.25; }
+        .brand-text small { color: var(--gold-light); font-size: .68rem; font-weight: 500; letter-spacing: .06em; }
+        .site-nav { display: flex; align-items: center; gap: 4px; }
+        .site-nav a {
+            padding: 8px 11px;
+            color: #fff9e9;
+            border-radius: 9px;
+            font-size: .9rem;
+            text-decoration: none;
+        }
+        .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--gold-light); background: rgba(212, 175, 55, .17); }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .language-switcher { display: inline-flex; padding: 3px; border: 1px solid rgba(248, 232, 171, .45); border-radius: 9px; }
+        .language-switcher button {
+            padding: 5px 8px;
+            color: #fff8e5;
+            background: transparent;
+            border: 0;
+            border-radius: 6px;
+            font-size: .78rem;
+            font-weight: 700;
+        }
+        .language-switcher button.active { color: var(--wine-dark); background: var(--gold-light); }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 54px 24px 62px;
+            color: #fff;
+            background: radial-gradient(circle at 82% 10%, rgba(212, 175, 55, .28), transparent 30%), linear-gradient(125deg, var(--wine-dark), var(--wine));
+        }
+        .hero::after {
+            position: absolute;
+            inset: auto -16px -40px auto;
+            width: 270px;
+            height: 270px;
+            border: 1px solid rgba(248, 232, 171, .24);
+            border-radius: 50%;
+            content: "";
+        }
+        .hero-inner { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; }
+        .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 11px; color: var(--gold-light); font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+        .eyebrow::before { width: 26px; height: 1px; background: var(--gold); content: ""; }
+        h1 { max-width: 780px; margin: 0; color: #fff; font-size: clamp(2rem, 5vw, 3.65rem); line-height: 1.2; }
+        .hero p { max-width: 720px; margin: 17px 0 0; color: #f9ecd3; font-size: 1.04rem; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
+        .meta-chip { padding: 8px 12px; border: 1px solid rgba(248, 232, 171, .35); border-radius: 99px; background: rgba(0, 0, 0, .14); color: #fff3d4; font-size: .86rem; }
+
+        .page-shell { max-width: 1120px; margin: 0 auto; padding: 44px 24px 66px; }
+        .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+        .section-heading h2 { margin: 0; color: var(--wine); font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1.3; }
+        .section-heading p { max-width: 560px; margin: 0; color: var(--muted); font-size: .94rem; text-align: right; }
+
+        .slider {
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+        }
+        .slide-stage {
+            position: relative;
+            display: grid;
+            min-height: 500px;
+            isolation: isolate;
+            background: #211517;
+        }
+        .slide-image { width: 100%; height: 100%; min-height: 500px; object-fit: cover; }
+        .image-wash { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(19, 3, 6, .84), rgba(19, 3, 6, .23) 65%, rgba(19, 3, 6, .1)); pointer-events: none; }
+        .slide-info { position: absolute; z-index: 2; right: 35px; bottom: 38px; left: 35px; max-width: 650px; color: #fff; }
+        .slide-kicker { margin: 0 0 6px; color: var(--gold-light); font-size: .8rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+        .slide-info h3 { max-width: 600px; margin: 0; font-size: clamp(1.6rem, 4vw, 2.5rem); line-height: 1.28; text-shadow: 0 2px 12px rgba(0, 0, 0, .48); }
+        .slide-info p { max-width: 580px; margin: 9px 0 0; color: #fff6e1; font-size: .96rem; text-shadow: 0 1px 7px rgba(0, 0, 0, .6); }
+        .slide-number { position: absolute; z-index: 3; top: 22px; right: 24px; padding: 7px 10px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 8px; background: rgba(0, 0, 0, .35); color: #fff; font-size: .78rem; font-variant-numeric: tabular-nums; }
+        .slider-controls { position: absolute; z-index: 4; top: 50%; right: 18px; left: 18px; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; }
+        .slider-controls button {
+            display: grid;
+            width: 46px;
+            height: 46px;
+            place-items: center;
+            padding: 0;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .5);
+            border-radius: 50%;
+            background: rgba(27, 7, 10, .7);
+            font-size: 1.65rem;
+            line-height: 1;
+            pointer-events: auto;
+            transition: background .2s ease, transform .2s ease;
+        }
+        .slider-controls button:hover { background: var(--wine); transform: scale(1.06); }
+        .slider-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 18px; background: #fffdfa; }
+        .slider-dots { display: flex; flex-wrap: wrap; gap: 7px; }
+        .slider-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: #d9cdbd; }
+        .slider-dots button.active { width: 25px; border-radius: 8px; background: var(--wine); }
+        .pause-button { padding: 6px 9px; color: var(--wine); border: 1px solid #dac9ae; border-radius: 7px; background: #fff; font-size: .78rem; font-weight: 700; }
+        .pause-button:hover { background: #fff7df; }
+
+        .instructions { display: flex; align-items: center; gap: 9px; margin: 15px 0 0; color: var(--muted); font-size: .83rem; }
+        .instructions span { display: inline-grid; width: 25px; height: 25px; place-items: center; color: var(--wine); border: 1px solid #dccba8; border-radius: 6px; background: #fff; font-weight: 700; }
+
+        .thumbnail-section { margin-top: 43px; }
+        .thumbnail-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+        .thumbnail {
+            position: relative;
+            overflow: hidden;
+            min-height: 128px;
+            padding: 0;
+            color: #fff;
+            border: 2px solid transparent;
+            border-radius: 13px;
+            background: var(--wine-dark);
+            text-align: left;
+            transition: border-color .2s ease, transform .2s ease;
+        }
+        .thumbnail:hover { transform: translateY(-3px); }
+        .thumbnail.active { border-color: var(--gold); box-shadow: 0 8px 20px rgba(87, 18, 27, .2); }
+        .thumbnail img { width: 100%; height: 128px; object-fit: cover; opacity: .81; transition: opacity .2s ease, transform .35s ease; }
+        .thumbnail:hover img, .thumbnail.active img { opacity: 1; transform: scale(1.05); }
+        .thumbnail span { position: absolute; right: 0; bottom: 0; left: 0; padding: 23px 9px 8px; background: linear-gradient(transparent, rgba(26, 4, 7, .91)); color: #fff; font-size: .74rem; font-weight: 600; line-height: 1.35; }
+
+        .service-grid { display: grid; grid-template-columns: 1.12fr .88fr; gap: 22px; margin-top: 54px; }
+        .service-card { padding: 27px; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: 0 8px 22px rgba(69, 45, 22, .06); }
+        .service-card h2 { margin: 0; color: var(--wine); font-size: 1.4rem; }
+        .service-card p { margin: 9px 0 0; color: var(--muted); font-size: .94rem; }
+        .guide-list { display: grid; gap: 11px; margin: 19px 0 0; padding: 0; list-style: none; }
+        .guide-list li { display: flex; gap: 11px; align-items: flex-start; }
+        .guide-list b { display: grid; flex: 0 0 auto; width: 25px; height: 25px; place-items: center; color: var(--wine); border-radius: 50%; background: #f9edd0; font-size: .77rem; }
+        .drive-card { display: flex; flex-direction: column; justify-content: center; color: #fff; border-color: transparent; background: linear-gradient(145deg, var(--wine), var(--wine-dark)); }
+        .drive-card h2 { color: var(--gold-light); }
+        .drive-card p { color: #f8e8c5; }
+        .drive-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: flex-start; margin-top: 21px; padding: 11px 15px; color: var(--wine-dark); border-radius: 9px; background: var(--gold-light); font-weight: 700; text-decoration: none; }
+        .drive-link:hover { background: #fff1bd; }
+
+        .site-footer { padding: 30px 24px; color: #f9ecd3; background: var(--wine-dark); text-align: center; }
+        .site-footer p { margin: 0; font-size: .86rem; }
+        .site-footer small { display: block; margin-top: 4px; color: #d9c6a3; }
+
+        @media (max-width: 860px) {
+            .site-nav { display: none; }
+            .topbar { min-height: 68px; padding: 9px 16px; }
+            .brand-text small { display: none; }
+            .slide-stage, .slide-image { min-height: 440px; }
+            .thumbnail-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .service-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 560px) {
+            .brand-text { font-size: .88rem; }
+            .brand img { width: 39px; height: 39px; }
+            .hero { padding: 42px 19px 49px; }
+            .page-shell { padding: 32px 16px 49px; }
+            .section-heading { display: block; }
+            .section-heading p { margin-top: 6px; text-align: left; }
+            .slide-stage, .slide-image { min-height: 405px; }
+            .slide-info { right: 22px; bottom: 28px; left: 22px; }
+            .slide-number { top: 14px; right: 15px; }
+            .slider-controls { right: 11px; left: 11px; }
+            .slider-controls button { width: 40px; height: 40px; }
+            .slider-bottom { align-items: flex-start; }
+            .thumbnail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+            .service-card { padding: 22px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#gallery">ຂ້າມໄປຄັງຮູບ</a>
+
+    <header class="site-header">
+        <div class="topbar">
+            <a class="brand" href="index.html" aria-label="ກັບໄປໜ້າຫຼັກ">
+                <img src="wat-logo.jpg" alt="ໂລໂກ້ວັດເຊກະໝານກາງ">
+                <span class="brand-text"><span data-i18n="brand">ວັດເຊກະໝານກາງ</span><small>WAT XEKAMAN KANG</small></span>
+            </a>
+            <nav class="site-nav" aria-label="ເມນູຫຼັກ">
+                <a href="index.html" data-i18n="navHome">ໜ້າຫຼັກ</a>
+                <a href="gallery.html" aria-current="page" data-i18n="navGallery">ຄັງຮູບພາບ</a>
+                <a href="temple_members.html" data-i18n="navMembers">ທຳນຽບວັດ</a>
+            </nav>
+            <div class="header-actions">
+                <div class="language-switcher" aria-label="ເລືອກພາສາ">
+                    <button type="button" class="active" data-language="lo" aria-pressed="true">ລາວ</button>
+                    <button type="button" data-language="th" aria-pressed="false">ไทย</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="page-title">
+            <div class="hero-inner">
+                <p class="eyebrow" data-i18n="eyebrow">WAT XEKAMAN KANG</p>
+                <h1 id="page-title" data-i18n="heroTitle">ຄັງຮູບພາບ ແລະ ກິດຈະກຳຂອງວັດ</h1>
+                <p data-i18n="heroText">ປະມວນຮູບພາບບັນຍາກາດງານບຸນ ແລະ ຊີວິດພາຍໃນວັດ ເລືອກຊົມຮູບໄດ້ຈາກປຸ່ມກ່ອນໜ້າ ຫຼື ຖັດໄປ.</p>
+                <div class="hero-meta">
+                    <span class="meta-chip" data-i18n="chipPhotos">10 ຮູບພາບ</span>
+                    <span class="meta-chip" data-i18n="chipControl">ກົດເລື່ອນໄດ້ ແລະ ຮອງຮັບແປ້ນພິມ</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-shell">
+            <section id="gallery" aria-labelledby="gallery-heading">
+                <div class="section-heading">
+                    <h2 id="gallery-heading" data-i18n="galleryTitle">ເລືອກຊົມຮູບພາບ</h2>
+                    <p data-i18n="galleryText">ສະໄລດ໌ນີ້ໃຊ້ຮູບທີ່ມີຢູ່ໃນເວັບໄຊທ໌ ຈຶ່ງເປີດໄດ້ທັນທີໂດຍບໍ່ຕ້ອງອັບໂຫຼດເພີ່ມ.</p>
+                </div>
+
+                <div class="slider" role="region" aria-roledescription="carousel" aria-label="ສະໄລດ໌ຮູບພາບກິດຈະກຳ">
+                    <div class="slide-stage" id="slideStage" tabindex="0">
+                        <img id="slideImage" class="slide-image" src="images/events/event1.jpg" alt="">
+                        <div class="image-wash"></div>
+                        <div class="slide-number" id="slideNumber" aria-live="polite">01 / 10</div>
+                        <div class="slide-info">
+                            <p class="slide-kicker" data-i18n="slideLabel">ຄັງຮູບພາບ</p>
+                            <h3 id="slideTitle"></h3>
+                            <p id="slideDescription"></p>
+                        </div>
+                        <div class="slider-controls" aria-label="ປຸ່ມຄວບຄຸມສະໄລດ໌">
+                            <button id="previousSlide" type="button" aria-label="ຮູບກ່ອນໜ້າ">‹</button>
+                            <button id="nextSlide" type="button" aria-label="ຮູບຖັດໄປ">›</button>
+                        </div>
+                    </div>
+                    <div class="slider-bottom">
+                        <div class="slider-dots" id="sliderDots" aria-label="ເລືອກຮູບສະໄລດ໌"></div>
+                        <button class="pause-button" id="pauseButton" type="button" data-i18n="pause">ຢຸດການເລື່ອນອັດຕະໂນມັດ</button>
+                    </div>
+                </div>
+
+                <p class="instructions"><span>←</span><span>→</span><span data-i18n="keyboardHelp">ກົດລູກສອນຊ້າຍ/ຂວາ ຫຼື ປຸ່ມເທິງໜ້າຈໍເພື່ອເລື່ອນຮູບ</span></p>
+            </section>
+
+            <section class="thumbnail-section" aria-labelledby="all-photos-heading">
+                <div class="section-heading">
+                    <h2 id="all-photos-heading" data-i18n="allPhotosTitle">ຮູບພາບທັງໝົດ</h2>
+                    <p data-i18n="allPhotosText">ກົດຮູບໃດກໍໄດ້ເພື່ອໄປຫາຮູບນັ້ນໃນສະໄລດ໌.</p>
+                </div>
+                <div class="thumbnail-grid" id="thumbnailGrid"></div>
+            </section>
+
+            <section class="service-grid" aria-label="ຂໍ້ມູນການໃຊ້ງານ">
+                <article class="service-card">
+                    <h2 data-i18n="guideTitle">ແນະນຳການເພີ່ມຮູບໃນອະນາຄົດ</h2>
+                    <p data-i18n="guideText">ເພື່ອໃຫ້ຂ່າວສານຂອງວັດທັນສະໄໝ ຄວນອັບເດດຮູບກິດຈະກຳໃໝ່ພ້ອມຄຳບັນຍາຍສັ້ນໆ ແລະ ກວດສອບຊື່ໄຟລ໌ກ່ອນເຜີຍແຜ່.</p>
+                    <ol class="guide-list">
+                        <li><b>1</b><span data-i18n="guideOne">ຕັ້ງຊື່ໄຟລ໌ຮູບໃຫ້ສື່ຄວາມໝາຍ ແລະ ໃຊ້ຕົວອັກສອນດຽວກັນ.</span></li>
+                        <li><b>2</b><span data-i18n="guideTwo">ໃສ່ວັນທີ ຫຼື ຊື່ກິດຈະກຳໃນຄຳບັນຍາຍ ເມື່ອມີຂໍ້ມູນພ້ອມ.</span></li>
+                        <li><b>3</b><span data-i18n="guideThree">ທົດສອບປຸ່ມກ່ອນໜ້າ/ຖັດໄປ ແລະ ໜ້າຈໍໂທລະສັບກ່ອນລົງເວັບ.</span></li>
+                    </ol>
+                </article>
+                <aside class="service-card drive-card">
+                    <h2 data-i18n="driveTitle">ອັລບັ້ມຮູບພາບສະບັບເຕັມ</h2>
+                    <p data-i18n="driveText">ສາມາດເປີດເບິ່ງອັລບັ້ມກິດຈະກຳຂອງວັດທີ່ຈັດເກັບໄວ້ໄດ້.</p>
+                    <a class="drive-link" href="https://drive.google.com/drive/folders/1dn_90j-wZuNfEsLvLGJKiGl0UICvkTuK" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">↗</span><span data-i18n="driveButton">ເປີດອັລບັ້ມ Google Drive</span></a>
+                </aside>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© <span id="copyrightYear"></span> <span data-i18n="footerName">ວັດເຊກະໝານກາງ · Wat Xekaman Kang</span></p>
+        <small data-i18n="footerNote">ເວັບໄຊທ໌ຂໍ້ມູນ ແລະ ປະຊາສຳພັນຂອງວັດ</small>
+    </footer>
+
+    <script>
+        const slides = [
+            { src: 'images/events/event1.jpg', lo: 'ບັນຍາກາດກິດຈະກຳຂອງວັດ 1', th: 'บรรยากาศกิจกรรมของวัด 1', loDesc: 'ຮູບພາບຈາກກິດຈະກຳ ແລະ ງານບຸນຂອງວັດເຊກະໝານກາງ', thDesc: 'ภาพจากกิจกรรมและงานบุญของวัดเซกะหมานกลาง' },
+            { src: 'images/events/event2.jpg', lo: 'ບັນຍາກາດກິດຈະກຳຂອງວັດ 2', th: 'บรรยากาศกิจกรรมของวัด 2', loDesc: 'ບັນທຶກພາບຄວາມສັດທາ ແລະ ການຮ່ວມກິດຈະກຳ', thDesc: 'บันทึกภาพศรัทธาและการร่วมกิจกรรม' },
+            { src: 'images/events/event3.jpg', lo: 'ບັນຍາກາດກິດຈະກຳຂອງວັດ 3', th: 'บรรยากาศกิจกรรมของวัด 3', loDesc: 'ພາບການຮ່ວມງານບຸນ ແລະ ກິດຈະກຳພາຍໃນວັດ', thDesc: 'ภาพการร่วมงานบุญและกิจกรรมภายในวัด' },
+            { src: 'images/events/event4.jpg', lo: 'ບັນຍາກາດກິດຈະກຳຂອງວັດ 4', th: 'บรรยากาศกิจกรรมของวัด 4', loDesc: 'ຮູບພາບອີກຊ່ວງໜຶ່ງຂອງງານບຸນ ແລະ ຊຸມຊົນ', thDesc: 'ภาพอีกช่วงหนึ่งของงานบุญและชุมชน' },
+            { src: 'images/events/event5.jpg', lo: 'ບັນຍາກາດກິດຈະກຳຂອງວັດ 5', th: 'บรรยากาศกิจกรรมของวัด 5', loDesc: 'ປະມວນພາບກິດຈະກຳທີ່ວັດຈັດຂຶ້ນ', thDesc: 'ประมวลภาพกิจกรรมที่วัดจัดขึ้น' },
+            { src: 'images/Monk1.jpg', lo: 'ພາບຄະນະສົງ 1', th: 'ภาพคณะสงฆ์ 1', loDesc: 'ພາບບຸກຄະລາກອນພາຍໃນວັດ', thDesc: 'ภาพบุคลากรภายในวัด' },
+            { src: 'images/Monk2.jpg', lo: 'ພາບຄະນະສົງ 2', th: 'ภาพคณะสงฆ์ 2', loDesc: 'ພາບບຸກຄະລາກອນພາຍໃນວັດ', thDesc: 'ภาพบุคลากรภายในวัด' },
+            { src: 'images/Monk3.jpg', lo: 'ພາບຄະນະສົງ 3', th: 'ภาพคณะสงฆ์ 3', loDesc: 'ພາບບຸກຄະລາກອນພາຍໃນວັດ', thDesc: 'ภาพบุคลากรภายในวัด' },
+            { src: 'images/Monk4.jpg', lo: 'ພາບຄະນະສົງ 4', th: 'ภาพคณะสงฆ์ 4', loDesc: 'ພາບບຸກຄະລາກອນພາຍໃນວັດ', thDesc: 'ภาพบุคลากรภายในวัด' },
+            { src: 'images/layman1.jpg', lo: 'ພາບຊຸມຊົນວັດ', th: 'ภาพชุมชนวัด', loDesc: 'ພາບຄະນະອຸປະຖຳ ແລະ ຊຸມຊົນຂອງວັດ', thDesc: 'ภาพคณะอุปถัมภ์และชุมชนของวัด' }
+        ];
+
+        const translations = {
+            lo: {
+                title: 'ຄັງຮູບພາບ | ວັດເຊກະໝານກາງ', brand: 'ວັດເຊກະໝານກາງ', navHome: 'ໜ້າຫຼັກ', navGallery: 'ຄັງຮູບພາບ', navMembers: 'ທຳນຽບວັດ', eyebrow: 'WAT XEKAMAN KANG', heroTitle: 'ຄັງຮູບພາບ ແລະ ກິດຈະກຳຂອງວັດ', heroText: 'ປະມວນຮູບພາບບັນຍາກາດງານບຸນ ແລະ ຊີວິດພາຍໃນວັດ ເລືອກຊົມຮູບໄດ້ຈາກປຸ່ມກ່ອນໜ້າ ຫຼື ຖັດໄປ.', chipPhotos: '10 ຮູບພາບ', chipControl: 'ກົດເລື່ອນໄດ້ ແລະ ຮອງຮັບແປ້ນພິມ', galleryTitle: 'ເລືອກຊົມຮູບພາບ', galleryText: 'ສະໄລດ໌ນີ້ໃຊ້ຮູບທີ່ມີຢູ່ໃນເວັບໄຊທ໌ ຈຶ່ງເປີດໄດ້ທັນທີໂດຍບໍ່ຕ້ອງອັບໂຫຼດເພີ່ມ.', slideLabel: 'ຄັງຮູບພາບ', pause: 'ຢຸດການເລື່ອນອັດຕະໂນມັດ', play: 'ເລີ່ມການເລື່ອນອັດຕະໂນມັດ', keyboardHelp: 'ກົດລູກສອນຊ້າຍ/ຂວາ ຫຼື ປຸ່ມເທິງໜ້າຈໍເພື່ອເລື່ອນຮູບ', allPhotosTitle: 'ຮູບພາບທັງໝົດ', allPhotosText: 'ກົດຮູບໃດກໍໄດ້ເພື່ອໄປຫາຮູບນັ້ນໃນສະໄລດ໌.', guideTitle: 'ແນະນຳການເພີ່ມຮູບໃນອະນາຄົດ', guideText: 'ເພື່ອໃຫ້ຂ່າວສານຂອງວັດທັນສະໄໝ ຄວນອັບເດດຮູບກິດຈະກຳໃໝ່ພ້ອມຄຳບັນຍາຍສັ້ນໆ ແລະ ກວດສອບຊື່ໄຟລ໌ກ່ອນເຜີຍແຜ່.', guideOne: 'ຕັ້ງຊື່ໄຟລ໌ຮູບໃຫ້ສື່ຄວາມໝາຍ ແລະ ໃຊ້ຕົວອັກສອນດຽວກັນ.', guideTwo: 'ໃສ່ວັນທີ ຫຼື ຊື່ກິດຈະກຳໃນຄຳບັນຍາຍ ເມື່ອມີຂໍ້ມູນພ້ອມ.', guideThree: 'ທົດສອບປຸ່ມກ່ອນໜ້າ/ຖັດໄປ ແລະ ໜ້າຈໍໂທລະສັບກ່ອນລົງເວັບ.', driveTitle: 'ອັລບັ້ມຮູບພາບສະບັບເຕັມ', driveText: 'ສາມາດເປີດເບິ່ງອັລບັ້ມກິດຈະກຳຂອງວັດທີ່ຈັດເກັບໄວ້ໄດ້.', driveButton: 'ເປີດອັລບັ້ມ Google Drive', footerName: 'ວັດເຊກະໝານກາງ · Wat Xekaman Kang', footerNote: 'ເວັບໄຊທ໌ຂໍ້ມູນ ແລະ ປະຊາສຳພັນຂອງວັດ', previous: 'ຮູບກ່ອນໜ້າ', next: 'ຮູບຖັດໄປ', choose: 'ເລືອກຮູບທີ'
+            },
+            th: {
+                title: 'คลังภาพ | วัดเซกะหมานกลาง', brand: 'วัดเซกะหมานกลาง', navHome: 'หน้าหลัก', navGallery: 'คลังภาพ', navMembers: 'ทำเนียบวัด', eyebrow: 'WAT XEKAMAN KANG', heroTitle: 'คลังภาพและกิจกรรมของวัด', heroText: 'รวบรวมภาพบรรยากาศงานบุญและวิถีชีวิตภายในวัด เลือกดูภาพด้วยปุ่มก่อนหน้า หรือ ถัดไปได้ทันที.', chipPhotos: '10 ภาพ', chipControl: 'เลื่อนภาพได้และรองรับแป้นพิมพ์', galleryTitle: 'เลือกชมภาพ', galleryText: 'สไลด์นี้ใช้ภาพที่มีอยู่แล้วในเว็บไซต์ จึงสามารถเปิดใช้งานได้ทันทีโดยไม่ต้องอัปโหลดเพิ่ม.', slideLabel: 'คลังภาพ', pause: 'หยุดเลื่อนอัตโนมัติ', play: 'เริ่มเลื่อนอัตโนมัติ', keyboardHelp: 'กดลูกศรซ้าย/ขวา หรือปุ่มบนหน้าจอเพื่อเลื่อนภาพ', allPhotosTitle: 'ภาพทั้งหมด', allPhotosText: 'กดภาพใดก็ได้เพื่อไปยังภาพนั้นในสไลด์.', guideTitle: 'ข้อแนะนำสำหรับการเพิ่มภาพครั้งต่อไป', guideText: 'เพื่อให้ข้อมูลข่าวสารของวัดทันสมัย ควรอัปเดตภาพกิจกรรมพร้อมคำบรรยายสั้น ๆ และตรวจสอบชื่อไฟล์ก่อนเผยแพร่.', guideOne: 'ตั้งชื่อไฟล์ภาพให้สื่อความหมายและใช้รูปแบบตัวอักษรให้สม่ำเสมอ.', guideTwo: 'ใส่วันที่หรือชื่อกิจกรรมไว้ในคำบรรยายเมื่อมีข้อมูลพร้อม.', guideThree: 'ทดสอบปุ่มก่อนหน้า/ถัดไปและหน้าจอโทรศัพท์ก่อนนำขึ้นเว็บไซต์.', driveTitle: 'อัลบั้มภาพฉบับเต็ม', driveText: 'เปิดดูอัลบั้มกิจกรรมของวัดที่จัดเก็บไว้ได้.', driveButton: 'เปิดอัลบั้ม Google Drive', footerName: 'วัดเซกะหมานกลาง · Wat Xekaman Kang', footerNote: 'เว็บไซต์ข้อมูลและประชาสัมพันธ์ของวัด', previous: 'ภาพก่อนหน้า', next: 'ภาพถัดไป', choose: 'เลือกภาพที่'
+            }
+        };
+
+        let activeIndex = 0;
+        let activeLanguage = localStorage.getItem('wat-kang-language') || 'lo';
+        let isPaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let autoplayTimer;
+        let touchStartX = 0;
+
+        const slideImage = document.getElementById('slideImage');
+        const slideTitle = document.getElementById('slideTitle');
+        const slideDescription = document.getElementById('slideDescription');
+        const slideNumber = document.getElementById('slideNumber');
+        const dots = document.getElementById('sliderDots');
+        const thumbnails = document.getElementById('thumbnailGrid');
+        const pauseButton = document.getElementById('pauseButton');
+        const stage = document.getElementById('slideStage');
+
+        function currentText(key) { return translations[activeLanguage][key]; }
+
+        function fallbackImage(image) {
+            image.onerror = null;
+            image.src = 'wat-logo.jpg';
+        }
+
+        function renderControls() {
+            dots.innerHTML = '';
+            thumbnails.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.setAttribute('aria-label', `${currentText('choose')} ${index + 1}`);
+                dot.setAttribute('aria-current', index === activeIndex ? 'true' : 'false');
+                dot.className = index === activeIndex ? 'active' : '';
+                dot.addEventListener('click', () => showSlide(index));
+                dots.appendChild(dot);
+
+                const thumbnail = document.createElement('button');
+                thumbnail.type = 'button';
+                thumbnail.className = `thumbnail${index === activeIndex ? ' active' : ''}`;
+                thumbnail.setAttribute('aria-label', `${currentText('choose')} ${index + 1}: ${activeLanguage === 'th' ? slide.th : slide.lo}`);
+                thumbnail.setAttribute('aria-current', index === activeIndex ? 'true' : 'false');
+                thumbnail.innerHTML = `<img src="${slide.src}" alt="" loading="lazy"><span>${activeLanguage === 'th' ? slide.th : slide.lo}</span>`;
+                thumbnail.querySelector('img').addEventListener('error', event => fallbackImage(event.currentTarget));
+                thumbnail.addEventListener('click', () => showSlide(index));
+                thumbnails.appendChild(thumbnail);
+            });
+        }
+
+        function showSlide(index) {
+            activeIndex = (index + slides.length) % slides.length;
+            const slide = slides[activeIndex];
+            slideImage.src = slide.src;
+            slideImage.alt = activeLanguage === 'th' ? slide.th : slide.lo;
+            slideTitle.textContent = activeLanguage === 'th' ? slide.th : slide.lo;
+            slideDescription.textContent = activeLanguage === 'th' ? slide.thDesc : slide.loDesc;
+            slideNumber.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+            renderControls();
+            resetAutoplay();
+        }
+
+        function resetAutoplay() {
+            window.clearInterval(autoplayTimer);
+            if (!isPaused) autoplayTimer = window.setInterval(() => showSlide(activeIndex + 1), 7000);
+        }
+
+        function setLanguage(language) {
+            activeLanguage = language;
+            document.documentElement.lang = language;
+            document.title = currentText('title');
+            localStorage.setItem('wat-kang-language', language);
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const value = currentText(element.dataset.i18n);
+                if (value) element.textContent = value;
+            });
+            document.getElementById('previousSlide').setAttribute('aria-label', currentText('previous'));
+            document.getElementById('nextSlide').setAttribute('aria-label', currentText('next'));
+            document.querySelectorAll('[data-language]').forEach(button => {
+                const selected = button.dataset.language === language;
+                button.classList.toggle('active', selected);
+                button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+            });
+            pauseButton.textContent = isPaused ? currentText('play') : currentText('pause');
+            showSlide(activeIndex);
+        }
+
+        document.getElementById('previousSlide').addEventListener('click', () => showSlide(activeIndex - 1));
+        document.getElementById('nextSlide').addEventListener('click', () => showSlide(activeIndex + 1));
+        document.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.language)));
+        pauseButton.addEventListener('click', () => {
+            isPaused = !isPaused;
+            pauseButton.textContent = isPaused ? currentText('play') : currentText('pause');
+            resetAutoplay();
+        });
+        stage.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft') { event.preventDefault(); showSlide(activeIndex - 1); }
+            if (event.key === 'ArrowRight') { event.preventDefault(); showSlide(activeIndex + 1); }
+        });
+        document.addEventListener('keydown', event => {
+            const isFormControl = /INPUT|TEXTAREA|SELECT|BUTTON/.test(event.target.tagName);
+            if (isFormControl) return;
+            if (event.key === 'ArrowLeft') showSlide(activeIndex - 1);
+            if (event.key === 'ArrowRight') showSlide(activeIndex + 1);
+        });
+        stage.addEventListener('touchstart', event => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
+        stage.addEventListener('touchend', event => {
+            const distance = event.changedTouches[0].screenX - touchStartX;
+            if (Math.abs(distance) > 45) showSlide(activeIndex + (distance > 0 ? -1 : 1));
+        }, { passive: true });
+        slideImage.addEventListener('error', event => fallbackImage(event.currentTarget));
+        document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+        setLanguage(activeLanguage);
+    </script>
+</body>
+</html>

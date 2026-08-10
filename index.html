@@ -11,7 +11,7 @@
     <!-- Lao Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Lao:wght@400;600;700;800&family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Lao:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Lao:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -44,6 +44,122 @@
         }
         h1, h2, h3, h4, .font-lao-serif {
             font-family: 'Noto Serif Lao', serif;
+        }
+        html[lang="th"] body, html[lang="th"] button, html[lang="th"] input, html[lang="th"] textarea, html[lang="th"] select {
+            font-family: 'Noto Sans Thai', 'Noto Sans Lao', sans-serif;
+        }
+        html[lang="en"] body, html[lang="en"] button, html[lang="en"] input, html[lang="en"] textarea, html[lang="en"] select {
+            font-family: 'Inter', Arial, sans-serif;
+            letter-spacing: .005em;
+        }
+        html[lang="en"] h1, html[lang="en"] h2, html[lang="en"] h3, html[lang="en"] h4, html[lang="en"] .font-lao-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+            letter-spacing: -.02em;
+        }
+        html[lang="en"] #home h1 {
+            letter-spacing: .025em;
+            text-transform: uppercase;
+        }
+        .gallery-slider {
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, .5);
+            border-radius: 1.5rem;
+            background: #2D080E;
+            box-shadow: 0 22px 50px rgba(45, 8, 14, .18);
+        }
+        .gallery-slide-stage { position: relative; min-height: 34rem; overflow: hidden; }
+        #homeSlideImage {
+            width: 100%;
+            height: 34rem;
+            object-fit: cover;
+            opacity: .9;
+            transition: opacity .45s ease, transform 6s ease;
+        }
+        #homeSlideImage.is-changing { opacity: .2; transform: scale(1.035); }
+        .gallery-slide-wash { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(45, 8, 14, .86), rgba(45, 8, 14, .28) 70%, rgba(45, 8, 14, .1)); pointer-events: none; }
+        .gallery-slide-content { position: absolute; right: 1.5rem; bottom: 1.5rem; left: 1.5rem; max-width: 42rem; }
+        .gallery-slide-caption {
+            padding: 1rem 1.15rem;
+            border: 1px solid rgba(243, 229, 171, .3);
+            border-radius: 1rem;
+            background: rgba(45, 8, 14, .55);
+            backdrop-filter: blur(8px);
+        }
+        .gallery-slide-caption strong { display: block; color: #F3E5AB; font-size: clamp(1.1rem, 3vw, 1.5rem); }
+        .gallery-slide-caption span { display: block; margin-top: .15rem; color: rgba(255, 251, 235, .9); font-size: .86rem; }
+        .gallery-slide-tools {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: .55rem;
+            margin-top: .85rem;
+        }
+        .gallery-slide-btn {
+            display: inline-grid;
+            width: 2.6rem;
+            height: 2.6rem;
+            place-items: center;
+            color: #F3E5AB;
+            border: 1px solid rgba(243, 229, 171, .65);
+            border-radius: 999px;
+            background: rgba(45, 8, 14, .58);
+            font-size: 1.5rem;
+            line-height: 1;
+            transition: transform .2s ease, background .2s ease;
+        }
+        .gallery-slide-btn:hover { transform: translateY(-2px); background: #4A0E17; }
+        .gallery-slide-status {
+            min-width: 4.7rem;
+            color: #F3E5AB;
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+        }
+        .gallery-slide-pause {
+            padding: .55rem .8rem;
+            color: #F3E5AB;
+            border: 1px solid rgba(243, 229, 171, .45);
+            border-radius: 999px;
+            background: rgba(45, 8, 14, .58);
+            font-size: .73rem;
+            font-weight: 700;
+            transition: background .2s ease;
+        }
+        .gallery-slide-pause:hover { background: #4A0E17; }
+        .language-menu-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            min-height: 2.25rem;
+            padding: .34rem .68rem;
+            color: #4A0E17;
+            border: 1px solid rgba(212, 175, 55, .75);
+            border-radius: .7rem;
+            background: linear-gradient(145deg, #fffdf8, #f8ebbf);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .16);
+            font-size: .76rem;
+            font-weight: 700;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .language-menu-trigger:hover { transform: translateY(-1px); background: #fff; box-shadow: 0 7px 16px rgba(0, 0, 0, .22); }
+        .language-menu-trigger .language-icon { display: grid; width: 1.35rem; height: 1.35rem; place-items: center; color: #fff; border-radius: 50%; background: #4A0E17; }
+        .language-menu-trigger .language-chevron { color: #9d7516; font-size: .65rem; }
+        .language-modal-backdrop { position: fixed; z-index: 99999; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(25, 4, 8, .68); backdrop-filter: blur(4px); }
+        .language-modal-card { width: min(100%, 25rem); overflow: hidden; border: 1px solid rgba(212, 175, 55, .75); border-radius: 1.2rem; background: #fffdf8; box-shadow: 0 24px 60px rgba(0, 0, 0, .32); }
+        .language-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.15rem 1.2rem; color: #fff; background: linear-gradient(135deg, #4A0E17, #2D080E); }
+        .language-modal-head h3 { margin: 0; color: #F3E5AB; font-size: 1.05rem; }
+        .language-modal-head p { margin: .15rem 0 0; color: #f8e8c5; font-size: .78rem; }
+        .language-modal-close { display: grid; width: 2rem; height: 2rem; place-items: center; padding: 0; color: #fff; border: 1px solid rgba(243, 229, 171, .5); border-radius: .55rem; background: transparent; font-size: 1.15rem; }
+        .language-modal-body { display: grid; gap: .65rem; padding: 1rem 1.2rem 1.2rem; }
+        .language-option { display: flex; align-items: center; gap: .8rem; width: 100%; padding: .85rem; color: #33231f; border: 1px solid #eadfca; border-radius: .85rem; background: #fff; text-align: left; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+        .language-option:hover { transform: translateY(-1px); border-color: #D4AF37; background: #fff9e9; }
+        .language-option-flag { display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border-radius: 50%; background: #f7ebcb; font-size: 1.1rem; }
+        .language-option strong, .language-option small { display: block; }
+        .language-option strong { font-size: .9rem; }
+        .language-option small { margin-top: .03rem; color: #76665f; font-size: .72rem; }
+        @media (max-width: 640px) { .gallery-slide-stage, #homeSlideImage { min-height: 27rem; height: 27rem; } .gallery-slide-content { right: 1rem; bottom: 1rem; left: 1rem; } }
+        @media (prefers-reduced-motion: reduce) {
+            #homeSlideImage, .gallery-slide-btn, .gallery-slide-pause, .language-menu-trigger, .language-option { transition: none; }
         }
         .lao-pattern {
             background-color: #4A0E17;
@@ -125,9 +241,10 @@
             <button onclick="playGongSound()" class="hover:text-laoGold transition-colors flex items-center gap-1 bg-laoMaroon px-2 py-0.5 rounded border border-laoGold/40 text-xs shadow-sm active:scale-95">
                 <i class="fa-solid fa-drum text-laoGold"></i> ຟັງສຽງກອງ
             </button>
-            <button onclick="openLangModal()" type="button" class="inline-flex items-center gap-1 bg-white/90 border border-amber-200 text-laoMaroon font-bold py-0.5 px-2 rounded-lg shadow-sm hover:bg-amber-50 transition-all text-xs">
-                <i class="fa-solid fa-globe text-amber-600"></i>
+            <button onclick="openLangModal()" type="button" class="language-menu-trigger" aria-haspopup="dialog" aria-label="Choose website language">
+                <span class="language-icon"><i class="fa-solid fa-globe"></i></span>
                 <span id="current-lang-label">🇱🇦 ພາສາລາວ</span>
+                <i class="fa-solid fa-chevron-down language-chevron" aria-hidden="true"></i>
             </button>
             <span class="text-laoGold/60 hidden sm:inline">|</span>
             <span id="lunarCalendarText" class="hidden sm:inline font-semibold text-amber-200">
@@ -198,9 +315,9 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-laoMaroonDark text-white">
-        <!-- Background Image -->
-        <div class="absolute inset-0 z-0 opacity-40 mix-blend-overlay bg-cover bg-center" 
-             style="background-image: url('https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=1800&auto=format&fit=crop');">
+        <!-- Local gallery slideshow background -->
+        <div class="absolute inset-0 z-0 opacity-40 mix-blend-overlay bg-cover bg-center">
+            <img id="homeSlideImage" src="images/events/event1.jpg" alt="">
         </div>
         
         <!-- Gradient Overlay -->
@@ -230,6 +347,17 @@
                     <i class="fa-solid fa-book-open text-xl"></i>
                     <span>ອ່ານປະວັດຄວາມເປັນມາ</span>
                 </a>
+            </div>
+
+            <div class="hero-slide-caption" aria-live="polite">
+                <strong id="homeSlideTitle">ພາບກິດຈະກຳຂອງວັດ</strong>
+                <span id="homeSlideDescription">ຊົມພາບບັນຍາກາດງານບຸນ ແລະ ກິດຈະກຳພາຍໃນວັດ</span>
+            </div>
+            <div class="hero-slide-tools" aria-label="Gallery slideshow controls">
+                <button id="homeSlidePrevious" type="button" class="hero-slide-btn" aria-label="Previous image">‹</button>
+                <span id="homeSlideCounter" class="hero-slide-status">01 / 10</span>
+                <button id="homeSlideNext" type="button" class="hero-slide-btn" aria-label="Next image">›</button>
+                <button id="homeSlidePause" type="button" class="hero-slide-pause">ຢຸດສະໄລດ໌</button>
             </div>
 
             <!-- Quick Info Cards -->
@@ -329,12 +457,12 @@
     <section id="sacred" class="py-20 bg-amber-50 border-y border-laoGold/20 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">SACRED PLACES & ARCHITECTURE</span>
+                <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">PHOTO GALLERY HIGHLIGHTS</span>
                 <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
-                    ສິ່ງສັກສິດ ແລະ ສາສະນະສະຖານ
+                    ຮູບພາບກິດຈະກຳ ແລະ ຊີວິດພາຍໃນວັດ
                 </h2>
                 <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base font-sans">
-                    ຊົມຄວາມງາມຂອງສະຖາປັດຕະຍະກຳ ແລະ ສິ່ງສັກສິດຄູ່ບ້ານຄູ່ເມືອງພາຍໃນວັດເຊກະໝານກາງ
+                    ເລືອກຊົມພາບທີ່ຄັດມາຈາກຄັງຮູບກິດຈະກຳຂອງວັດເຊກະໝານກາງ
                 </p>
                 <div class="w-24 h-1 bg-laoGold mx-auto rounded-full mt-4"></div>
             </div>
@@ -344,8 +472,8 @@
                 <!-- Ubosot -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-amber-200 hover:shadow-2xl transition-all duration-300 group flex flex-col">
                     <div class="relative h-64 overflow-hidden cursor-pointer" 
-                         onclick="openGalleryModal('https://images.unsplash.com/photo-1548625149-fc4a29cf7092?q=80&w=800&auto=format&fit=crop', 'ພຣະອຸໂບສົດ (ສິມ)', 'ພຣະອຸໂບສົດສຸວັນນະພູມ ອອກແບບດ້ວຍຊ່າງຝີມືລາວ, ມີຫຼັງຄາຊ້ອນຊັ້ນອັນສົມສ່ວນ ພ້ອມລວດລາຍແກະສະຫຼັກຄຳ')">
-                        <img src="https://images.unsplash.com/photo-1548625149-fc4a29cf7092?q=80&w=800&auto=format&fit=crop" 
+                         onclick="openGalleryModal('images/events/event1.jpg', 'ພາບກິດຈະກຳ 1', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ')">
+                        <img src="images/events/event1.jpg" 
                              alt="ພຣະອຸໂບສົດ" 
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <span class="absolute top-4 left-4 bg-laoMaroon text-laoGold text-xs font-bold px-3 py-1 rounded-full border border-laoGold/40 shadow">
@@ -373,8 +501,8 @@
                 <!-- Main Buddha Statue -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-amber-200 hover:shadow-2xl transition-all duration-300 group flex flex-col">
                     <div class="relative h-64 overflow-hidden cursor-pointer"
-                         onclick="openGalleryModal('https://images.unsplash.com/photo-1596402184320-417e7178b2cd?q=80&w=800&auto=format&fit=crop', 'ພຣະພຸດທະເຊກະໝານ', 'ພຣະພຸດທະຮູບປະທານອົງໃຫຍ່ ຫຼໍ່ດ້ວຍທອງສຳລິດ ປາງມາຣະວິໄຊ ມີພຣະພັກອັນສະຫງົບເຢັນ ເປັນທີ່ເຄົາລົບສັກກະຣະບູຊາ')">
-                        <img src="https://images.unsplash.com/photo-1596402184320-417e7178b2cd?q=80&w=800&auto=format&fit=crop" 
+                         onclick="openGalleryModal('images/events/event2.jpg', 'ພາບກິດຈະກຳ 2', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ')">
+                        <img src="images/events/event2.jpg" 
                              alt="ພຣະປະທານ" 
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <span class="absolute top-4 left-4 bg-laoMaroon text-laoGold text-xs font-bold px-3 py-1 rounded-full border border-laoGold/40 shadow">
@@ -402,8 +530,8 @@
                 <!-- Scripture Library -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-amber-200 hover:shadow-2xl transition-all duration-300 group flex flex-col">
                     <div class="relative h-64 overflow-hidden cursor-pointer"
-                         onclick="openGalleryModal('https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=800&auto=format&fit=crop', 'ຫໍໄຕກາງນ້ຳ', 'ຫໍເກບໄພລານ ແລະ ຄຳພີພຣະໄຕປິດົກໂບຮານ ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ເພື່ອປ້ອງກັນປວກ ແລະ ແມງໄມ້')">
-                        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=800&auto=format&fit=crop" 
+                         onclick="openGalleryModal('images/events/event3.jpg', 'ພາບກິດຈະກຳ 3', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ')">
+                        <img src="images/events/event3.jpg" 
                              alt="ຫໍໄຕ" 
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <span class="absolute top-4 left-4 bg-laoMaroon text-laoGold text-xs font-bold px-3 py-1 rounded-full border border-laoGold/40 shadow">
@@ -1386,8 +1514,8 @@
         function getRandomQuote() {
             const randomIndex = Math.floor(Math.random() * QUOTES.length);
             const quote = QUOTES[randomIndex];
-            const englishQuote = autoTranslations.en.quotes[randomIndex];
-            document.getElementById('dhammaText').innerText = getPreferredLanguage() === 'en' ? englishQuote : quote.text;
+            const localizedQuote = autoTranslations[getPreferredLanguage()]?.quotes?.[randomIndex];
+            document.getElementById('dhammaText').innerText = localizedQuote || quote.text;
             document.getElementById('dhammaSource').innerText = translateText(quote.source);
             showToast("ສຸ່ມທຳມະຄຳສອນໃໝ່ແລ້ວ", "ທຳມະທານ", "fa-quote-left");
         }
@@ -1577,7 +1705,8 @@ const autoTranslations = {
 
         // ส่วนท้ายเว็บ (Footer)
         "© 2026 ວັດເຊກະພານກາງ ( Wat Sekaman Kang ). ສະຫງວນລິຂະສິດທັງໝົດ.": "© 2026 Wat Sekaman Kang. All rights reserved."
-    }
+    },
+    th: {}
 };
 
 // Complete English translation set for every built-in interface string.
@@ -1762,6 +1891,76 @@ Object.assign(autoTranslations.en, {
     "- ສຸພາສິດເຕືອນໃຈ -": "— Wise Saying —"
 });
 
+// Refine frequently used English labels so the English presentation reads naturally.
+Object.assign(autoTranslations.en, {
+    "ຟັງສຽງລະຄັງ": "Temple Bell",
+    "ຟັງສຽງກອງ": "Temple Gong",
+    "ວັນພະຕໍ່ໄປ: 15 ຄ່ຳ": "Next observance day: 15th lunar day",
+    "ສາທຸ ສາທຸ ສາທຸ - ຍິນດີຕ້ອນຮັບສູ່ດິນແດນແຫ່ງທຳ": "A warm welcome to Wat Xekaman Kang",
+    "ກິດຈະກຳ-ງານບຸນ": "Activities & Festivals",
+    "ເບິ່ງຮູບພາບກິດຈະກຳທັງໝົດ": "Browse the complete photo gallery",
+    "ຮູບພາບກິດຈະກຳ ແລະ ຊີວິດພາຍໃນວັດ": "Temple photo highlights",
+    "ເລືອກຊົມພາບທີ່ຄັດມາຈາກຄັງຮູບກິດຈະກຳຂອງວັດເຊກະໝານກາງ": "A selection from Wat Xekaman Kang's activity photo gallery"
+});
+
+// Thai translations for the primary website navigation, information, and services.
+Object.assign(autoTranslations.th, {
+    "ວັດເຊກະໝານກາງ - Wat Xekaman Kang": "วัดเซกะหมานกลาง",
+    "ແຈ້ງເຕືອນ": "แจ้งเตือน",
+    "ຕົກລົງ / ປິດ": "ตกลง / ปิด",
+    "ວັດເຊກະໝານກາງ": "วัดเซกะหมานกลาง",
+    "ວັດເຊກະພານກາງ": "วัดเซกะหมานกลาง",
+    "ໜ້າຫຼັກ": "หน้าหลัก",
+    "ປະຫວັດຄວາມເປັນມາ": "ประวัติความเป็นมา",
+    "ສິ່ງສັກສິດ": "สิ่งศักดิ์สิทธิ์",
+    "ໄຕ້ທຽນອອນໄລນ໌": "จุดเทียนออนไลน์",
+    "ທຳມະຄຳສອນ": "ธรรมะคำสอน",
+    "ກິດຈະກຳ-ງານບຸນ": "กิจกรรมและงานบุญ",
+    "ຕິດຕໍ່-ແຜນທີ່": "ติดต่อและแผนที่",
+    "ຮ່ວມເຮັດບຸນ": "ร่วมทำบุญ",
+    "ຮ່ວມເຮັດບຸນບໍລິຈາກ": "ร่วมทำบุญและบริจาค",
+    "ສາທຸ ສາທຸ ສາທຸ - ຍິນດີຕ້ອນຮັບສູ່ດິນແດນແຫ່ງທຳ": "ยินดีต้อนรับสู่วัดเซกะหมานกลาง",
+    "ສູນລວມຈິດໃຈ, ທຳມະທານ, ມໍລະດົກທາງສະຖາປັດຕະຍະກຳ ແລະ ຄວາມສະຫງົບສຸກແຫ່ງລຸ່ມນ້ຳເຊກະໝານ": "ศูนย์รวมจิตใจ ธรรมทาน มรดกทางสถาปัตยกรรม และความสงบแห่งลุ่มน้ำเซกะหมาน",
+    "ໄຕ້ທຽນ & ຖວາຍດອກບົວ": "จุดเทียนและถวายดอกบัว",
+    "ອ່ານປະຫວັດຄວາມເປັນມາ": "อ่านประวัติความเป็นมา",
+    "ຕັກບາດເຊົ້າ": "ตักบาตรยามเช้า",
+    "ທຸກໆເຊົ້າ ເວລາ 06:00 ໂມງ": "ทุกเช้า เวลา 06:00 น.",
+    "ທຳວັດສວດມົນ": "ทำวัตรสวดมนต์",
+    "ເຊົ້າ 07:00 | ແລງ 18:00": "เช้า 07:00 | เย็น 18:00 น.",
+    "ປະຕິບັດທຳ & ສະມາທິ": "ปฏิบัติธรรมและสมาธิ",
+    "ທຸກໆວັນສີນ ແລະ ວັນອາທິດ": "ทุกวันพระและวันอาทิตย์",
+    "ປະຫວັດຄວາມເປັນມາ ວັດເຊກະໝານກາງ": "ประวัติความเป็นมาวัดเซกะหมานกลาง",
+    "ສິ່ງສັກສິດ ແລະ ສາສະນະສະຖານ": "สิ่งศักดิ์สิทธิ์และศาสนสถาน",
+    "ຮູບພາບກິດຈະກຳ ແລະ ຊີວິດພາຍໃນວັດ": "ภาพกิจกรรมและวิถีชีวิตภายในวัด",
+    "ເລືອກຊົມພາບທີ່ຄັດມາຈາກຄັງຮູບກິດຈະກຳຂອງວັດເຊກະໝານກາງ": "เลือกชมภาพที่คัดมาจากคลังภาพกิจกรรมของวัดเซกะหมานกลาง",
+    "ຊົມຄວາມງາມຂອງສະຖາປັດຕະຍະກຳ ແລະ ສິ່ງສັກສິດຄູ່ບ້ານຄູ່ເມືອງພາຍໃນວັດເຊກະໝານກາງ": "ชมความงามของสถาปัตยกรรมและสิ่งศักดิ์สิทธิ์ภายในวัดเซกะหมานกลาง",
+    "ພຣະອຸໂບສົດ": "พระอุโบสถ",
+    "ພຣະພຸດທະເຊກະໝານ": "พระพุทธเซกะหมาน",
+    "ຫໍໄຕກາງນ້ຳ": "หอไตรกลางน้ำ",
+    "ຕັ້ງຢູ່ໃຈກາງຂອງວັດ": "ตั้งอยู่ใจกลางวัด",
+    "ຮ່ວມທຳບຸນບໍລິຈາກ ບູລະນະວັດເຊກະໝານກາງ": "ร่วมทำบุญเพื่อบูรณะวัดเซกะหมานกลาง",
+    "ຊື່-ນາມສະກຸນຜູ້ຮ່ວມທຳບຸນ": "ชื่อ-นามสกุลผู้ร่วมทำบุญ",
+    "ຈຳນວນເງິນບໍລິຈາກ": "จำนวนเงินบริจาค",
+    "ວັດຖຸປະສົງການເຮັດບຸນ": "วัตถุประสงค์การทำบุญ",
+    "ສ້າງໃບອະນຸໂມທະນາບຸນ": "สร้างใบอนุโมทนาบุญ",
+    "ທຳມະຄຳສອນປະຈຳວັນ": "ธรรมะคำสอนประจำวัน",
+    "ສຸ່ມທຳມະຄຳສອນໃໝ່": "สุ่มธรรมะคำสอนใหม่",
+    "ຄັດລອກ": "คัดลอก",
+    "ຕິດຕໍ່ເຮົາ & ແຜນທີ່ການເດີນທາງ": "ติดต่อเราและแผนที่การเดินทาง",
+    "ທີ່ຢູ່": "ที่อยู่",
+    "ໂທລະສັບ / WhatsApp": "โทรศัพท์ / WhatsApp",
+    "ອີເມວ": "อีเมล",
+    "ເບິ່ງແຜນທີ່ຕຳແໜ່ງວັດ": "ดูแผนที่ตำแหน่งวัด",
+    "ສົ່ງຂໍ້ຄວາມ ຫຼື ສອບຖາມຂໍ້ມູນ": "ส่งข้อความหรือสอบถามข้อมูล",
+    "ຊື່ ແລະ ນາມສະກຸນ": "ชื่อและนามสกุล",
+    "ເບີໂທລະສັບ": "เบอร์โทรศัพท์",
+    "ຂໍ້ຄວາມທີ່ຕ້ອງການສົ່ງ": "ข้อความที่ต้องการส่ง",
+    "ສົ່ງຂໍ້ຄວາມ": "ส่งข้อความ",
+    "ແຜນທີ່ ແລະ ການເດີນທາງ": "แผนที่และการเดินทาง",
+    "ນຳທາງດ້ວຍ Google Maps": "นำทางด้วย Google Maps",
+    "ປິດ": "ปิด"
+});
+
 // English counterparts for all 100 rotating Dhamma quotations, in QUOTES order.
 autoTranslations.en.quotes = [
     "Avoid all evil, cultivate good, and purify your mind — this is the teaching of all Buddhas.",
@@ -1944,6 +2143,9 @@ function openLangModal() {
                     <button onclick="selectLanguage('en', '2. 🇬🇧 English')" style="text-align:left; padding:12px 16px; border-radius:12px; border:1px solid #e5e7eb; background:#fff; font-weight:bold; color:#333; cursor:pointer;">
                         2. 🇬🇧 English
                     </button>
+                    <button onclick="selectLanguage('th', '3. 🇹🇭 ภาษาไทย')" style="text-align:left; padding:12px 16px; border-radius:12px; border:1px solid #e5e7eb; background:#fff; font-weight:bold; color:#333; cursor:pointer;">
+                        3. 🇹🇭 ภาษาไทย
+                    </button>
                 </div>
             </div>
         </div>
@@ -1966,29 +2168,139 @@ function selectLanguage(lang, label) {
     localStorage.setItem('preferred_lang_label', label);
 
     closeLangModalCustom();
+    // Reloading always starts from the original Lao text. This prevents partial
+    // translations when visitors switch between English and Thai repeatedly.
+    location.reload();
+}
 
-    // ถ้าเลือกภาษาลาว ให้รีโหลดหน้าเว็บกลับค่าเริ่มต้น
-    if (lang === 'lo') {
-        location.reload();
-        return;
-    }
-
-    if (!autoTranslations[lang]) return;
+function applyLanguage(lang) {
+    if (lang === 'lo' || !autoTranslations[lang]) return;
     document.documentElement.lang = lang;
     document.title = translateText(document.title, lang);
     translateDom(document.body, lang);
     renderDevotees();
 }
 
+const HOME_GALLERY_SLIDES = [
+    { src: 'images/events/event1.jpg', lo: ['ພາບກິດຈະກຳຂອງວັດ', 'ຊົມພາບບັນຍາກາດງານບຸນ ແລະ ກິດຈະກຳພາຍໃນວັດ'], en: ['Temple activities', 'Moments from merit-making ceremonies and temple activities'], th: ['ภาพกิจกรรมของวัด', 'บรรยากาศงานบุญและกิจกรรมภายในวัด'] },
+    { src: 'images/events/event2.jpg', lo: ['ບຸນປະເພນີ', 'ຮ່ວມສືບສານວັດທະນະທຳ ແລະ ຄວາມສັດທາ'], en: ['Temple traditions', 'Continuing a shared tradition of culture and faith'], th: ['ประเพณีของวัด', 'สืบสานวัฒนธรรมและความศรัทธาร่วมกัน'] },
+    { src: 'images/events/event3.jpg', lo: ['ຊຸມຊົນແຫ່ງຄວາມສັດທາ', 'ພາບຄວາມຮ່ວມມືຂອງຄະນະວັດ ແລະ ສາທຸຊົນ'], en: ['A community of faith', 'Temple members and visitors coming together'], th: ['ชุมชนแห่งศรัทธา', 'ภาพความร่วมมือของวัดและพุทธศาสนิกชน'] },
+    { src: 'images/events/event4.jpg', lo: ['ວິຖີວັດ', 'ສະຖານທີ່ແຫ່ງການຮຽນຮູ້ ແລະ ຄວາມສະຫງົບ'], en: ['The temple way of life', 'A place for learning, reflection, and calm'], th: ['วิถีวัด', 'พื้นที่แห่งการเรียนรู้ การใคร่ครวญ และความสงบ'] },
+    { src: 'images/events/event5.jpg', lo: ['ຊ່ວງເວລາອັນປະທັບໃຈ', 'ຮູບພາບຈາກງານບຸນຂອງວັດເຊກະໝານກາງ'], en: ['Memorable moments', 'Scenes from merit-making at Wat Xekaman Kang'], th: ['ช่วงเวลาน่าประทับใจ', 'ภาพจากงานบุญของวัดเซกะหมานกลาง'] },
+    { src: 'images/Monk1.jpg', lo: ['ຄະນະສົງພາຍໃນວັດ', 'ຮູບພາບບຸກຄະລາກອນຂອງວັດ'], en: ['Temple monastic community', 'A portrait from the temple community'], th: ['คณะสงฆ์ภายในวัด', 'ภาพบุคลากรของวัด'] },
+    { src: 'images/Monk2.jpg', lo: ['ຄະນະສົງພາຍໃນວັດ', 'ຮູບພາບບຸກຄະລາກອນຂອງວັດ'], en: ['Temple monastic community', 'A portrait from the temple community'], th: ['คณะสงฆ์ภายในวัด', 'ภาพบุคลากรของวัด'] },
+    { src: 'images/Monk3.jpg', lo: ['ຄະນະສົງພາຍໃນວັດ', 'ຮູບພາບບຸກຄະລາກອນຂອງວັດ'], en: ['Temple monastic community', 'A portrait from the temple community'], th: ['คณะสงฆ์ภายในวัด', 'ภาพบุคลากรของวัด'] },
+    { src: 'images/Monk4.jpg', lo: ['ຄະນະສົງພາຍໃນວັດ', 'ຮູບພາບບຸກຄະລາກອນຂອງວັດ'], en: ['Temple monastic community', 'A portrait from the temple community'], th: ['คณะสงฆ์ภายในวัด', 'ภาพบุคลากรของวัด'] },
+    { src: 'images/layman1.jpg', lo: ['ຊຸມຊົນວັດ', 'ຄະນະອຸປະຖຳ ແລະ ສາທຸຊົນຂອງວັດ'], en: ['Temple community', 'Supporters and visitors of the temple'], th: ['ชุมชนวัด', 'คณะอุปถัมภ์และผู้มาเยือนวัด'] }
+];
+
+const HOME_SLIDE_LABELS = {
+    lo: { previous: 'ຮູບກ່ອນໜ້າ', next: 'ຮູບຖັດໄປ', pause: 'ຢຸດສະໄລດ໌', play: 'ເລີ່ມສະໄລດ໌' },
+    en: { previous: 'Previous image', next: 'Next image', pause: 'Pause slideshow', play: 'Play slideshow' },
+    th: { previous: 'ภาพก่อนหน้า', next: 'ภาพถัดไป', pause: 'หยุดสไลด์', play: 'เริ่มสไลด์' }
+};
+
+let homeSlideIndex = 0;
+let homeSlideTimer;
+let homeSlidePaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let homeSlideTouchStart = 0;
+
+function getHomeSlideLanguage() {
+    const language = getPreferredLanguage();
+    return HOME_GALLERY_SLIDES[homeSlideIndex][language] ? language : 'lo';
+}
+
+function updateHomeGallerySlide(index) {
+    homeSlideIndex = (index + HOME_GALLERY_SLIDES.length) % HOME_GALLERY_SLIDES.length;
+    const slide = HOME_GALLERY_SLIDES[homeSlideIndex];
+    const language = getHomeSlideLanguage();
+    const labels = HOME_SLIDE_LABELS[language];
+    const image = document.getElementById('homeSlideImage');
+    const title = document.getElementById('homeSlideTitle');
+    const description = document.getElementById('homeSlideDescription');
+    const counter = document.getElementById('homeSlideCounter');
+    const pause = document.getElementById('homeSlidePause');
+    if (!image || !title || !description || !counter || !pause) return;
+
+    image.classList.add('is-changing');
+    window.setTimeout(() => {
+        image.src = slide.src;
+        image.alt = slide[language][0];
+        image.classList.remove('is-changing');
+    }, 140);
+    image.onerror = () => { image.onerror = null; image.src = 'wat-logo.jpg'; };
+    title.textContent = slide[language][0];
+    description.textContent = slide[language][1];
+    counter.textContent = `${String(homeSlideIndex + 1).padStart(2, '0')} / ${String(HOME_GALLERY_SLIDES.length).padStart(2, '0')}`;
+    document.getElementById('homeSlidePrevious').setAttribute('aria-label', labels.previous);
+    document.getElementById('homeSlideNext').setAttribute('aria-label', labels.next);
+    pause.textContent = homeSlidePaused ? labels.play : labels.pause;
+    resetHomeSlideTimer();
+}
+
+function resetHomeSlideTimer() {
+    window.clearInterval(homeSlideTimer);
+    if (!homeSlidePaused) homeSlideTimer = window.setInterval(() => updateHomeGallerySlide(homeSlideIndex + 1), 7000);
+}
+
+function initHomeGallerySlider() {
+    const previous = document.getElementById('homeSlidePrevious');
+    const next = document.getElementById('homeSlideNext');
+    const pause = document.getElementById('homeSlidePause');
+    const hero = document.getElementById('home');
+    if (!previous || !next || !pause || !hero) return;
+    previous.addEventListener('click', () => updateHomeGallerySlide(homeSlideIndex - 1));
+    next.addEventListener('click', () => updateHomeGallerySlide(homeSlideIndex + 1));
+    pause.addEventListener('click', () => {
+        homeSlidePaused = !homeSlidePaused;
+        updateHomeGallerySlide(homeSlideIndex);
+    });
+    hero.addEventListener('touchstart', event => { homeSlideTouchStart = event.changedTouches[0].screenX; }, { passive: true });
+    hero.addEventListener('touchend', event => {
+        const distance = event.changedTouches[0].screenX - homeSlideTouchStart;
+        if (Math.abs(distance) > 45) updateHomeGallerySlide(homeSlideIndex + (distance > 0 ? -1 : 1));
+    }, { passive: true });
+    document.addEventListener('keydown', event => {
+        if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(event.target.tagName)) return;
+        if (event.key === 'ArrowLeft') updateHomeGallerySlide(homeSlideIndex - 1);
+        if (event.key === 'ArrowRight') updateHomeGallerySlide(homeSlideIndex + 1);
+    });
+    updateHomeGallerySlide(0);
+}
+
+function replaceSacredImageSources() {
+    const galleryCards = [
+        { src: 'images/events/event1.jpg', lo: ['ພາບກິດຈະກຳ 1', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ'], en: ['Gallery activity 1', 'A local image from the temple activity gallery'], th: ['ภาพกิจกรรม 1', 'ภาพจากคลังภาพกิจกรรมของวัด'] },
+        { src: 'images/events/event2.jpg', lo: ['ພາບກິດຈະກຳ 2', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ'], en: ['Gallery activity 2', 'A local image from the temple activity gallery'], th: ['ภาพกิจกรรม 2', 'ภาพจากคลังภาพกิจกรรมของวัด'] },
+        { src: 'images/events/event3.jpg', lo: ['ພາບກິດຈະກຳ 3', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ'], en: ['Gallery activity 3', 'A local image from the temple activity gallery'], th: ['ภาพกิจกรรม 3', 'ภาพจากคลังภาพกิจกรรมของวัด'] }
+    ];
+    const language = getPreferredLanguage();
+    document.querySelectorAll('#sacred .cursor-pointer').forEach((card, index) => {
+        const item = galleryCards[index];
+        const image = card.querySelector('img');
+        if (!item || !image) return;
+        image.src = item.src;
+        image.onerror = () => { image.onerror = null; image.src = 'wat-logo.jpg'; };
+        card.onclick = () => openGalleryModal(item.src, item[language]?.[0] || item.lo[0], item[language]?.[1] || item.lo[1]);
+        const panel = card.parentElement;
+        const heading = panel.querySelector('h3');
+        const description = panel.querySelector('.p-6 p');
+        const badge = card.querySelector('span');
+        if (heading) heading.textContent = item[language]?.[0] || item.lo[0];
+        if (description) description.textContent = item[language]?.[1] || item.lo[1];
+        if (badge) badge.textContent = language === 'th' ? 'คลังภาพกิจกรรม' : language === 'en' ? 'PHOTO GALLERY' : 'ຄັງຮູບກິດຈະກຳ';
+    });
+}
+
 // 5. โหลดภาษาเดิมที่เลือกไว้อัตโนมัติเมื่อเปิดเว็บ
 document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('preferred_lang') || 'lo';
     const savedLabel = localStorage.getItem('preferred_lang_label') || '1. 🇱🇦 ພາສາລາວ';
-    if (savedLang !== 'lo') {
-        setTimeout(() => {
-            selectLanguage(savedLang, savedLabel);
-        }, 300);
-    }
+    const labelEl = document.getElementById('current-lang-label');
+    if (labelEl) labelEl.innerText = savedLabel;
+    applyLanguage(savedLang);
+    initHomeGallerySlider();
+    replaceSacredImageSources();
 });
     </script>
     
