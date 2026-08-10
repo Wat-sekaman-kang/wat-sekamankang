@@ -2199,7 +2199,6 @@ const HOME_SLIDE_LABELS = {
     en: { previous: 'Previous image', next: 'Next image', pause: 'Pause slideshow', play: 'Play slideshow' },
     th: { previous: 'ภาพก่อนหน้า', next: 'ภาพถัดไป', pause: 'หยุดสไลด์', play: 'เริ่มสไลด์' }
 };
-
 let homeSlideIndex = 0;
 let homeSlideTimer;
 let homeSlidePaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2247,7 +2246,7 @@ function initHomeGallerySlider() {
     const previous = document.getElementById('homeSlidePrevious');
     const next = document.getElementById('homeSlideNext');
     const pause = document.getElementById('homeSlidePause');
-    const hero = document.getElementById('home');
+    const hero = document.getElementById('home-gallery-slideshow');
     if (!previous || !next || !pause || !hero) return;
     previous.addEventListener('click', () => updateHomeGallerySlide(homeSlideIndex - 1));
     next.addEventListener('click', () => updateHomeGallerySlide(homeSlideIndex + 1));
@@ -2268,40 +2267,8 @@ function initHomeGallerySlider() {
     updateHomeGallerySlide(0);
 }
 
-function replaceSacredImageSources() {
-    const galleryCards = [
-        { src: 'images/events/event1.jpg', lo: ['ພາບກິດຈະກຳ 1', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ'], en: ['Gallery activity 1', 'A local image from the temple activity gallery'], th: ['ภาพกิจกรรม 1', 'ภาพจากคลังภาพกิจกรรมของวัด'] },
-        { src: 'images/events/event2.jpg', lo: ['ພາບກິດຈະກຳ 2', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ'], en: ['Gallery activity 2', 'A local image from the temple activity gallery'], th: ['ภาพกิจกรรม 2', 'ภาพจากคลังภาพกิจกรรมของวัด'] },
-        { src: 'images/events/event3.jpg', lo: ['ພາບກິດຈະກຳ 3', 'ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ'], en: ['Gallery activity 3', 'A local image from the temple activity gallery'], th: ['ภาพกิจกรรม 3', 'ภาพจากคลังภาพกิจกรรมของวัด'] }
-    ];
-    const language = getPreferredLanguage();
-    document.querySelectorAll('#sacred .cursor-pointer').forEach((card, index) => {
-        const item = galleryCards[index];
-        const image = card.querySelector('img');
-        if (!item || !image) return;
-        image.src = item.src;
-        image.onerror = () => { image.onerror = null; image.src = 'wat-logo.jpg'; };
-        card.onclick = () => openGalleryModal(item.src, item[language]?.[0] || item.lo[0], item[language]?.[1] || item.lo[1]);
-        const panel = card.parentElement;
-        const heading = panel.querySelector('h3');
-        const description = panel.querySelector('.p-6 p');
-        const badge = card.querySelector('span');
-        if (heading) heading.textContent = item[language]?.[0] || item.lo[0];
-        if (description) description.textContent = item[language]?.[1] || item.lo[1];
-        if (badge) badge.textContent = language === 'th' ? 'คลังภาพกิจกรรม' : language === 'en' ? 'PHOTO GALLERY' : 'ຄັງຮູບກິດຈະກຳ';
-    });
-}
-
-// 5. โหลดภาษาเดิมที่เลือกไว้อัตโนมัติเมื่อเปิดเว็บ
-document.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('preferred_lang') || 'lo';
-    const savedLabel = localStorage.getItem('preferred_lang_label') || '1. 🇱🇦 ພາສາລາວ';
-    const labelEl = document.getElementById('current-lang-label');
-    if (labelEl) labelEl.innerText = savedLabel;
-    applyLanguage(savedLang);
-    initHomeGallerySlider();
-    replaceSacredImageSources();
-});
+// เรียกใช้งานหลังโหลดหน้าเสร็จ
+initHomeGallerySlider();
     </script>
     
 </body>
