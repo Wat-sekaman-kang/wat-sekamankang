@@ -3,420 +3,805 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ວັດເຊກະໝານກາງ - ສູນລວມຈິດໃຈແລະສືບທອດພຣະພຸດທະສາສະໜາ</title>
-    
-    <!-- Tailwind CSS CDN -->
+    <title>ວັດເຊກະໝານກາງ - Wat Xekaman Kang</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Noto Sans Lao -->
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lao Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Lao:wght@400;600;700;800&family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        temple: {
-                            gold: '#D4AF37',
-                            goldlight: '#F4D03F',
-                            maroon: '#6A1B1A',
-                            maroondark: '#4A1212',
-                        }
+                        laoGold: '#D4AF37',
+                        laoGoldDark: '#B8860B',
+                        laoGoldLight: '#F3E5AB',
+                        laoMaroon: '#4A0E17',
+                        laoMaroonDark: '#2D080E',
+                        laoAmber: '#FFFBEB',
+                        laoGreen: '#14532D'
                     },
                     fontFamily: {
-                        lao: ['"Noto Sans Lao"', 'sans-serif'],
+                        serif: ['"Noto Serif Lao"', 'serif'],
+                        sans: ['"Noto Sans Lao"', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <style>
-        body { 
-            font-family: 'Noto Sans Lao', sans-serif; 
-        }
-        
-        .hero-bg {
-            background-image: linear-gradient(rgba(106, 27, 26, 0.75), rgba(15, 15, 15, 0.85)), url('https://images.unsplash.com/photo-1590393802688-e21b19904cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
 
-        .card-zoom-image {
-            transition: transform 0.5s ease;
+    <style>
+        body {
+            font-family: 'Noto Sans Lao', sans-serif;
+            background-color: #FAF8F5;
+            color: #2D080E;
+            overflow-x: hidden;
         }
-        .group:hover .card-zoom-image {
-            transform: scale(1.08);
+        h1, h2, h3, h4, .font-lao-serif {
+            font-family: 'Noto Serif Lao', serif;
+        }
+        .lao-pattern {
+            background-color: #4A0E17;
+            background-image: radial-gradient(#D4AF37 0.75px, transparent 0.75px), radial-gradient(#D4AF37 0.75px, #4A0E17 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            opacity: 0.98;
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFE259 0%, #FFA751 100%);
+        }
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FAD961 0%, #F76B1C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .flame-animation {
+            animation: flicker 1.2s infinite alternate ease-in-out;
+        }
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-1deg); opacity: 0.9; filter: drop-shadow(0 0 8px #f59e0b); }
+            50% { transform: scale(1.15) rotate(2deg); opacity: 1; filter: drop-shadow(0 0 18px #ef4444); }
+            100% { transform: scale(0.92) rotate(-2deg); opacity: 0.85; filter: drop-shadow(0 0 10px #f59e0b); }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2D080E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B8860B;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased font-lao selection:bg-temple-gold selection:text-temple-maroondark">
+<body class="antialiased selection:bg-laoGold selection:text-laoMaroonDark">
 
-    <!-- Header & Navigation -->
-    <nav class="bg-temple-maroon text-white fixed w-full z-50 shadow-md top-0 left-0 transition-all duration-300" id="navbar">
+    <!-- Notification Toast Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none max-w-sm w-full px-4"></div>
+
+    <!-- Generic Modal Dialog -->
+    <div id="appModal" class="fixed inset-0 z-[90] hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-2xl w-full border-2 border-laoGold shadow-2xl overflow-hidden transform transition-transform scale-95 duration-300" id="modalBox">
+            <div class="bg-laoMaroon text-laoGold p-4 px-6 flex justify-between items-center border-b border-laoGold/40">
+                <h3 id="modalTitle" class="font-lao-serif font-bold text-xl flex items-center gap-2">
+                    <i class="fa-solid fa-dharmachakra text-laoGold"></i>
+                    <span>ແຈ້ງເຕືອນ</span>
+                </h3>
+                <button onclick="closeModal()" class="text-amber-200 hover:text-white text-2xl focus:outline-none">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="modalBody" class="p-6 max-h-[75vh] overflow-y-auto text-gray-800 leading-relaxed">
+                <!-- Dynamic Modal Content -->
+            </div>
+            <div class="bg-amber-50 p-4 border-t border-amber-200 flex justify-end">
+                <button onclick="closeModal()" class="bg-laoMaroon text-laoGold font-bold px-6 py-2 rounded-xl hover:bg-laoMaroonDark transition-all">
+                    ຕົກລົງ / ປິດ
+                </button>
+            </div>
+        </div>
+    </div>
+         <!-- Top Announcement Bar -->
+<div class="bg-laoMaroonDark text-laoGoldLight text-xs md:text-sm py-1.5 px-4 border-b border-laoGold/30">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 text-center md:text-left">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-dharmachakra text-laoGold animate-spin-slow"></i>
+            <span>ຂໍຕ້ອນຮັບສູ່ <b>ວັດເຊກະພານກາງ</b> ຍິນດີຕ້ອນຮັບທຸກທ່ານ</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <button onclick="playBellSound()" class="hover:text-laoGold transition-colors flex items-center gap-1 bg-laoMaroon px-2 py-0.5 rounded border border-laoGold/40 text-xs shadow-sm active:scale-95">
+                <i class="fa-solid fa-bell text-laoGold"></i> ຟັງສຽງຮັງ
+            </button>
+            <button onclick="playGongSound()" class="hover:text-laoGold transition-colors flex items-center gap-1 bg-laoMaroon px-2 py-0.5 rounded border border-laoGold/40 text-xs shadow-sm active:scale-95">
+                <i class="fa-solid fa-drum text-laoGold"></i> ຟັງສຽງກອງ
+            </button>
+            <button onclick="openLangModal()" type="button" class="inline-flex items-center gap-1 bg-white/90 border border-amber-200 text-laoMaroon font-bold py-0.5 px-2 rounded-lg shadow-sm hover:bg-amber-50 transition-all text-xs">
+                <i class="fa-solid fa-globe text-amber-600"></i>
+                <span id="current-lang-label">🇱🇦 ພາສາລາວ</span>
+            </button>
+            <span class="text-laoGold/60 hidden sm:inline">|</span>
+            <span id="lunarCalendarText" class="hidden sm:inline font-semibold text-amber-200">
+                <i class="fa-regular fa-calendar-check mr-1 text-laoGold"></i> ວັນພຣະຕໍ່ໄປ: 15 ຄ່ຳ
+            </span>
+        </div>
+    </div>
+</div>
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-50 bg-laoMaroon/95 backdrop-blur-md text-white border-b-2 border-laoGold shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20">
-                <!-- Logo & Brand Title -->
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-                    <i class="fa-solid fa-dharmachakra text-3xl text-temple-gold animate-spin-slow"></i>
-                    <div>
-                        <h1 class="font-bold text-xl md:text-2xl tracking-wide text-white">ວັດເຊກະໝານກາງ</h1>
-                        <p class="text-xs text-gray-300 font-light">ສູນລວມຈິດໃຈພຸດທະສາສະນິກະຊົນ</p>
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Logo -->
+                <a href="#home" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-laoGold via-amber-400 to-laoGoldDark flex items-center justify-center text-laoMaroon font-bold text-2xl shadow-inner">
+                        <i class="fa-solid fa-dharmachakra"></i>
                     </div>
-                </div>
-                
-                <!-- Desktop Navigation Menu -->
-                <div class="hidden md:flex items-center space-x-6 text-sm lg:text-base font-medium">
-                    <a href="#home" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ໜ້າຫຼັກ</a>
-                    <a href="#about" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ປະຫວັດວັດ</a>
-                    <a href="#dhamma" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຄຳສອນທຳມະ</a>
-                    <a href="#news" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຂ່າວສານ/ກິດຈະກຳ</a>
-                    <a href="#donation" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຮ່ວມເຮັດບຸນ</a>
-                    <a href="#contact" class="hover:text-temple-gold transition duration-200 py-1 border-b-2 border-transparent hover:border-temple-gold">ຕິດຕໍ່/ແຜນທີ່</a>
+                    <div>
+                         <span class="font-lao-serif text-xl sm:text-2xl font-bold text-laoGold block leading-tight group-hover:text-amber-300 transition-colors">
+                             ວັດເຊກະໝານກາງ
+                         </span>
+                         <span class="text-xs text-amber-200/80 font-sans tracking-wide block">
+                             WAT XEKAMAN KANG - LAOS
+                         </span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex items-center space-x-1 font-medium text-sm">
+                    <a href="#home" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ໜ້າຫຼັກ</a>
+                    <a href="#history" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ປະວັດຄວາມເປັນມາ</a>
+                    <a href="#sacred" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ສິ່ງສັກສິດ</a>
+                    <a href="#virtual-merit" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ໄຕ້ທຽນອອນໄລນ໌</a>
+                    <a href="#dhamma" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ທຳມະຄຳສອນ</a>
+                    <a href="gallery.html" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ກິດຈະກຳ-ງານບຸນ</a>
+                    <a href="#contact" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ຕິດຕໍ່-ແຜນທີ່</a>
+                </nav>
+
+                <!-- Donate Action Button -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <a href="#donation" class="bg-gradient-to-r from-laoGold via-amber-400 to-laoGoldDark text-laoMaroon font-bold px-5 py-2.5 rounded-full shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-amber-200 flex items-center gap-2">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        <span>ຮ່ວມເຮັດບຸນ</span>
+                    </a>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden">
-                    <button type="button" id="mobile-menu-btn" aria-label="Toggle menu" class="inline-flex items-center justify-center p-2 rounded-lg text-white hover:text-temple-gold hover:bg-temple-maroondark focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl text-laoGold bg-laoMaroonDark hover:bg-laoMaroon border border-laoGold/40 focus:outline-none">
+                    <i id="menuIcon" class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-laoMaroonDark border-t border-laoGold/30 px-4 pt-3 pb-6 space-y-2">
+            <a href="#home" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-solid fa-house mr-2 text-laoGold"></i>ໜ້າຫຼັກ</a>
+            <a href="#history" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-solid fa-book-open mr-2 text-laoGold"></i>ປະວັດຄວາມເປັນມາ</a>
+            <a href="#sacred" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-solid fa-gopuram mr-2 text-laoGold"></i>ສິ່ງສັກສິດ</a>
+            <a href="#virtual-merit" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-solid fa-flame mr-2 text-laoGold"></i>ໄຕ້ທຽນອອນໄລນ໌</a>
+            <a href="#dhamma" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-solid fa-quote-left mr-2 text-laoGold"></i>ທຳມະຄຳສອນ</a>
+            <a href="gallery.html" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-regular fa-calendar-days mr-2 text-laoGold"></i>ກິດຈະກຳ-ງານບຸນ</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl text-amber-100 hover:bg-laoGold/20 hover:text-laoGold"><i class="fa-solid fa-location-dot mr-2 text-laoGold"></i>ຕິດຕໍ່-ແຜນທີ່</a>
+            <a href="#donation" onclick="toggleMobileMenu()" class="block text-center mt-4 gold-gradient text-laoMaroon font-bold py-3 rounded-xl shadow-lg">
+                <i class="fa-solid fa-hand-holding-heart mr-2"></i>ຮ່ວມເຮັດບຸນບໍລິຈາກ
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-laoMaroonDark text-white">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0 opacity-40 mix-blend-overlay bg-cover bg-center" 
+             style="background-image: url('https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=1800&auto=format&fit=crop');">
+        </div>
+        
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-laoMaroonDark via-laoMaroon/75 to-transparent z-10"></div>
+
+        <div class="relative z-20 max-w-5xl mx-auto px-4 text-center py-16 sm:py-24">
+            <!-- Blessing Badge -->
+            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-laoGold/20 border border-laoGold/50 text-laoGoldLight text-xs sm:text-sm font-semibold mb-6 shadow-lg backdrop-blur-md animate-pulse">
+                <i class="fa-solid fa-star text-laoGold"></i>
+                <span>ສາທຸ ສາທຸ ສາທຸ - ຍິນດີຕ້ອນຮັບສູ່ດິນແດນແຫ່ງທຳ</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold font-lao-serif text-laoGold mb-6 tracking-wide drop-shadow-md leading-tight">
+                ວັດເຊກະໝານກາງ
+            </h1>
+            
+            <p class="text-lg sm:text-2xl text-amber-100/90 font-light max-w-3xl mx-auto mb-10 leading-relaxed font-sans">
+                ສູນລວມຈິດໃຈ, ທຳມະທານ, ມໍລະດົກທາງສະຖາປັດຕະຍະກຳ ແລະ ຄວາມສະຫງົບສຸກແຫ່ງລຸ່ມນ້ຳເຊກະໝານ
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#virtual-merit" class="w-full sm:w-auto bg-gradient-to-r from-laoGold via-amber-400 to-amber-500 text-laoMaroonDark font-bold px-8 py-4 rounded-full text-lg shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-flame text-xl"></i>
+                    <span>ໄຕ້ທຽນ & ຖວາຍດອກບົວ</span>
+                </a>
+                <a href="#history" class="w-full sm:w-auto bg-laoMaroon/80 hover:bg-laoMaroon text-laoGoldLight border border-laoGold/50 font-semibold px-8 py-4 rounded-full text-lg shadow-lg hover:border-laoGold transition-all flex items-center justify-center gap-3 backdrop-blur-sm">
+                    <i class="fa-solid fa-book-open text-xl"></i>
+                    <span>ອ່ານປະວັດຄວາມເປັນມາ</span>
+                </a>
+            </div>
+
+            <!-- Quick Info Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16 text-left">
+                <div class="bg-laoMaroon/70 border border-laoGold/30 p-5 rounded-2xl backdrop-blur-md flex items-center gap-4 hover:border-laoGold/70 transition-all">
+                    <div class="w-12 h-12 rounded-2xl bg-laoGold/20 border border-laoGold/50 flex items-center justify-center text-laoGold text-2xl shrink-0">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-laoGold text-base font-lao-serif">ຕັກບາດເຊົ້າ</h4>
+                        <p class="text-xs text-amber-100/80">ທຸກໆເຊົ້າ ເວລາ 06:00 ໂມງ</p>
+                    </div>
+                </div>
+
+                <div class="bg-laoMaroon/70 border border-laoGold/30 p-5 rounded-2xl backdrop-blur-md flex items-center gap-4 hover:border-laoGold/70 transition-all">
+                    <div class="w-12 h-12 rounded-2xl bg-laoGold/20 border border-laoGold/50 flex items-center justify-center text-laoGold text-2xl shrink-0">
+                        <i class="fa-solid fa-dharmachakra"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-laoGold text-base font-lao-serif">ທຳວັດສູດມົນ</h4>
+                        <p class="text-xs text-amber-100/80">ເຊົ້າ 07:00 | ແລງ 18:00</p>
+                    </div>
+                </div>
+
+                <div class="bg-laoMaroon/70 border border-laoGold/30 p-5 rounded-2xl backdrop-blur-md flex items-center gap-4 hover:border-laoGold/70 transition-all">
+                    <div class="w-12 h-12 rounded-2xl bg-laoGold/20 border border-laoGold/50 flex items-center justify-center text-laoGold text-2xl shrink-0">
+                        <i class="fa-solid fa-hands-praying"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-laoGold text-base font-lao-serif">ປະຕິບັດທຳ & ສະມາທິ</h4>
+                        <p class="text-xs text-amber-100/80">ທຸກໆວັນສີນ ແລະ ວັນອາທິດ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="py-20 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">BACKGROUND & HISTORY</span>
+            <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+                ປະວັດຄວາມເປັນມາ ວັດເຊກະໝານກາງ
+            </h2>
+            <div class="w-24 h-1 bg-laoGold mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Image Frame -->
+            <div class="relative">
+                <div class="absolute -inset-3 bg-gradient-to-r from-laoGold via-amber-300 to-laoGoldDark rounded-3xl blur-md opacity-40"></div>
+                <div class="relative bg-laoMaroon rounded-2xl overflow-hidden p-2 shadow-2xl border border-laoGold">
+                    <img src="wat-logo.jpg" 
+                         alt="ວັດເຊກະໝານກາງ" 
+                         class="w-full h-[400px] object-cover rounded-xl transition-transform duration-500 hover:scale-105 cursor-pointer"
+                         onclick="openGalleryModal(this.src, 'ວັດເຊກະໝານກາງ', 'ພາບຖ່າຍມຸມກວ້າງຂອງວັດເຊກະໝານກາງ ສູນລວມສັດທາແຄມນ້ຳເຊກະໝານ')">
+                </div>
+                <div class="absolute -bottom-6 -right-6 bg-laoMaroon text-laoGold p-4 px-6 rounded-2xl border border-laoGold shadow-xl hidden sm:block">
+                    <p class="text-3xl font-bold font-lao-serif">100+</p>
+                    <p class="text-xs text-amber-200">ປີ ແຫ່ງຄວາມສັດທາ</p>
+                </div>
+            </div>
+
+            <!-- History Detail -->
+            <div class="space-y-6 text-gray-800 leading-relaxed text-base sm:text-lg">
+                <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-laoMaroon font-lao-serif">
+                    <strong class="text-laoMaroon font-semibold">ວັດເຊກະໝານກາງ</strong> ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ດິນແດນອຸດົມສົມບູນດ້ວຍທຳມະຊາດ ແລະ ວັດທະນະທຳອັນງົດງາມ. ເປັນວັດເກົ່າແກ່ທີ່ສ້າງຂຶ້ນໂດຍຄວາມສັດທາຮ່ວມກັນຂອງພຸດທະສາສະນິກະຊົນ ເພື່ອເປັນສູນລວມຈິດໃຈ, ບ່ອນອົບຮົມສີລະທຳ ແລະ ບ່ອນສຶກສາພຣະທຳຄຳສອນຂອງອົງພຣະສຳມາສຳພຸດທະເຈົ້າ.
+                </p>
+                <p>
+                    ຊື່ຂອງວັດ "ເຊກະໝານກາງ" ມີທີ່ມາຈາກທີ່ຕັ້ງທີ່ຢູ່ເຄິ່ງກາງຂອງລຸ່ມນ້ຳເຊກະໝານ ເຊິ່ງເປັນສາຍນ້ຳຫຼັກທີ່ລ້ຽງຊີວິດປະຊາຊົນ. ພຣະອຸໂບສົດ ແລະ ສິ່ງກໍ່ສ້າງພາຍໃນວັດໄດ້ຮັບການອອກແບບຕາມສະຖາປັດຕະຍະກຳລາວອັນເປັນເອກະລັກ ມີຊໍ່ຟ້າ, ໃບລະກາ, ແລະ ລວດລາຍກົບກຽວຢ່າງອ່ອນຊ້ອຍ.
+                </p>
+                <p>
+                    ປັດຈຸບັນ, ວັດເຊກະໝານກາງ ບໍ່ພຽງແຕ່ເປັນສະຖານທີ່ປະກອບພິທີທາງສາສະໜາເທົ່ານັ້ນ, ແຕ່ຍັງເປັນສູນອະນຸລັກສິລະປະວັດທະນະທຳລາວ, ສະຖານທີ່ປະຕິບັດທຳຂອງປະຊາຊົນ ແລະ ຕ້ອນຮັບແຂກບ້ານແຂກເມືອງທີ່ມາຢ້ຽມຢາມດ້ວຍຄວາມອົບອຸ່ນ.
+                </p>
+
+                <div class="pt-4 border-t border-gray-200 grid grid-cols-2 gap-4">
+                    <div class="flex items-center gap-3 bg-amber-100/50 p-3 rounded-xl border border-amber-200">
+                        <i class="fa-solid fa-tree text-laoGreen text-2xl"></i>
+                        <div>
+                            <h5 class="font-bold text-laoMaroon text-sm font-lao-serif">ທຳມະຊາດຮົມເຢັນ</h5>
+                            <p class="text-xs text-gray-600">ຕັ້ງຢູ່ຕິດແຄມນ້ຳ</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-amber-100/50 p-3 rounded-xl border border-amber-200">
+                        <i class="fa-solid fa-hands-holding-circle text-laoGoldDark text-2xl"></i>
+                        <div>
+                            <h5 class="font-bold text-laoMaroon text-sm font-lao-serif">ສູນຮວມສັດທາ</h5>
+                            <p class="text-xs text-gray-600">ຮັກສາປະເພນີອັນດີງາມ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sacred Highlights Section -->
+    <section id="sacred" class="py-20 bg-amber-50 border-y border-laoGold/20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">SACRED PLACES & ARCHITECTURE</span>
+                <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+                    ສິ່ງສັກສິດ ແລະ ສາສະນະສະຖານ
+                </h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base font-sans">
+                    ຊົມຄວາມງາມຂອງສະຖາປັດຕະຍະກຳ ແລະ ສິ່ງສັກສິດຄູ່ບ້ານຄູ່ເມືອງພາຍໃນວັດເຊກະໝານກາງ
+                </p>
+                <div class="w-24 h-1 bg-laoGold mx-auto rounded-full mt-4"></div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Ubosot -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-amber-200 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                    <div class="relative h-64 overflow-hidden cursor-pointer" 
+                         onclick="openGalleryModal('https://images.unsplash.com/photo-1548625149-fc4a29cf7092?q=80&w=800&auto=format&fit=crop', 'ພຣະອຸໂບສົດ (ສິມ)', 'ພຣະອຸໂບສົດສຸວັນນະພູມ ອອກແບບດ້ວຍຊ່າງຝີມືລາວ, ມີຫຼັງຄາຊ້ອນຊັ້ນອັນສົມສ່ວນ ພ້ອມລວດລາຍແກະສະຫຼັກຄຳ')">
+                        <img src="https://images.unsplash.com/photo-1548625149-fc4a29cf7092?q=80&w=800&auto=format&fit=crop" 
+                             alt="ພຣະອຸໂບສົດ" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-4 left-4 bg-laoMaroon text-laoGold text-xs font-bold px-3 py-1 rounded-full border border-laoGold/40 shadow">
+                            ສາສະນະສະຖານຫຼັກ
+                        </span>
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <i class="fa-solid fa-magnifying-glass-plus text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold font-lao-serif text-laoMaroon mb-2 group-hover:text-laoGoldDark transition-colors">
+                                ພຣະອຸໂບສົດ (ສິມ)
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                ພຣະອຸໂບສົດສຸວັນນະພູມ ອອກແບບດ້ວຍຊ່າງຝີມືລາວ, ມີຫຼັງຄາຊ້ອນຊັ້ນອັນສົມສ່ວນ ພ້ອມລວດລາຍແກະສະຫຼັກຄຳທີ່ສະທ້ອນຄວາມຮຸ່ງເຮືອງທາງພຸດທະສາສະໜາ.
+                            </p>
+                        </div>
+                        <span class="inline-flex items-center text-xs font-semibold text-laoMaroon gap-1 mt-2">
+                            <i class="fa-solid fa-location-dot text-laoGold"></i> ຕັ້ງຢູ່ໃຈກາງຂອງວັດ
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Main Buddha Statue -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-amber-200 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                    <div class="relative h-64 overflow-hidden cursor-pointer"
+                         onclick="openGalleryModal('https://images.unsplash.com/photo-1596402184320-417e7178b2cd?q=80&w=800&auto=format&fit=crop', 'ພຣະພຸດທະເຊກະໝານ', 'ພຣະພຸດທະຮູບປະທານອົງໃຫຍ່ ຫຼໍ່ດ້ວຍທອງສຳລິດ ປາງມາຣະວິໄຊ ມີພຣະພັກອັນສະຫງົບເຢັນ ເປັນທີ່ເຄົາລົບສັກກະຣະບູຊາ')">
+                        <img src="https://images.unsplash.com/photo-1596402184320-417e7178b2cd?q=80&w=800&auto=format&fit=crop" 
+                             alt="ພຣະປະທານ" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-4 left-4 bg-laoMaroon text-laoGold text-xs font-bold px-3 py-1 rounded-full border border-laoGold/40 shadow">
+                            ພຣະປະທານ
+                        </span>
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <i class="fa-solid fa-magnifying-glass-plus text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold font-lao-serif text-laoMaroon mb-2 group-hover:text-laoGoldDark transition-colors">
+                                ພຣະພຸດທະເຊກະໝານ
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                ພຣະພຸດທະຮູບປະທານອົງໃຫຍ່ ຫຼໍ່ດ້ວຍທອງສຳລິດ ປາງມາຣະວິໄຊ ມີພຣະພັກອັນສະຫງົບເຢັນ ເປັນທີ່ເຄົາລົບສັກກະຣະບູຊາຂອງຊາວບ້ານ ແລະ ອາຄັນຕຸກະ.
+                            </p>
+                        </div>
+                        <span class="inline-flex items-center text-xs font-semibold text-laoMaroon gap-1 mt-2">
+                            <i class="fa-solid fa-hands-praying text-laoGold"></i> ປະທັບໃນພຣະອຸໂບສົດ
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Scripture Library -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-amber-200 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                    <div class="relative h-64 overflow-hidden cursor-pointer"
+                         onclick="openGalleryModal('https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=800&auto=format&fit=crop', 'ຫໍໄຕກາງນ້ຳ', 'ຫໍເກບໄພລານ ແລະ ຄຳພີພຣະໄຕປິດົກໂບຮານ ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ເພື່ອປ້ອງກັນປວກ ແລະ ແມງໄມ້')">
+                        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=800&auto=format&fit=crop" 
+                             alt="ຫໍໄຕ" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span class="absolute top-4 left-4 bg-laoMaroon text-laoGold text-xs font-bold px-3 py-1 rounded-full border border-laoGold/40 shadow">
+                            ຫໍພຣະໄຕປິດົກ
+                        </span>
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <i class="fa-solid fa-magnifying-glass-plus text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold font-lao-serif text-laoMaroon mb-2 group-hover:text-laoGoldDark transition-colors">
+                                ຫໍໄຕກາງນ້ຳ
+                            </h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                ຫໍເກບໄພລານ ແລະ ຄຳພີພຣະໄຕປິດົກໂບຮານ ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ເພື່ອປ້ອງກັນປວກ ແລະ ແມງໄມ້, ອຸດົມດ້ວຍຄຳສອນອັນລຳ້ຄ່າ.
+                            </p>
+                        </div>
+                        <span class="inline-flex items-center text-xs font-semibold text-laoMaroon gap-1 mt-2">
+                            <i class="fa-solid fa-book text-laoGold"></i> ບ່ອນເກັບຮັກສາຄຳພີໂບຮານ
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Candle & Lotus Offering Section -->
+    <section id="virtual-merit" class="py-20 lao-pattern text-white relative">
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <span class="text-laoGold font-bold uppercase tracking-wider text-xs sm:text-sm">VIRTUAL MERIT OFFERING</span>
+            <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoGoldLight mt-2 mb-4">
+                ໄຕ້ທຽນ & ຖວາຍດອກບົວອອນໄລນ໌
+            </h2>
+            <p class="text-amber-100/90 text-sm sm:text-base max-w-xl mx-auto mb-10 font-sans">
+                ສົ່ງຜົນບຸນ ແລະ ຄຳອະທິຖານຂອງທ່ານ ເພື່ອຄວາມສົມຫວັງ, ຄວາມສະຫງົບສຸກ ແລະ ເປັນສິຣິມົງຄົນແກ່ຊີວິດ
+            </p>
+
+            <!-- Offering Card Box -->
+            <div class="bg-laoMaroonDark/95 border-2 border-laoGold/60 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-md text-left">
+                <!-- Altar Interactive Display Area -->
+                <div id="altarDisplay" class="bg-gradient-to-b from-black/90 to-laoMaroon/95 rounded-2xl p-6 mb-8 border border-laoGold/30 text-center min-h-[240px] flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+                    <div id="noFlameText" class="text-amber-200/60 text-sm">
+                        <i class="fa-solid fa-hands-praying text-5xl text-laoGold mb-3 block animate-pulse"></i>
+                        ກະລຸນາປ້ອນຊື່ ແລະ ຄຳອະທິຖານ ຈາກນັ້ນກົດປຸ່ມ "ໄຕ້ທຽນ & ຖວາຍດອກບົວ"
+                    </div>
+
+                    <!-- Animated Altar Flames -->
+                    <div id="activeFlameArea" class="hidden flex-col items-center w-full">
+                        <div class="flex items-center justify-center gap-6 sm:gap-10 mb-4">
+                            <!-- Left Candle -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-4 h-8 bg-gradient-to-t from-yellow-500 via-amber-400 to-red-500 rounded-full flame-animation"></div>
+                                <div class="w-3.5 h-16 bg-amber-100 rounded-t-sm shadow-lg border-x border-amber-300"></div>
+                            </div>
+                            <!-- Lotus Icon -->
+                            <div id="offeredLotusIcon" class="text-6xl text-pink-400 drop-shadow-[0_0_15px_rgba(244,114,182,0.8)] animate-bounce">
+                                🪷
+                            </div>
+                            <!-- Right Candle -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-4 h-8 bg-gradient-to-t from-yellow-500 via-amber-400 to-red-500 rounded-full flame-animation"></div>
+                                <div class="w-3.5 h-16 bg-amber-100 rounded-t-sm shadow-lg border-x border-amber-300"></div>
+                            </div>
+                        </div>
+
+                        <p id="blessingOutputName" class="font-lao-serif text-xl sm:text-2xl font-bold text-laoGold mb-2"></p>
+                        <p id="blessingOutputWish" class="text-amber-100 italic text-sm sm:text-base max-w-lg mx-auto bg-black/40 px-4 py-2 rounded-xl border border-laoGold/20"></p>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <form id="meritForm" onsubmit="submitVirtualMerit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-laoGoldLight text-sm font-semibold mb-2">ຊື່ ແລະ ນາມສະກຸນ ຜູ້ຮ່ວມເຮັດບຸນ</label>
+                            <input type="text" id="devoteeName" required placeholder="ຕົວຢ່າງ: ທ່ານ ທອງດີ + ຄອບຄົວ"
+                                   class="w-full bg-laoMaroon/80 border border-laoGold/40 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-laoGold transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-laoGoldLight text-sm font-semibold mb-2">ເລືອກສີດອກບົວຖວາຍ</label>
+                            <select id="lotusColor" class="w-full bg-laoMaroon/80 border border-laoGold/40 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-laoGold transition-colors">
+                                <option value="🪷 pink">🌸 ດອກບົວສີຊົມພູ (ຄວາມເມດຕາ & ຄວາມຮັກ)</option>
+                                <option value="🪷 white">🪷 ດອກບົວສີຂາວ (ຄວາມບໍລິສຸດ & ປັນຍາ)</option>
+                                <option value="🪷 yellow">🌼 ດອກບົວສີເຫຼືອງ (ຄວາມຈະເລີນຮຸ່ງເຮືອງ)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-laoGoldLight text-sm font-semibold mb-2">ຄຳອະທິຖານ / ຂໍພອນ</label>
+                        <textarea id="devoteeWish" rows="3" required placeholder="ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ, ສຸຂະພາບແຂງແຮງ, ປາສະຈາກໂຣກໄພໄຂ້ເຈັບ..."
+                                  class="w-full bg-laoMaroon/80 border border-laoGold/40 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-laoGold transition-colors"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full gold-gradient text-laoMaroon font-bold text-lg py-4 rounded-xl shadow-xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-flame text-xl"></i>
+                        <span>ໄຕ້ທຽນ & ຖວາຍດອກບົວ</span>
+                    </button>
+                </form>
+
+                <!-- Devotees List Display -->
+                <div class="mt-8 border-t border-laoGold/20 pt-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-laoGold font-semibold text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-list-check"></i> ລາຍຊື່ຜູ້ໄຕ້ທຽນຖວາຍດອກບົວບໍ່ດົນມານີ້
+                        </h4>
+                        <button onclick="clearDevoteeList()" class="text-xs text-amber-200/50 hover:text-amber-200">
+                            ລຶບປະວັດ
+                        </button>
+                    </div>
+                    <div id="recentDevoteesList" class="space-y-2 max-h-48 overflow-y-auto pr-2 text-xs">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Daily Dhamma Wisdom Section -->
+    <section id="dhamma" class="py-20 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">DHAMMA TEACHINGS</span>
+            <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+                ທຳມະຄຳສອນປະຈຳວັນ
+            </h2>
+            <div class="w-24 h-1 bg-laoGold mx-auto rounded-full"></div>
+        </div>
+
+        <div class="bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 border-2 border-laoGold/40 rounded-3xl p-8 sm:p-12 shadow-xl relative overflow-hidden text-center">
+            <i class="fa-solid fa-quote-left text-6xl text-laoGold/20 absolute top-4 left-6"></i>
+            <i class="fa-solid fa-quote-right text-6xl text-laoGold/20 absolute bottom-4 right-6"></i>
+
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <p id="dhammaText" class="text-xl sm:text-3xl font-lao-serif font-bold text-laoMaroon leading-relaxed mb-6">
+                    "ຄວາມເວັ້ນຈາກບາບທັງປວງ, ການຍັງກຸສົນໃຫ້ເຖິງພ້ອມ, ການເຮັດຈິດໃຈຂອງຕົນໃຫ້ຜ່ອງໃສ ນີ້ແມ່ນຄຳສອນຂອງພຣະພຸດທະເຈົ້າທັງຫຼາຍ."
+                </p>
+                <p id="dhammaSource" class="text-sm font-semibold text-laoGoldDark uppercase tracking-wider mb-8">
+                    - ພຣະທຳມະຄຳສອນ ໂອວາດປາຕິໂມກ -
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="getRandomQuote()" class="bg-laoMaroon text-laoGold font-semibold px-6 py-3 rounded-full shadow-md hover:bg-laoMaroonDark transition-all active:scale-95 flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>ສຸ່ມຄຳສອນໃໝ່</span>
+                    </button>
+                    <button onclick="copyDhammaQuote()" class="bg-white text-laoMaroon border border-laoGold/50 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-amber-50 transition-all active:scale-95 flex items-center gap-2">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>ຄັດລອກຂໍ້ຄວາມ</span>
+                    </button>
+                    <!-- ปุ่มแชร์ Facebook -->
+        <button type="button" onclick="shareToFacebook()" style="background-color: #1877f2;" class="text-white font-semibold px-5 py-3 rounded-full shadow-md hover:opacity-90 transition-all active:scale-95 flex items-center gap-2">
+            <i class="fab fa-facebook"></i>
+            <span>ແບ່ງປັນ Facebook</span>
+        </button>
+
+        <!-- ปุ่มแชร์ WhatsApp -->
+        <button type="button" onclick="shareToWhatsApp()" style="background-color: #25d366;" class="text-white font-semibold px-5 py-3 rounded-full shadow-md hover:opacity-90 transition-all active:scale-95 flex items-center gap-2">
+            <i class="fab fa-whatsapp"></i>
+            <span>ສົ່ງທາງ WhatsApp</span>
+        </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events & Calendar Section -->
+    <section id="events" class="py-20 bg-amber-50 border-t border-laoGold/20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">ACTIVITIES & FESTIVALS</span>
+                <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+                    ງານບຸນປະເພນີ ແລະ ຕາຕະລາງກິດຈະກຳ
+                </h2>
+                <p class="text-gray-600 max-w-xl mx-auto text-sm sm:text-base font-sans">
+                    ຂໍເຊີນຊວນສັດທາສາທຸຊົນທັງຫຼາຍ ຮ່ວມງານບຸນປະເພນີປະຈຳປີ ແລະ ກິດຈະກຳທາງສາສະໜາ
+                </p>
+                <div class="w-24 h-1 bg-laoGold mx-auto rounded-full mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Event 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border-l-8 border-laoGold hover:shadow-xl transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-laoGold/20 text-laoMaroon font-bold text-xs px-3 py-1 rounded-full">
+                                ງານບຸນປະຈຳປີ
+                            </span>
+                            <span class="text-xs font-semibold text-gray-500">
+                                <i class="fa-regular fa-calendar"></i> ເດືອນ 11 ລາວ
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold font-lao-serif text-laoMaroon mb-2">ງານບຸນອອກພັນສາ & ລອຍກະໂທງ</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            ພິທີຕັກບາດເທໂວ, ຟັງພຣະທຳເທດສະໜາ, ໄຕ້ປະທີບໂຄມໄຟ ແລະ ລອຍກະໂທງບູຊາສາຍນ້ຳເຊກະໝານ.
+                        </p>
+                    </div>
+                    <div class="text-xs text-gray-500 border-t border-gray-100 pt-3 flex justify-between">
+                        <span><i class="fa-solid fa-clock text-laoGold mr-1"></i> ຕະຫຼອດມື້</span>
+                        <span><i class="fa-solid fa-location-dot text-laoGold mr-1"></i> ແຄມນ້ຳເຊກະໝານ</span>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border-l-8 border-laoMaroon hover:shadow-xl transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-laoMaroon/10 text-laoMaroon font-bold text-xs px-3 py-1 rounded-full">
+                                ບຸນມະຫາຊາດ
+                            </span>
+                            <span class="text-xs font-semibold text-gray-500">
+                                <i class="fa-regular fa-calendar"></i> ເດືອນ 4 ລາວ
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold font-lao-serif text-laoMaroon mb-2">ງານບຸນມະຫາຊາດ (ບຸນຜະເວດ)</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            ພິທີແຫ່ຜ້າຜະເວດ, ຟັງເທດສະໜາມະຫາຊາດ 13 ກັນ 1000 ພຣະຄາຖາ ເພື່ອສີຣິມົງຄົນ.
+                        </p>
+                    </div>
+                    <div class="text-xs text-gray-500 border-t border-gray-100 pt-3 flex justify-between">
+                        <span><i class="fa-solid fa-clock text-laoGold mr-1"></i> 3 ມື້ 3 ຄືນ</span>
+                        <span><i class="fa-solid fa-location-dot text-laoGold mr-1"></i> ພຣະອຸໂບສົດ</span>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border-l-8 border-laoGreen hover:shadow-xl transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-laoGreen/10 text-laoGreen font-bold text-xs px-3 py-1 rounded-full">
+                                ກິດຈະກຳປະຈຳອາທິດ
+                            </span>
+                            <span class="text-xs font-semibold text-gray-500">
+                                <i class="fa-regular fa-calendar"></i> ທຸກໆວັນອາທິດ
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold font-lao-serif text-laoMaroon mb-2">ອົບຮົມສະມາທິ & ສຶກສາທຳ</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            ຮຽນຮູ້ການເຈີນສະມາທິພາວະນາ, ຝຶກຈິດໃຈໃຫ້ສະຫງົບ ແລະ ແລກປ່ຽນຄຳສອນທຳມະ.
+                        </p>
+                    </div>
+                    <div class="text-xs text-gray-500 border-t border-gray-100 pt-3 flex justify-between">
+                        <span><i class="fa-solid fa-clock text-laoGold mr-1"></i> 14:00 - 16:00 ໂມງ</span>
+                        <span><i class="fa-solid fa-location-dot text-laoGold mr-1"></i> ຫໍແຈກ (ສາລາການເປຣຽນ)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation & Merit Contribution Section -->
+    <section id="donation" class="py-20 px-4 max-w-6xl mx-auto">
+        <div class="bg-gradient-to-br from-laoMaroon to-laoMaroonDark rounded-3xl p-8 sm:p-14 text-white shadow-2xl border-2 border-laoGold">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-laoGold font-bold uppercase tracking-wider text-xs sm:text-sm">MAKE MERIT & DONATION</span>
+                    <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoGoldLight mt-2 mb-6 leading-tight">
+                        ຮ່ວມເຮັດບຸນບໍລິຈາກ ບູລະນະວັດເຊກະໝານກາງ
+                    </h2>
+                    <p class="text-amber-100/90 text-sm sm:text-base leading-relaxed mb-6 font-sans">
+                        ຂໍເຊີນຊວນສາທຸຊົນຜູ້ມີຈິດສັດທາ ຮ່ວມບໍລິຈາກທຶນຮັກສາສ້ອມແປງພຣະອຸໂບສົດ, ຄ່ານ້ຳ-ຄ່າໄຟ, ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ ແລະ ສ້າງສາທາລະນະປະໂຫຍດໃນຊຸມຊົນ.
+                    </p>
+
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3 text-sm text-amber-200">
+                            <i class="fa-solid fa-circle-check text-laoGold text-lg"></i>
+                            <span>ຮ່ວມສ້າງ ແລະ ບູລະນະສິມ/ພຣະອຸໂບສົດ</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-amber-200">
+                            <i class="fa-solid fa-circle-check text-laoGold text-lg"></i>
+                            <span>ອຸປະຖຳການສຶກສາພຣະທຳມະວິນັຍ</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-amber-200">
+                            <i class="fa-solid fa-circle-check text-laoGold text-lg"></i>
+                            <span>ກອງທຶນສາທາລະນະສຸກ ແລະ ບຸນປະເພນີ</span>
+                        </div>
+                    </div>
+
+                    <button onclick="openReceiptGeneratorModal()" class="bg-laoMaroon border border-laoGold/60 hover:bg-laoGold hover:text-laoMaroon font-bold text-amber-100 px-6 py-3 rounded-2xl transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>ອອກໃບອະນຸໂມທະນາບຸນ (Digital Receipt)</span>
+                    </button>
+                </div>
+
+                <!-- QR Donation Box -->
+                <div class="bg-white text-gray-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center border-4 border-laoGold">
+                    <h3 class="text-xl font-bold font-lao-serif text-laoMaroon mb-2">
+                        ສະແກນ QR Code ເພື່ອຮ່ວມບໍລິຈາກ (BCEL One)
+                    </h3>
+                    <p class="text-xs text-gray-500 mb-6">ຊື່ບັນຊີ: Khamsavanh LEUAMTHININ Monk)</p>
+
+                 <!-- QR Simulation Frame -->
+<div class="inline-block relative cursor-pointer" onclick="openQRImage()">
+    <div class="w-full h-full bg-white rounded-xl p-3 flex flex-col items-center justify-center border-2 border-gray-200 overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
+        <img src="QR.jpg" id="qrImgSrc" alt="QR Code" class="w-full h-full object-contain">
+    </div>
+    <div class="absolute bottom-2 right-2 bg-black/50 text-white p-1.5 rounded-full text-xs">
+        <i class="fa-solid fa-magnifying-glass-plus"></i>
+    </div>
+</div>
+
+<!-- QR Code Modal -->
+<div id="qrImageModal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; padding: 16px;" onclick="closeQRImage()">
+    <div style="position: relative; max-width: 500px; width: 100%; text-align: center;" onclick="event.stopPropagation()">
+        <button onclick="closeQRImage()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; background: none; border: none; cursor: pointer;">&times;</button>
+        <img id="qrModalImg" src="" alt="QR Code" style="max-height: 80vh; width: auto; max-width: 100%; border-radius: 16px; border: 3px solid #af9164; margin: 0 auto;">
+    </div>
+</div>
+
+<script>
+    function openQRImage() {
+        var profileImgSrc = document.getElementById('qrImgSrc');
+        var modal = document.getElementById('qrImageModal');
+        var modalImg = document.getElementById('qrModalImg');
+        if (profileImgSrc && modal && modalImg) {
+            modalImg.src = profileImgSrc.src;
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closeQRImage() {
+        var modal = document.getElementById('qrImageModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
+                    <div class="space-y-2 text-left bg-amber-50 p-4 rounded-xl border border-amber-200 text-xs sm:text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">ເລກບັນຊີ (LAK):</span>
+                            <span class="font-bold text-laoMaroon font-mono">040-12-00-01285365-001</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">ເລກບັນຊີ (THB):</span>
+                            <span class="font-bold text-laoMaroon font-mono">0801231883147</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">ທະນາຄານ:</span>
+                            <span class="font-bold text-laoMaroon">ທະນາຄານການຄ້າຕ່າງປະເທດລາວ (BCEL)</span>
+                        </div>
+                    </div>
+
+                    <button onclick="copyAccountNo()" class="w-full mt-4 gold-gradient text-laoMaroon font-bold py-3 rounded-xl shadow hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>ຄັດລອກເລກບັນຊີ</span>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Menu Panel -->
-        <div class="md:hidden hidden bg-temple-maroondark border-t border-red-900/50" id="mobile-menu">
-            <div class="px-4 pt-3 pb-4 space-y-2">
-                <a href="#home" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ໜ້າຫຼັກ</a>
-                <a href="#about" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ປະຫວັດວັດ</a>
-                <a href="#dhamma" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຄຳສອນທຳມະ</a>
-                <a href="#news" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຂ່າວສານ/ກິດຈະກຳ</a>
-                <a href="#donation" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຮ່ວມເຮັດບຸນ</a>
-                <a href="#contact" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-white hover:text-temple-gold hover:bg-temple-maroon">ຕິດຕໍ່/ແຜນທີ່</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Banner Section -->
-    <section id="home" class="hero-bg min-h-screen flex items-center justify-center pt-20 px-4">
-        <div class="text-center max-w-4xl mx-auto py-12">
-            <div class="inline-block mb-3 px-4 py-1 rounded-full bg-temple-gold/20 backdrop-blur-md border border-temple-gold/40">
-                <span class="text-temple-gold text-sm md:text-base font-medium">ຂໍນອບນ້ອມແດ່ພຣະຣັດຕະນະໄຕຣ</span>
-            </div>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-                ຍິນດີຕ້ອນຮັບສູ່<br/>
-                <span class="text-temple-gold">ວັດເຊກະໝານກາງ</span>
-            </h1>
-            <p class="text-gray-200 text-lg md:text-xl mb-10 max-w-2xl mx-auto drop-shadow leading-relaxed font-light">
-                ສະຖານທີ່ສະຫງົບສຳລັບການປະຕິບັດທຳ, ຈະເລີນສະຕິປັນຍາ ແລະ ສືບທອດພຣະພຸດທະສາສະໜາໃຫ້ຍືນຍົງສືບໄປ
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#about" class="w-full sm:w-auto bg-temple-gold hover:bg-temple-goldlight text-temple-maroondark font-bold py-3.5 px-8 rounded-full transition duration-300 shadow-xl transform hover:-translate-y-1 text-center">
-                    ຮູ້ຈັກວັດຂອງພວກເຮົາ
-                </a>
-                <a href="#donation" class="w-full sm:w-auto bg-black/40 hover:bg-temple-gold border-2 border-temple-gold text-temple-gold hover:text-temple-maroondark font-bold py-3.5 px-8 rounded-full transition duration-300 shadow-xl transform hover:-translate-y-1 text-center">
-                    ຮ່ວມບຸນສົມທົບທຶນ
-                </a>
-            </div>
-        </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ປະຫວັດຄວາມເປັນມາ</h2>
-                <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full"></div>
-            </div>
-            
-            <div class="flex flex-col lg:flex-row gap-12 items-center">
-                <div class="w-full lg:w-1/2">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl group">
-                        <img src="https://images.unsplash.com/photo-1551104443-162e2402d73f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="ພຣະພຸດທະຮູບປະທານ" class="w-full h-[400px] object-cover card-zoom-image">
-                        <div class="absolute inset-0 border-4 border-temple-gold/60 rounded-2xl m-3 pointer-events-none"></div>
-                    </div>
-                </div>
-                
-                <div class="w-full lg:w-1/2 space-y-5 text-gray-600 leading-relaxed text-base md:text-lg">
-                    <p>
-                        <strong class="text-temple-maroon font-semibold text-xl">ວັດເຊກະໝານກາງ</strong> ເລີ່ມກໍ່ຕັ້ງຂຶ້ນດ້ວຍແຮງສັດທາຂອງຊາວບ້ານໃນຊຸມຊົນທີ່ຕ້ອງການສະຖານທີ່ສຳລັບຍຶດໜ່ຽວຈິດໃຈ ແລະ ປະກອບສາສະນະກິດ ເພື່ອສືບທອດຮີດຄອງປະເພນີອັນດີງາມຂອງຊາວພຸດ.
-                    </p>
-                    <p>
-                        ພາຍໃນວັດມີພື້ນທີ່ກວ້າງຂວາງ, ຮົ່ມເຢັນໄປດ້ວຍຕົ້ນໄມ້ນ້ອຍໃຫຍ່ ເໝາະແກ່ການເຂົ້າມາພັກຜ່ອນຢ່ອນໃຈທາງທຳ. ສິມ (ອຸໂບສົດ) ຂອງວັດສ້າງດ້ວຍສະຖາປັດຕະຍະກຳທີ່ຜະສົມຜະສານລະຫວ່າງສິລະປະພື້ນບ້ານແລະຄວາມຮ່ວມສະໄໝ, ປະດິດສະຖານພຣະພຸດທະຮູບສັກສິດເຊິ່ງເປັນທີ່ເຄົາລົບສັກກາລະຂອງພຸດທະສາສະນິກະຊົນທົ່ວໄປ.
-                    </p>
-                    <p>
-                        ປັດຈຸບັນ, ວັດເຊກະໝານກາງ ບໍ່ພຽງແຕ່ເປັນສະຖານທີ່ເຮັດບຸນຕັກບາດຕາມປະເພນີ ແຕ່ຍັງເປີດເປັນສູນກາງການຮຽນຮູ້ພຣະພຸດທະສາສະໜາ ມີການຈັດອົບຮົມວິປັດສະນາກຳມະຖານສຳລັບເຍົາວະຊົນ ແລະ ປະຊາຊົນທົ່ວໄປຢ່າງຕໍ່ເນື່ອງ.
-                    </p>
-                    
-                    <div class="pt-4 grid grid-cols-2 gap-4">
-                        <div class="bg-amber-50/60 p-4 rounded-xl border-l-4 border-temple-gold shadow-sm">
-                            <i class="fa-solid fa-users text-2xl text-temple-maroon mb-1"></i>
-                            <h4 class="font-bold text-gray-800 text-sm md:text-base">ພຣະພິກຂຸ/ສາມະເນນ</h4>
-                            <p class="text-2xl font-bold text-temple-gold">໒໕ <span class="text-xs font-normal text-gray-500">ອົງ</span></p>
-                        </div>
-                        <div class="bg-amber-50/60 p-4 rounded-xl border-l-4 border-temple-gold shadow-sm">
-                            <i class="fa-solid fa-tree text-2xl text-temple-maroon mb-1"></i>
-                            <h4 class="font-bold text-gray-800 text-sm md:text-base">ພື້ນທີ່ລານທຳ</h4>
-                            <p class="text-2xl font-bold text-temple-gold">໑໕ <span class="text-xs font-normal text-gray-500">ໄລ່</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- Monk Profile Section -->
+<div class="mb-10 text-center">
+    <div class="inline-block relative cursor-pointer">
+        <img src="Monk.jpg" id="monkProfileImg" alt="Monk" onclick="openMonkImage()" class="w-60 h-60 sm:w-64 sm:h-64 rounded-full object-cover border-4 border-laoGold shadow-xl mx-auto block hover:scale-105 transition-transform duration-300">
+    </div>
+
+    <div class="mt-6 mb-5">
+        <div class="bg-blue-600 text-white font-bold text-xl sm:text-2xl px-8 py-3 inline-block rounded-full shadow-lg border-2 border-laoGold hover:scale-105 transition-transform">
+            ພຣະອາຈານ ຄຳສະຫວັນ ເລື່ອມທິນິນ
         </div>
-    </section>
+    </div>
 
-    <!-- Dhamma Quotes Section -->
-    <section id="dhamma" class="py-24 bg-temple-maroon text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <i class="fa-solid fa-leaf text-4xl text-temple-gold mb-3"></i>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-3">ຄຳສອນ ແລະ ຄຳຄົມທຳມະ</h2>
-                <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full"></div>
-                <p class="mt-4 text-gray-300 text-base md:text-lg font-light">ຂໍ້ຄິດເຕືອນໃຈ ເພື່ອການດຳເນີນຊີວິດຢ່າງມີສະຕິ ແລະ ສະຫງົບສຸກ</p>
-            </div>
+    <div class="text-lg sm:text-xl space-y-2 text-gray-800 font-medium">
+        <p>ຄະນະກໍາມະການບໍລິຫານງານ ອພສ ເມືອງສາມັກຄີໄຊ</p>
+        <p>ຄະນະກໍາມາທິການສຶກສາສົງເມືອງ</p>
+        <p class="font-bold text-laoMaroon text-xl sm:text-2xl mt-2">ສະໄໝທີ VIII (2025-2030)</p>
+    </div>
+</div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Quote 1 -->
-                <div class="bg-temple-maroondark/90 p-8 rounded-2xl shadow-xl border border-red-900/50 relative flex flex-col justify-between hover:border-temple-gold/50 transition">
-                    <i class="fa-solid fa-quote-left text-4xl text-temple-gold opacity-40 absolute top-6 left-6"></i>
-                    <p class="text-lg md:text-xl leading-relaxed mt-8 mb-6 relative z-10 font-light">
-                        "ຄວາມສຸກທີ່ແທ້ຈິງ ບໍ່ໄດ້ເກີດຈາກການມີຊັບສິນເງິນທອງຫຼວງຫຼາຍ ແຕ່ເກີດຈາກໃຈທີ່ປ່ອຍວາງ ແລະ ຮູ້ຈັກພໍ."
-                    </p>
-                    <div class="text-right text-xs text-temple-gold font-medium">— ຂໍ້ຄິດເຕືອນໃຈ</div>
-                </div>
+<!-- Pop-up Modal เฉพาะรูปพระอาจารย์ -->
+<div id="monkImageModal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; padding: 16px;" onclick="closeMonkImage()">
+    <div style="position: relative; max-width: 600px; width: 100%; text-align: center;" onclick="event.stopPropagation()">
+        <button onclick="closeMonkImage()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; background: none; border: none; cursor: pointer;">&times;</button>
+        <img id="monkModalImg" src="" alt="Monk" style="max-height: 80vh; width: auto; max-width: 100%; border-radius: 16px; border: 3px solid #af9164; margin: 0 auto;">
+    </div>
+</div>
 
-                <!-- Quote 2 -->
-                <div class="bg-temple-maroondark/90 p-8 rounded-2xl shadow-xl border border-red-900/50 relative flex flex-col justify-between hover:border-temple-gold/50 transition">
-                    <i class="fa-solid fa-quote-left text-4xl text-temple-gold opacity-40 absolute top-6 left-6"></i>
-                    <p class="text-lg md:text-xl leading-relaxed mt-8 mb-6 relative z-10 font-light">
-                        "ເຮັດດີໄດ້ດີ ເຮັດຊົ່ວໄດ້ຊົ່ວ ນີ້ຄືກົດແຫ່ງກຳທີ່ບໍ່ເຄີຍປ່ຽນແປງ ຈົ່ງໝັ່ນສ້າງແຕ່ຄຸນງາມຄວາມດີໄວ້ເຖີດ."
-                    </p>
-                    <div class="text-right text-xs text-temple-gold font-medium">— ຂໍ້ຄິດເຕືອນໃຈ</div>
-                </div>
+<script>
+    function openMonkImage() {
+        var profileImg = document.getElementById('monkProfileImg');
+        var modal = document.getElementById('monkImageModal');
+        var modalImg = document.getElementById('monkModalImg');
+        if (profileImg && modal && modalImg) {
+            modalImg.src = profileImg.src;
+            modal.style.display = 'flex';
+        }
+    }
 
-                <!-- Quote 3 -->
-                <div class="bg-temple-maroondark/90 p-8 rounded-2xl shadow-xl border border-red-900/50 relative flex flex-col justify-between hover:border-temple-gold/50 transition">
-                    <i class="fa-solid fa-quote-left text-4xl text-temple-gold opacity-40 absolute top-6 left-6"></i>
-                    <p class="text-lg md:text-xl leading-relaxed mt-8 mb-6 relative z-10 font-light">
-                        "ເວລາໃນຊີວິດຂອງຄົນເຮົາມີຈຳກັດ ຈົ່ງໃຊ້ເວລາທີ່ເຫຼືອຢູ່ ໄປກັບການສ້າງບຸນກຸສົນ ແລະ ເຮັດປະໂຫຍດແກ່ສ່ວນລວມ."
-                    </p>
-                    <div class="text-right text-xs text-temple-gold font-medium">— ຂໍ້ຄິດເຕືອນໃຈ</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- News & Events Section -->
-    <section id="news" class="py-24 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ຂ່າວສານ ແລະ ກິດຈະກຳ</h2>
-                    <div class="w-20 h-1 bg-temple-gold rounded-full"></div>
-                </div>
-                <a href="#" class="hidden sm:inline-flex items-center text-temple-maroon font-bold hover:text-temple-gold transition gap-2">
-                    ເບິ່ງທັງໝົດ <i class="fa-solid fa-arrow-right text-sm"></i>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition duration-300 flex flex-col">
-                    <div class="relative overflow-hidden h-56">
-                        <img src="https://images.unsplash.com/photo-1542642594-e0b4a4574cc4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ງານບຸນກະຖິນ" class="w-full h-full object-cover card-zoom-image">
-                        <div class="absolute top-4 right-4 bg-temple-maroon text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
-                            ໑໕ ພະຈິກ
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-temple-maroon transition">ຂໍເຊີນຮ່ວມເປັນເຈົ້າພາບທອດກະຖິນສາມັກຄີ</h3>
-                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">ເພື່ອສົມທົບທຶນບູລະນະປະຕິສັງຂອນເສນາສະນະພາຍໃນວັດທີ່ຊຳລຸດຊຸດໂຊມ ແລະ ສ້າງສາລາປະຕິບັດທຳຫຼັງໃໝ່.</p>
-                        </div>
-                        <a href="#" class="text-temple-gold font-bold text-sm inline-flex items-center hover:underline gap-1">
-                            ອ່ານລາຍລະອຽດ <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition duration-300 flex flex-col">
-                    <div class="relative overflow-hidden h-56">
-                        <img src="https://images.unsplash.com/photo-1627918549646-3b60ba95ebcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ປະຕິບັດທຳ" class="w-full h-full object-cover card-zoom-image">
-                        <div class="absolute top-4 right-4 bg-temple-maroon text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
-                            ທຸກວັນອາທິດ
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-temple-maroon transition">ໂຄງການປະຕິບັດທຳວັນອາທິດ</h3>
-                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">ສູດມົນ, ຈະເລີນສະມາທິພາວະນາ ແລະ ຟັງພຣະທຳມະເທສະໜາ ຕັ້ງແຕ່ເວລາ 09:00 - 15:00 ນ. (ບໍ່ມີຄ່າໃຊ້ຈ່າຍ)</p>
-                        </div>
-                        <a href="#" class="text-temple-gold font-bold text-sm inline-flex items-center hover:underline gap-1">
-                            ອ່ານລາຍລະອຽດ <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-md group hover:shadow-xl transition duration-300 flex flex-col">
-                    <div class="relative overflow-hidden h-56">
-                        <img src="https://images.unsplash.com/photo-1542385151-efd9000785a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="ງານປະເພນີ" class="w-full h-full object-cover card-zoom-image">
-                        <div class="absolute top-4 right-4 bg-temple-maroon text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
-                            ໄວໆນີ້
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-temple-maroon transition">ງານບຸນປະເພນີອອກພັນສາປະວໍລະນາ</h3>
-                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">ຂໍເຊີນຮ່ວມງານບຸນປະເພນີອອກພັນສາປະວໍລະນາ, ຕັກບາດເທໂວໂຣຫະນະ ແລະ ວຽນທຽນອ້ອມສິມ.</p>
-                        </div>
-                        <a href="#" class="text-temple-gold font-bold text-sm inline-flex items-center hover:underline gap-1">
-                            ອ່ານລາຍລະອຽດ <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-10 text-center sm:hidden">
-                 <a href="#" class="inline-block bg-white text-temple-maroon px-6 py-2.5 rounded-full font-bold border border-temple-maroon shadow-sm text-sm">ເບິ່ງຂ່າວສານທັງໝົດ</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Donation Section -->
-    <section id="donation" class="py-24 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <i class="fa-solid fa-hand-holding-heart text-4xl text-temple-gold mb-3"></i>
-            <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ຮ່ວມເຮັດບຸນສົມທົບທຶນ</h2>
-            <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full mb-6"></div>
-            <p class="text-gray-600 mb-10 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-                ທ່ານສາມາດຮ່ວມເປັນສ່ວນໜຶ່ງໃນການບຳລຸງຮັກສາວັດ ແລະ ສະໜັບສະໜູນກິດຈະກຳທາງພຣະພຸດທະສາສະໜາ<br class="hidden md:block"/>
-                ອານິສົງແຫ່ງບຸນກຸສົນນີ້ ຈົ່ງດົນບັນດານໃຫ້ທ່ານ ແລະ ຄອບຄົວມີແຕ່ຄວາມສຸກ ຄວາມຈະເລີນ.
-            </p>
-
-            <div class="bg-gray-50 rounded-3xl shadow-lg p-6 sm:p-10 text-left border border-gray-100">
-                <div class="flex flex-col md:flex-row gap-8 items-center justify-between">
-                    <!-- Bank Details -->
-                    <div class="w-full md:w-3/5 space-y-5">
-                        <div>
-                            <h3 class="text-2xl font-bold text-temple-maroon mb-1">ບັນຊີຮັບບໍລິຈາກຫຼັກຂອງວັດ</h3>
-                            <p class="text-gray-500 text-sm">ສຳລັບສົມທົບທຶນຄ່ານ້ຳ, ຄ່າໄຟ ແລະ ບຳລຸງເສນາສະນະ</p>
-                        </div>
-                        
-                        <div class="bg-white border-l-4 border-red-600 p-5 rounded-r-xl shadow-sm">
-                            <div class="flex items-center gap-4 mb-3">
-                                <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fa-solid fa-building-columns text-red-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-500 font-medium">ທະນາຄານການຄ້າຕ່າງປະເທດລາວ ມະຫາຊົນ (BCEL)</p>
-                                    <p class="text-lg sm:text-xl font-bold text-gray-800 tracking-wider font-mono">010 120 001 234 567 001</p>
-                                </div>
-                            </div>
-                            <p class="text-base text-gray-700">ຊື່ບັນຊີ: <span class="font-bold text-temple-maroondark">ວັດເຊກະໝານກາງ</span></p>
-                        </div>
-
-                        <div class="flex items-center gap-3">
-                            <button onclick="copyAccount()" class="inline-flex items-center gap-2 bg-temple-maroon text-white hover:bg-temple-maroondark transition font-bold text-sm py-2.5 px-5 rounded-xl shadow-sm">
-                                <i class="fa-regular fa-copy"></i> ກັອບປີ້ເລກບັນຊີ
-                            </button>
-                            <span id="copy-msg" class="text-green-600 text-sm font-medium hidden">
-                                <i class="fa-solid fa-check-circle"></i> ກັອບປີ້ເລກບັນຊີແລ້ວ!
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- QR Code Placeholder -->
-                    <div class="w-full md:w-2/5 flex flex-col items-center">
-                        <div class="bg-white p-5 rounded-2xl border-2 border-red-600 shadow-md w-full max-w-[220px] aspect-square flex flex-col items-center justify-center relative">
-                            <i class="fa-solid fa-qrcode text-8xl text-gray-800 mb-2"></i>
-                            <span class="text-red-600 font-bold text-xs uppercase tracking-wider">BCEL OnePay</span>
-                        </div>
-                        <p class="mt-3 text-xs text-gray-500 text-center">ສາມາດໃຊ້ແອັບ BCEL One ຫຼື ແອັບທະນາຄານອື່ນ ສະແກນເພື່ອຮ່ວມເຮັດບຸນໄດ້ທັນທີ</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact & Map Section -->
-    <section id="contact" class="py-24 bg-gray-50 border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-temple-maroon mb-3">ຕິດຕໍ່ສອບຖາມ / ແຜນທີ່ການເດີນທາງ</h2>
-                <div class="w-20 h-1 bg-temple-gold mx-auto rounded-full"></div>
-            </div>
-
-            <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Info Column -->
-                <div class="w-full lg:w-1/3 space-y-6">
-                    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-md border border-gray-100">
-                        <h3 class="font-bold text-xl mb-6 text-gray-800 border-b pb-4">ຂໍ້ມູນການຕິດຕໍ່</h3>
-                        
-                        <ul class="space-y-5">
-                            <li class="flex items-start gap-4">
-                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
-                                    <i class="fa-solid fa-location-dot w-4 h-4 flex justify-center items-center"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm">ທີ່ຢູ່</h4>
-                                    <p class="text-gray-600 text-sm mt-0.5 leading-relaxed">ວັດເຊກະໝານກາງ,<br/>ເມືອງ ສາມັກຄີໄຊ, ແຂວງ ອັດຕະປື</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4">
-                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
-                                    <i class="fa-solid fa-phone w-4 h-4 flex justify-center items-center"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm">ເບີໂທຕິດຕໍ່</h4>
-                                    <p class="text-gray-600 text-sm mt-0.5">020 9767 1723</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4">
-                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
-                                    <i class="fa-brands fa-facebook-f w-4 h-4 flex justify-center items-center"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm">Facebook Page</h4>
-                                    <a href="#" class="text-blue-600 text-sm hover:underline mt-0.5 block">ວັດເຊກະໝານກາງ</a>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4">
-                                <div class="bg-temple-maroon text-white p-3 rounded-xl flex-shrink-0">
-                                    <i class="fa-regular fa-clock w-4 h-4 flex justify-center items-center"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm">ເວລາເປີດ-ປິດ</h4>
-                                    <p class="text-gray-600 text-sm mt-0.5">ເປີດທຸກມື້ ເວລາ 06:00 - 18:00 ນ.</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Google Maps Placeholder / Embed -->
-                <div class="w-full lg:w-2/3">
-                    <div class="bg-gray-200 w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-md relative flex items-center justify-center group border border-gray-300">
-                        <div class="text-center z-10 px-6 py-8 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg max-w-md mx-4">
-                            <i class="fa-solid fa-map-location-dot text-5xl text-temple-maroon mb-3"></i>
-                            <h3 class="font-bold text-lg text-gray-800 mb-1">ແຜນທີ່ Google Maps</h3>
-                            <p class="text-gray-600 text-xs leading-relaxed">
-                                ພື້ນທີ່ສຳລັບຝັງ (Embed) ໂຄດແຜນທີ່ຈາກ Google Maps<br/>ເພື່ອນຳທາງມາຍັງ ວັດເຊກະໝານກາງ
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-<!-- ກັອບປີ້ໂຄດລຸ່ມນີ້ ໄປວາງໄວ້ໃນໄຟລ໌ໜ້າທຳອິດ (ເຊັ່ນ index.html) ບ່ອນທີ່ທ່ານຕ້ອງການໃຫ້ສະແດງປຸ່ມ -->
+    function closeMonkImage() {
+        var modal = document.getElementById('monkImageModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+    <!-- ກັອບປີ້ໂຄດລຸ່ມນີ້ ໄປວາງໄວ້ໃນໄຟລ໌ໜ້າທຳອິດ (ເຊັ່ນ index.html) ບ່ອນທີ່ທ່ານຕ້ອງການໃຫ້ສະແດງປຸ່ມ -->
 
 <style>
     /* ເພີ່ມເອັບເຟັກແສງແລ່ນຜ່ານປຸ່ມ */
@@ -445,93 +830,1167 @@
         
     </a>
 </div>
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-12 pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-800 pb-8 mb-8 gap-6">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-dharmachakra text-2xl text-temple-gold"></i>
-                    <h2 class="font-bold text-xl">ວັດເຊກະໝານກາງ</h2>
-                </div>
-                <div class="flex gap-3">
-                    <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-temple-gold hover:text-gray-900 transition"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-temple-gold hover:text-gray-900 transition"><i class="fa-brands fa-youtube"></i></a>
-                </div>
+    <!-- Contact & Map Section -->
+    <section id="contact" class="py-20 bg-amber-50 border-t border-laoGold/20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">LOCATION & CONTACT</span>
+                <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+                    ຕິດຕໍ່ເຮົາ & ແຜນທີ່ການເດີນທາງ
+                </h2>
+                <div class="w-24 h-1 bg-laoGold mx-auto rounded-full"></div>
             </div>
-            <div class="text-center text-gray-400 text-sm">
-                <p>&copy; 2026 ວັດເຊກະໝານກາງ (Wat Sekkhaman Klang). ຂໍສະຫງວນລິຂະສິດ.</p>
-                <p class="mt-2 text-xs text-gray-500">ເວັບໄຊນີ້ຈັດທຳຂຶ້ນເພື່ອເຜີຍແຜ່ຂໍ້ມູນຂ່າວສານຂອງທາງວັດເທົ່ານັ້ນ.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Info Column -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-amber-200 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-laoMaroon text-laoGold flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-laoMaroon text-lg mb-1 font-lao-serif">ທີ່ຢູ່</h4>
+                            <p class="text-gray-600 text-sm">
+                                ບ້ານເຊກະໝານກາງ, ເມືອງ ສາມັກຄີໄຊ ແລະ ແຂວງ ອັດຕະປື, ສປປລາວ
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-amber-200 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-laoMaroon text-laoGold flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-laoMaroon text-lg mb-1 font-lao-serif">ໂທລະສັບ / WhatsApp</h4>
+                            <p class="text-gray-600 text-sm">
+                                +856 20 9767 1723 / +856 20 9767 1723
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-amber-200 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-laoMaroon text-laoGold flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-laoMaroon text-lg mb-1 font-lao-serif">ອີເມວ</h4>
+                            <p class="text-gray-600 text-sm">
+                                Tingpakse567@gmail.com
+                            </p>
+                        </div>
+                    </div>
+
+                    <button onclick="openMapModal()" class="w-full bg-laoMaroon text-laoGold font-bold p-4 rounded-2xl shadow-lg hover:bg-laoMaroonDark transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-map-marked-alt text-xl"></i>
+                        <span>ເບິ່ງແຜນທີ່ຕຳແໜ່ງວັດ</span>
+                    </button>
+                </div>
+
+                <!-- Contact Form Column -->
+                <div class="lg:col-span-2 bg-white rounded-2xl p-8 shadow-md border border-amber-200">
+                    <h3 class="text-2xl font-bold font-lao-serif text-laoMaroon mb-6">
+                        ສົ່ງຂໍ້ຄວາມ ຫຼື ສອບຖາມຂໍ້ມູນ
+                    </h3>
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຊື່ ແລະ ນາມສະກຸນ</label>
+                                <input type="text" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-laoGold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ເບີໂທລະສັບ</label>
+                                <input type="tel" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-laoGold">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຫົວຂໍ້</label>
+                            <input type="text" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-laoGold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຂໍ້ຄວາມ</label>
+                            <textarea rows="4" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-laoGold"></textarea>
+                        </div>
+                        <button type="submit" class="bg-laoMaroon text-laoGold font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-laoMaroonDark transition-all active:scale-95 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>ສົ່ງຂໍ້ຄວາມ</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
+    </section>
+
+    <!-- Footer -->
+<footer class="bg-laoMaroonDark text-white border-t-4 border-laoGold pt-16 pb-8 px-4">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+    
+    <!-- Column 1: Info -->
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-laoMaroon text-laoGold flex items-center justify-center font-bold text-xl shadow">
+            <i class="fa-solid fa-dharmachakra"></i>
+        </div>
+        <span class="font-lao-serif text-2xl font-bold text-laoGold">ວັດເຊກະໝານກາງ</span>
+      </div>
+      <p class="text-amber-100/80 text-sm leading-relaxed max-w-md font-sans">
+        ສູນລວມຈິດໃຈ, ທຳມະທານ ແລະ ມໍລະດົກທາງພຸດທະສາສະໜາ ລຸ່ມນ້ຳເຊກະໝານ. ຂໍໃຫ້ຜົນບຸນອັນເກີດຈາກການສຶກສາ ແລະ ຮ່ວມສ້າງບຸນ ຈົ່ງດົນບັນດານໃຫ້ທ່ານມີຄວາມສຸກ ຄວາມຈະເລີນ.
+      </p>
+      
+      <!-- Social Media Links -->
+      <div class="flex space-x-4 mt-6 text-xl">
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/thinglez/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-laoMaroon flex items-center justify-center hover:bg-laoGold hover:text-laoMaroon transition-all">
+          <i class="fa-brands fa-facebook"></i>
+        </a>
+        <!-- YouTube -->
+        <a href="https://https://www.youtube.com/@gamersff1400" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-laoMaroon flex items-center justify-center hover:bg-laoGold hover:text-laoMaroon transition-all">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        <!-- WhatsApp -->
+        <a href="https://wa.me/qr/QNBLMGXETGLQP1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-laoMaroon flex items-center justify-center hover:bg-laoGold hover:text-laoMaroon transition-all">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Column 2: Quick Links -->
+    <div>
+      <h4 class="font-lao-serif text-laoGold font-bold text-lg mb-4">ລິ້ງຄ໌ດ່ວນ</h4>
+      <ul class="space-y-2 text-amber-100/80 text-sm">
+        <li><a href="#home" class="hover:text-laoGold transition-colors">ໜ້າຫຼັກ</a></li>
+        <li><a href="#history" class="hover:text-laoGold transition-colors">ປະວັດຄວາມເປັນມາ</a></li>
+        <li><a href="#sacred" class="hover:text-laoGold transition-colors">ສິ່ງສັກສິດ</a></li>
+        <li><a href="#spiritual-merit" class="hover:text-laoGold transition-colors">ໄຕ້ທຽນອອນໄລນ໌</a></li>
+        <li><a href="#events" class="hover:text-laoGold transition-colors">ກິດຈະກຳ-ງານບຸນ</a></li>
+      </ul>
+    </div>
+         <div>
+            <h4 class="font-lao-serif text-laoGold font-bold text-lg mb-4">ຄຳອຸທິດສ່ວນບຸນ</h4>
+                <p class="text-xs text-amber-100/80 leading-relaxed italic border-l-2 border-laoGold pl-3">
+                              "ອິດທັງ ເມ ຍາຕີນັງ ໂຫຕຸ ສຸຂິຕາ ໂຫນຕຸ ຍາຕະໂຍ"
+                ຂໍສ່ວນບຸນນີ້ຈົ່ງສຳເລັດແກ່ຍາດຕິພີ່ນ້ອງທັງຫຼາຍຂອງຂ້າພະເຈົ້າ ຂໍໃຫ້ຍາດຕິພີ່ນ້ອງທັງຫຼາຍຈົ່ງມີຄວາມສຸກ.
+                </p>
+         </div>
+       </div>
+          <!-- Copyright Bar (จัดอยู่ตรงกลางเป๊ะ) -->
+<div class="max-w-7xl mx-auto border-t border-laoGold/20 pt-6 text-center text-xs text-amber-200/60 flex flex-col items-center justify-center gap-2">
+  <p>© 2026 ວັດເຊກະໝານກາງ (Wat Xekaman Kang). ສະງວນລິຂະສິດ / All Rights Reserved.</p>
+  <p>ສ້າງຂຶ້ນດ້ວຍຄວາມສັດທາໃນພຣະພຸດທະສາສະໜາ 🇱🇦</p>
+</div>
+      </div>
     </footer>
 
-    <!-- Interactive Scripts -->
     <script>
-        // Mobile Menu Toggle
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = document.getElementById('menu-icon');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+        /* ===================================================
+           Web Audio API Sound Engine (Bell & Gong Synthesizer)
+           =================================================== */
+        let audioCtx = null;
 
-        menuBtn.addEventListener('click', () => {
-            const isHidden = mobileMenu.classList.contains('hidden');
-            if (isHidden) {
-                mobileMenu.classList.remove('hidden');
-                menuIcon.classList.remove('fa-bars');
-                menuIcon.classList.add('fa-xmark');
-            } else {
-                mobileMenu.classList.add('hidden');
-                menuIcon.classList.remove('fa-xmark');
-                menuIcon.classList.add('fa-bars');
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
             }
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                menuIcon.classList.remove('fa-xmark');
-                menuIcon.classList.add('fa-bars');
-            });
-        });
-
-        // Copy Account Number Function
-        function copyAccount() {
-            const accNumber = "010120001234567001";
-            navigator.clipboard.writeText(accNumber).then(() => {
-                showCopyMessage();
-            }).catch(() => {
-                // Fallback for older browsers
-                const textArea = document.createElement("textarea");
-                textArea.value = accNumber;
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    showCopyMessage();
-                } catch (err) {
-                    console.error('Failed to copy text', err);
-                }
-                document.body.removeChild(textArea);
-            });
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
         }
 
-        function showCopyMessage() {
-            const msg = document.getElementById('copy-msg');
-            msg.classList.remove('hidden');
+        // Resonant Temple Bell Sound
+        function playBellSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                
+                // Fundamental frequencies for lao temple bell harmonics
+                const freqs = [261.63, 523.25, 784.88, 1046.50, 1567.98];
+                freqs.forEach((freq, index) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+                    
+                    gain.gain.setValueAtTime(0, now);
+                    gain.gain.linearRampToValueAtTime(0.25 / (index + 1), now + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.5);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.start(now);
+                    osc.stop(now + 4.5);
+                });
+                showToast("ສຽງລະຄັງວັດດັງຂຶ້ນ... ສາທຸ", "ສຽງສັກສິດ", "fa-bell");
+            } catch (e) {
+                console.log('Audio Context Error:', e);
+            }
+        }
+
+        // Deep Resonant Gong Sound
+        function playGongSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(110, now);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 2.0);
+                
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.6, now + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.0);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start(now);
+                osc.stop(now + 5.0);
+
+                showToast("ສຽງຄ້ອງວັດດັງຂຶ້ນ... ສາທຸ", "ສຽງສັກສິດ", "fa-drum");
+            } catch (e) {
+                console.log('Audio Context Error:', e);
+            }
+        }
+
+        /* ===================================================
+           STREAMING_CHUNK:Managing modal dialogs and notification toast system...
+           =================================================== */
+        function showToast(message, title = "ແຈ້ງເຕືອນ", icon = "fa-circle-info") {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'bg-laoMaroon text-white p-4 rounded-2xl shadow-2xl border border-laoGold flex items-center gap-3 transform translate-y-4 opacity-0 transition-all duration-300 pointer-events-auto';
+            
+            toast.innerHTML = `
+                <div class="w-10 h-10 rounded-xl bg-laoGold/20 border border-laoGold/50 flex items-center justify-center text-laoGold text-lg shrink-0">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h5 class="font-lao-serif font-bold text-laoGold text-sm">${translateText(title)}</h5>
+                    <p class="text-xs text-amber-100 font-sans truncate">${translateText(message)}</p>
+                </div>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate in
             setTimeout(() => {
-                msg.classList.add('hidden');
-            }, 3000);
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            // Remove after 3.5 seconds
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
         }
 
-        // Dynamic Navbar Background on Scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('shadow-lg', 'bg-temple-maroon/95', 'backdrop-blur-md');
-            } else {
-                nav.classList.remove('shadow-lg', 'bg-temple-maroon/95', 'backdrop-blur-md');
+        function openModal(title, contentHtml) {
+            document.getElementById('modalTitle').querySelector('span').innerText = translateText(title);
+            document.getElementById('modalBody').innerHTML = translateHtml(contentHtml);
+            const modal = document.getElementById('appModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modalBox').classList.remove('scale-95');
+                document.getElementById('modalBox').classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            document.getElementById('modalBox').classList.remove('scale-100');
+            document.getElementById('modalBox').classList.add('scale-95');
+            setTimeout(() => {
+                document.getElementById('appModal').classList.add('hidden');
+            }, 200);
+        }
+
+        function openGalleryModal(imgSrc, title, description) {
+            const content = `
+                <div class="space-y-4">
+                    <div class="rounded-2xl overflow-hidden border border-laoGold/40 shadow-md max-h-[50vh]">
+                        <img src="${imgSrc}" alt="${title}" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold font-lao-serif text-laoMaroon mb-1">${title}</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed font-sans">${description}</p>
+                    </div>
+                </div>
+            `;
+            openModal(title, content);
+        }
+
+        function openMapModal() {
+    const content = `
+        <div class="space-y-4 text-center">
+            <div class="bg-amber-100 p-6 rounded-2xl border border-amber-300">
+                <i class="fa-solid fa-map-location-dot text-5xl text-laoMaroon mb-3"></i>
+                <h4 class="font-bold text-lg text-laoMaroon font-lao-serif">ແຜນທີ່ຕຳແໜ່ງ ອັດຕະປື ເຊກະພານ</h4>
+                <p class="text-xs text-gray-600 mt-2">ບ້ານເຊກະພານ, ເມືອງ ແລະ ແຂວງໃນເຂດລຸ່ມນ້ຳເຊກະພານ, ສປປ ລາວ</p>
+            </div>
+            <p class="text-sm text-gray-700">ທ່ານສາມາດເດີນທາງຕາມເສັ້ນທາງຫຼັກເລກທີ 16A ແຄມນ້ຳເຊກະພານ.</p>
+            <div class="pt-2">
+                <a href="https://www.google.com/maps/search/?api=1&query=วัดเซกะพานกลาง" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all text-sm">
+                    <i class="fa-solid fa-location-arrow"></i>
+                    <span>ນຳທາງດ້ວຍ Google Maps</span>
+                </a>
+            </div>
+        </div>
+    `;
+    openModal("ແຜນທີ່ ແລະ ການເດີນທາງ", content);
+}
+
+        function openReceiptGeneratorModal() {
+            const content = `
+                <form onsubmit="generateReceiptSubmit(event)" class="space-y-4">
+                    <p class="text-xs text-gray-600">ກະລຸນາປ້ອນຂໍ້ມູນເພື່ອອອກໃບອະນຸໂມທະນາບຸນດິຈິທັລ ສຳລັບເກັບໄວ້ເປັນສິຣິມົງຄົນ:</p>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຊື່ ແລະ ນາມສະກຸນ ຜູ້ບໍລິຈາກ</label>
+                        <input type="text" id="receiptName" required placeholder="ຕົວຢ່າງ: ທ່ານ ສົມໄຊ ວົງສາ" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:border-laoGold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຈຳນວນເງິນບໍລິຈາກ (ກີບ / ບາດ)</label>
+                        <input type="text" id="receiptAmount" required placeholder="ຕົວຢ່າງ: 100,000 ກີບ" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:border-laoGold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ວັດຖຸປະສົງການເຮັດບຸນ</label>
+                        <select id="receiptPurpose" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:border-laoGold focus:outline-none">
+                            <option value="ບູລະນະພຣະອຸໂບສົດ (ສິມ)">ບູລະນະພຣະອຸໂບສົດ (ສິມ)</option>
+                            <option value="ຄ່ານ້ຳ-ຄ່າໄຟຟ້າວັດ">ຄ່ານ້ຳ-ຄ່າໄຟຟ້າວັດ</option>
+                            <option value="ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ">ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ</option>
+                            <option value="ກອງທຶນສາທາລະນະກຸສົນ">ກອງທຶນສາທາລະນະກຸສົນ</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full gold-gradient text-laoMaroon font-bold py-3 rounded-xl shadow hover:scale-[1.01] transition-transform">
+                        ສ້າງໃບອະນຸໂມທະນາບຸນ
+                    </button>
+                </form>
+            `;
+            openModal("ອອກໃບອະນຸໂມທະນາບຸນ", content);
+        }
+
+        function generateReceiptSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('receiptName').value;
+            const amount = document.getElementById('receiptAmount').value;
+            const purpose = document.getElementById('receiptPurpose').value;
+            const dateStr = new Date().toLocaleDateString('lo-LA', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            const content = `
+                <div class="border-4 border-laoGold p-6 rounded-2xl bg-amber-50/80 text-center relative font-lao-serif">
+                    <div class="text-laoMaroon font-bold text-2xl mb-1">ໃບອະນຸໂມທະນາບຸນ</div>
+                    <div class="text-xs text-laoGoldDark font-semibold uppercase mb-4">WAT XEKAMAN KANG MERIT CERTIFICATE</div>
+                    <p class="text-xs text-gray-600 mb-6">ຂໍອະນຸໂມທະນາບຸນຂອບໃຈ ນຳ:</p>
+                    <p class="text-2xl font-bold text-laoMaroon mb-2">${name}</p>
+                    <p class="text-sm text-gray-700 mb-4">ໄດ້ຮ່ວມບໍລິຈາກເຮັດບຸນ ຈຳນວນເງິນ: <strong class="text-laoMaroon">${amount}</strong></p>
+                    <p class="text-xs text-gray-600 mb-6">ເພື່ອວັດຖຸປະສົງ: <strong>${purpose}</strong></p>
+                    <div class="border-t border-laoGold/40 pt-4 mt-4 flex justify-between items-center text-xs text-gray-500 font-sans">
+                        <span>ວັນທີ: ${dateStr}</span>
+                        <span class="font-bold text-laoMaroon">ວັດເຊກະໝານກາງ</span>
+                    </div>
+                </div>
+            `;
+            openModal("ໃບອະນຸໂມທະນາບຸນດິຈິທັລ", content);
+            showToast("ສ້າງໃບອະນຸໂມທະນາບຸນສຳເລັດ! ສາທຸ", "ສຳເລັດ", "fa-certificate");
+        }
+
+        /* ===================================================
+           STREAMING_CHUNK:Implementing virtual merit state and local storage...
+           =================================================== */
+        const DEFAULT_DEVOTEES = [
+            { name: "ທ່ານ ສົມພອນ + ຄອບຄົວ", wish: "ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ ສຸຂະພາບແຂງແຮງ", time: "5 ນາທີກ່ອນ", lotus: "🌸" },
+            { name: "ນາງ ມະລີວັນ", wish: "ຂໍໃຫ້ການຄ້າຂາຍຈະເລີນຮຸ່ງເຮືອງ", time: "18 ນາທີກ່ອນ", lotus: "🪷" },
+            { name: "ທ່ານ ບຸນມີ", wish: "ຂໍໃຫ້ແຄ້ວຄາດປອດໄພຈາກໂຣກໄພທັງປວງ", time: "1 ຊົ່ວໂມງກ່ອນ", lotus: "🌼" }
+        ];
+
+        function getDevoteeList() {
+            const stored = localStorage.getItem('xekaman_devotees');
+            if (stored) {
+                try { return JSON.parse(stored); } catch (e) {}
+            }
+            return DEFAULT_DEVOTEES;
+        }
+
+        function saveDevoteeList(list) {
+            localStorage.setItem('xekaman_devotees', JSON.stringify(list));
+        }
+
+        function renderDevotees() {
+            const devotees = getDevoteeList();
+            const container = document.getElementById('recentDevoteesList');
+            container.innerHTML = devotees.map(d => `
+                <div class="bg-laoMaroon/70 p-3 rounded-xl border border-laoGold/20 flex justify-between items-center gap-2">
+                    <div class="min-w-0">
+                        <span class="font-bold text-laoGold block text-xs sm:text-sm font-lao-serif truncate">${d.lotus || '🪷'} ${d.name}</span>
+                        <p class="text-amber-100/80 text-xs font-light truncate">${translateText(d.wish)}</p>
+                    </div>
+                    <span class="text-[10px] text-amber-200/60 shrink-0 bg-laoMaroonDark/60 px-2 py-1 rounded-md border border-laoGold/10">${translateText(d.time)}</span>
+                </div>
+            `).join('');
+        }
+
+        function submitVirtualMerit(e) {
+            e.preventDefault();
+            const name = document.getElementById('devoteeName').value.trim();
+            const wish = document.getElementById('devoteeWish').value.trim();
+            const lotusSelect = document.getElementById('lotusColor').value;
+            const lotusIcon = lotusSelect.split(' ')[0];
+
+            if (!name || !wish) return;
+
+            // Play sound
+            playBellSound();
+
+            // Show active altar flame area
+            document.getElementById('noFlameText').classList.add('hidden');
+            const activeArea = document.getElementById('activeFlameArea');
+            activeArea.classList.remove('hidden');
+            activeArea.classList.add('flex');
+
+            document.getElementById('blessingOutputName').innerText = translateText("ສາທຸ!") + " " + name;
+            document.getElementById('blessingOutputWish').innerText = '“' + wish + '”';
+            document.getElementById('offeredLotusIcon').innerText = lotusIcon;
+
+            // Save state
+            const currentList = getDevoteeList();
+            currentList.unshift({
+                name: name,
+                wish: wish,
+                lotus: lotusIcon,
+                time: "ເພິ່ງນີ້"
+            });
+            saveDevoteeList(currentList);
+            renderDevotees();
+
+            showToast("ທ່ານໄດ້ໄຕ້ທຽນ ແລະ ຖວາຍດອກບົວສຳເລັດແລ້ວ! ຂໍໃຫ້ສົມປະຖາໜາ", "ສາທຸ ສາທຸ", "fa-flame");
+
+            // Reset inputs
+            document.getElementById('devoteeName').value = '';
+            document.getElementById('devoteeWish').value = '';
+        }
+
+        function clearDevoteeList() {
+            localStorage.removeItem('xekaman_devotees');
+            renderDevotees();
+            showToast("ລຶບປະວັດການເຮັດບຸນແລ້ວ", "ແຈ້ງເຕືອນ", "fa-trash");
+        }
+
+        /* ===================================================
+           STREAMING_CHUNK:Adding Dhamma quote rotation and clipboard copy handlers...
+           =================================================== */
+       const QUOTES = [
+    { text: "ຄວາມເວັ້ນຈາກບາບທັງປວງ, ການຍັງກຸສົນໃຫ້ເຖິງພ້ອມ, ການເຮັດຈິດໃຈຂອງຕົນໃຫ້ຜ່ອງໃສ ນີ້ແມ່ນຄຳສອນຂອງພຣະພຸດທະເຈົ້າທັງຫຼາຍ.", source: "- ພຣະພຸດທະໂອວາດ -" },
+    { text: "ການໃຫ້ທານ ຍ່ອມຊະນະການຕະຖີ່ ມີຄວາມເມດຕາ ຍ່ອມຊະນະຄວາມໂກດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຈິດໃຈທີ່ຝຶກອົບຮົມດີແລ້ວ ຍ່ອມນຳຄວາມສຸກມາໃຫ້.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມບໍ່ປະໝາດ ເປັນໜທາງແຫ່ງຄວາມບໍ່ຕາຍ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຕົນເປັນທີ່ເພິ່ງຂອງຕົນ ຄົນອື່ນໃຜເລີຍຈະເປັນທີ່ເພິ່ງໄດ້.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ເຮັດດີໄດ້ດີ ເຮັດຊົ່ວໄດ້ຊົ່ວ ກົດແຫ່ງກຳຍ່ອມໃຫ້ຜົນສະເໝີ.", source: "- ຄຳສອນພຣະທຳ -" },
+    { text: "ຄວາມອົດທົນ ເປັນຕົບະຢ່າງຍິ່ງ.", source: "- ໂອວາດປາຕິໂມກ -" },
+    { text: "ຜູ້ມີສະຕິ ຍ່ອມມີຄວາມສຸກໃນທຸກສະຖານທີ່.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ເມດຕາທຳ ຄ້ຳຈູນໂລກ.", source: "- ຄຳສອນພຣະທຳ -" },
+    { text: "ການຊະນະຕົນເອງ ດີກວ່າຊະນະສົງຄາມພັນຄັ້ງ.", source: "- ພຣະພຸດທະໂອວາດ -" },
+    { text: "ຄວາມສຸກຍ່ອມເກີດຈາກຄວາມສະຫົບແຫ່ງຈິດໃຈ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ອະດີດຜ່ານໄປແລ້ວ ອນາຄົດຍັງບໍ່ເຖິງ ຈົ່ງຢູ່ກັບປັດຈຸບັນຢ່າງມີສະຕິ.", source: "- ຄຳສອນເຕືອນໃຈ -" },
+    { text: "ໂກດເຂົາ ເໝືອນຈຸດໄຟເຜົາຕົນເອງ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ການສ້າງບຸນກຸສົນ ເປັນອະຣິຍະຊັບຕິດຕົວໄປທຸກຊາດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ປັນຍາຍ່ອມເກີດຈາກການພິຈາລະນາ ແລະ ການຝຶກຝົນ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມກະຕັນຍູ ຮູ້ຄຸນຄົນ ເປັນເຄື່ອງໝາຍຂອງຄົນດີ.", source: "- ຄຳສອນພຣະທຳ -" },
+    { text: "ຢ່າເບິ່ງນຳຄວາມຊົ່ວຂອງຄົນອື່ນ ຈົ່ງກວດສອບຄວາມຊົ່ວຂອງຕົນເອງ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ສີລ ຍ່ອມນຳຄວາມສຸກ ແລະ ຄວາມສະຫົບມາໃຫ້ຜູ້ປະຕິບັດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມບໍ່ມີໂຣກ ເປັນລາບອັນປະເສີດ.", source: "- ພຣະພຸດທະໂອວາດ -" },
+    { text: "ຄວາມບໍລິສຸດ ແລະ ຄວາມເສົ້າໝອງ ເປັນຂອງສະເພາະຕົນ ໃຜເຮັດໃຫ້ໃຜບໍລິສຸດບໍ່ໄດ້.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຜູ້ໃຫ້ຍ່ອມເປັນທີ່ຮັກຂອງຄົນທັງຫຼາຍ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມສັນໂດດ ເປັນຊັບຢ່າງຍິ່ງ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມຄຸ້ນເຄີຍ ເປັນຍາດຢ່າງຍິ່ງ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ນິບພານ ເປັນສຸກຢ່າງຍິ່ງ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ການບໍ່ເຮັດບາບທັງປວງ ນຳມາເຊິ່ງຄວາມສະຫົບສຸກ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຜູ້ມີຄວາມເພຍຽນ ຍ່ອມລ່ວງພົ້ນຄວາມທຸກໄດ້.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ວາຈາທີ່ໄພລោះ ແລະ ເປັນຈິງ ຍ່ອມມີຄ່າກວ່າຄຳເວົ້າພັນຄຳທີ່ໄຮ້ສາລະ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ການຄົບຄົນດີ ຍ່ອມນຳພາໄປສູ່ຄວາມຈະເລີນ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການບໍ່ຄົບຄົນພານ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການບູຊາຜູ້ທີ່ຄວນບູຊາ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການລ້ຽງດູພໍ່ແມ່ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການປະຕິບັດທຳ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຈິດໃຈທີ່ຜ່ອງໃສ ຍ່ອມນຳໄປສູ່ສຸຄະຕິ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມໂກດ ຍ່ອມທຳລາຍມິດພາບ ແລະ ຄວາມສະຫົບ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມໂລບ ຍ່ອມນຳມາເຊິ່ງຄວາມທຸກບໍ່ມີທີ່ສິ້ນສຸດ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມຫຼົງ ຍ່ອມເຮັດໃຫ້ຄົນເຮົາມືດບອດຈາກຄວາມຈິງ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ສະຕິ ຍ່ອມປ້ອງກັນຈິດໃຈບໍ່ໃຫ້ຕົກໄປໃນທາງທີ່ຜິດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ສີລ 5 ເປັນເກາະປ້ອງກັນຊີວິດໃຫ້ມີຄວາມສະຫົບສຸກ.", source: "- ຄຳສອນພຣະທຳ -" },
+    { text: "ການເວັ້ນຈາກການຂ້າສັດ ຍ່ອມນຳມາເຊິ່ງຄວາມມີອາຍຸຢືນ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ການເວັ້ນຈາກການລັກຊັບ ຍ່ອມນຳມາເຊິ່ງຄວາມປອດໄພໃນຊັບສິນ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ການເວັ້ນຈາກການປະເວນີຜິດ ຍ່ອມນຳມາເຊິ່ງຄວາມສຸກໃນຄອບຄົວ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ການເວັ້ນຈາກການເວົ້າຂີ້ຕເລື່ອນ ຍ່ອມນຳມາເຊິ່ງຄວາມນັບຖືຈາກຄົນອື່ນ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ການເວັ້ນຈາກການດື່ມສຸລາ ຍ່ອມນຳມາເຊິ່ງສະຕິປັນຍາທີ່ແຈ່ມໃສ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ຄວາມດີທີ່ເຮັດໄວ້ ຍ່ອມບໍ່ສູນຫາຍໄປໃສ.", source: "- ຄຳສອນພຣະທຳ -" },
+    { text: "ເວລາບໍ່ເຄີຍຄອຍໃຜ ຈົ່ງຟ້າວສ້າງຄວາມດີໃນມື້ນີ້.", source: "- ຄຳສອນເຕືອນໃຈ -" },
+    { text: "ຄວາມຕາຍເປັນຂອງແນ່ນອນ ແຕ່ເວລາຕາຍບໍ່ມີໃຜຮູ້.", source: "- ພິຈາລະນາມໍຣະນະສະຕິ -" },
+    { text: "ທຸກສິ່ງທຸກຢ່າງເກີດຂຶ້ນ ຕັ້ງຢູ່ ແລະ ດັບໄປເປັນທຳມະດາ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ສັງຂານທັງຫຼາຍບໍ່ທ່ຽງ ຈົ່ງພິຈາລະນາດ້ວຍຄວາມບໍ່ປະໝາດ.", source: "- ພຣະພຸດທະໂອວາດ -" },
+    { text: "ການອະໄພ ໃຫ້ຄວາມສະຫົບແກ່ຈິດໃຈຂອງຜູ້ໃຫ້.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ລົມຫາຍໃຈເຂົ້າອອກ ເປັນຂອງຂວັນອັນປະເສີດຂອງຊີວິດ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ຈົ່ງເປັນຜູ້ຟັງที่ดี ຫຼາຍກວ່າເປັນຜູ້ເວົ້າທີ່ໄຮ້ສາລະ.", source: "- ຄຳສອນເຕືອນໃຈ -" },
+    { text: "ຄວາມອ່ອນນ້ອມຖ່ອມຕົນ ຍ່ອມນຳມາເຊິ່ງຄວາມເມດຕາຈາກຜູ້ໃຫຍ່.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມຊື່ສັດ ສຸຈະລິດ ເປັນຮາກຖານຂອງຊີວິດທີ່ດີງາມ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມຂະຫຍັນປະຢັດ ເປັນຄຸນນະທຳນຳໄປສູ່ຄວາມຮັ່ງມີ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ການຮູ້ຈັກພໍ ຍ່ອມເຮັດໃຫ້ຊີວິດมีความສຸກຕາມອັດຕະພາບ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມອິດສາ ຍ່ອມທຳລາຍຄວາມສຸກຂອງຕົນເອງ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມຮັກທີ່ແທ້ຈິງ ຄືຄວາມປາດຖະໜາໃຫ້ผู້ອື່ນมีความສຸກ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມກະລຸນາ ຄືຄວາມປາດຖະໜາໃຫ້ผู້ອື່ນພົ້ນຈາກຄວາມທຸກ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ມຸທິຕາ ຄືຄວາມຍິນດີເມື່ອผู້ອື່ນໄດ້ດີ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ອຸເປກຂາ ຄືຄວາມວາງເສີຍດ້ວຍປັນຍາ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ການທຳບຸນ ບໍ່ແມ່ນພຽງແຕ່ການໃຫ້ທານ ແຕ່ລວມເຖິງການรักษาສີລ ແລະ ພາວະນາ.", source: "- ຄຳສອນພຣະທຳ -" },
+    { text: "ການທຳສະມາທິ ຍ່ອມເຮັດໃຫ້ຈິດໃຈມີພະລັງ ແລະ ສະຫົບຕັ້ງມັ້ນ.", source: "- ຂໍ້ຄິດປະຕິບັດ -" },
+    { text: "ປັນຍາ ຄືແສງສະຫວ່າງສ່ອງທາງໃນຄວາມມືດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມພະຍາຍາມຢູ່ທີ່ໃດ ຄວາມສຳເລັດຢູ່ທີ່ນັ້ນ.", source: "- ສຸພາສິດເຕືອນໃຈ -" },
+    { text: "ອຸປະສັກ ເປັນບົດຮຽນສຳຄັນໃນການຝຶກຝົນຕົນເອງ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ການຍອມຮັບຄວາມຈິງ ເປັນບາດກ້າວທຳອິດຂອງຄວາມສະຫົບ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຢ່າເອົາຄວາມສຸກຂອງຕົນເອງ ໄປຜູກໄວ້ກັບປາກຂອງຄົນອື່ນ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄຳນິນທາ ເໝືອນລົມພັດມາແລ້ວກໍ່ພັດໄປ ຢ່າເກັບມາເກັບໄວ້ໃນໃຈ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມດີທີ່ເຮັດໃນມຸມມືດ ຍ່ອມສົ່ງຜົນໃຫ້ສະຫວ່າງໃນທີ່ແຈ້ງ.", source: "- ຄຳສອນເຕືອນໃຈ -" },
+    { text: "ການຟັງທຳຕາມກາລະ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການສົນທະນາທຳຕາມກາລະ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຄວາມເຄົາລົບ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຄວາມຖ່ອມຕົນ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຄວາມອົດທົນ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຄວາມເປັນຜູ້ວ່າງ່າຍ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການເຫັນສະມະນະ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ການເຮັດຈິດໃຈບໍ່ໃຫ້ຫ່ວັນໄຫວໃນໂລກກະທຳ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຈິດໃຈທີ່ໄຮ້ໂສກ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຈິດໃຈທີ່ປາດສະຈາກມົນທິນ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຈິດໃຈທີ່ເກັມເກษມ ເປັນມົງຄົນອັນປະເສີດ.", source: "- ມັງຄະລາສູດ -" },
+    { text: "ຄວາມກະຕັນຍູຕໍ່ຜູ້ມີພຣະຄຸນ ຍ່ອມນຳມາເຊິ່ງຄວາມຈະເລີນຮຸ່ງເຮືອງ.", source: "- ຄຳສອນເຕືອນໃຈ -" },
+    { text: "ເມື່ອມີຄວາມທຸກ ຈົ່ງໃຊ້ສະຕິ ແລະ ປັນຍາໃນການແກ້ໄຂ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຢ່າປ່ອຍໃຫ້ຄວາມໂກດ ເປັນຜູ້ຄວບຄຸມການກະທຳຂອງຕົນ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ການໃຫ້ອະໄພ ຄືການປົດປ່ອຍຕົນເອງຈາກຄວາມທຸກ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຄວາມສຸກທີ່ແທ້ຈິງ ບໍ່ໄດ້ຢູ່ທີ່ວັດຖຸ ແຕ່ຢູ່ທີ່ຈິດໃຈ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຈົ່ງເປັນຜູ້ສ້າງຄວາມສຸກ ໃຫ້ແກ່ຄົນຮອບข้าง.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ການມີມິດດີ ຍ່ອມພາໄປສູ່ທາງທີ່ດີ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ການຄຸ້ມຄອງທວານໃນອິນຊີ ເປັນທາງນຳໄປສູ່ຄວາມສະຫົບ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມປະໝາດ ເປັນເຄືອດທາງແຫ່ງຄວາມເສື່ອມ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຈົ່ງພິຈາລະນາຄວາມແກ່ ຄວາມເຈັບ ແລະ ຄວາມຕາຍ ເພື່ອບໍ່ໃຫ້ປະໝາດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມຮັກໃຜ່ໃນທຳ ຍ່ອມນຳມາເຊິ່ງຄວາມສຸກ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຜູ້ປະຕິບັດທຳ ຍ່ອມມີທຳມະຄຸ້ມຄອງ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມສະຫົບແຫ່ງຈິດ ຍ່ອມເກີດຈາກການລະຄວາມຢາກ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ການຝຶກຕົນເອງ ເປັນສິ່ງທີ່ປະເສີດທີ່ສຸດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມບໍ່ມີອະຄະຕິ ຍ່ອມນຳມາເຊິ່ງຄວາມຍຸຕິທຳ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ຈົ່ງໃຊ້ຊີວິດດ້ວຍຄວາມເມດຕາ ແລະ ປັນຍາໃນທຸກໆ ວັນ.", source: "- ຂໍ້ຄິດເຕືອນໃຈ -" },
+    { text: "ການໃຫ້ຄວາມຮູ້ ເປັນການໃຫ້ທານອັນປະເສີດ.", source: "- ພຣະທຳມະຄຳສອນ -" },
+    { text: "ຄວາມສຸກຍ່ອມຕາມຜູ້ມີຈິດໃຈດີ ເໝືອນເງົາຕາມໂຕ.", source: "- ພຣະພຸດທະໂອວາດ -" },
+    { text: "ຄວາມທຸກຍ່ອມຕາມຜູ້ມີຈິດໃຈຊົ່ວ ເໝືອນລໍ້ລົດຕາມຮອບຕີນງົວ.", source: "- ພຣະພຸດທະໂອວາດ -" },
+    { text: "ຄວາມບໍ່ມີໂຣກທາງໃຈ ຄືຄວາມປາດສະຈາກກິເລດ.", source: "- ພຣະທຳມະຄຳສອນ -" }
+];
+        function getRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * QUOTES.length);
+            const quote = QUOTES[randomIndex];
+            const englishQuote = autoTranslations.en.quotes[randomIndex];
+            document.getElementById('dhammaText').innerText = getPreferredLanguage() === 'en' ? englishQuote : quote.text;
+            document.getElementById('dhammaSource').innerText = translateText(quote.source);
+            showToast("ສຸ່ມທຳມະຄຳສອນໃໝ່ແລ້ວ", "ທຳມະທານ", "fa-quote-left");
+        }
+
+        function copyDhammaQuote() {
+            const text = document.getElementById('dhammaText').innerText + " " + document.getElementById('dhammaSource').innerText;
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            showToast("ຄັດລອກຂໍ້ຄວາມທຳມະຄຳສອນສຳເລັດແລ້ວ!", "ຄັດລອກແລ້ວ", "fa-copy");
+        }
+
+        function copyAccountNo() {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = "160-12-00-00123456-001";
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            showToast("ຄັດລອກເລກບັນຊີ BCEL 160-12-00-00123456-001 ສຳເລັດແລ້ວ!", "ຄັດລອກແລ້ວ", "fa-copy");
+        }
+
+function handleContactSubmit(e) {
+    e.preventDefault();
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyRNp_doGL4rXXaGYJWxE8KgLB_DJiJ5cx-EMn6qxmcSJdLcPdqP4AdFudpmV406Rxo5A/exec';
+
+    const form = e.target;
+    const inputs = form.querySelectorAll('input');
+    const textarea = form.querySelector('textarea');
+
+    const formData = {
+        name: inputs[0] ? inputs[0].value : '',
+        phone: inputs[1] ? inputs[1].value : '',
+        subject: inputs[2] ? inputs[2].value : '',
+        message: textarea ? textarea.value : ''
+    };
+
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(() => {
+        showToast("ສົ່ງຂໍ້ຄວາມສຳເລັດແລ້ວ!", "ສົ່ງຂໍ້ຄວາມສຳເລັດ", "fa-paper-plane");
+        
+        // ລ້າງຂໍ້ຄວາມໃນช่องກອກທັງໝົດ
+        if (typeof form.reset === 'function') {
+            form.reset();
+        }
+        inputs.forEach(input => input.value = '');
+        if (textarea) textarea.value = '';
+    })
+    .catch(error => {
+        showToast("ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່", "ສົ່ງບໍ່ສຳເລັດ", "fa-exclamation-triangle");
+        console.error('Error!', error.message);
+    });
+}
+        // 1. ฟังก์ชันแชร์ลง Facebook
+function shareToFacebook() {
+    try {
+        var textEl = document.getElementById('dhammaText');
+        var sourceEl = document.getElementById('dhammaSource');
+        
+        var text = textEl ? textEl.innerText.trim() : '';
+        var source = sourceEl ? sourceEl.innerText.trim() : '';
+        var pageUrl = window.location.href;
+
+        // รวมข้อความคำสอนและแหล่งที่มา
+        var shareContent = text + (source ? " " + source : "");
+
+        // สร้าง Link สำหรับแชร์ลง Facebook
+        var facebookUrl = "https://www.facebook.com/sharer/sharer.php?u=" + 
+                          encodeURIComponent(pageUrl) + 
+                          "&quote=" + encodeURIComponent(shareContent);
+
+        // เปิด Pop-up หน้าแชร์ Facebook
+        window.open(facebookUrl, '_blank', 'width=600,height=500,location=no,menubar=no,status=no,toolbar=no');
+    } catch (err) {
+        console.error("Facebook Share Error:", err);
+    }
+}
+
+// 2. ฟังก์ชันส่งทาง WhatsApp
+function shareToWhatsApp() {
+    try {
+        var textEl = document.getElementById('dhammaText');
+        var sourceEl = document.getElementById('dhammaSource');
+        
+        var text = textEl ? textEl.innerText.trim() : '';
+        var source = sourceEl ? sourceEl.innerText.trim() : '';
+        var pageUrl = window.location.href;
+
+        // จัดรูปแบบข้อความ WhatsApp (มีตัวหนาและลิงก์อ่านเพิ่มเติม)
+        var message = "*" + text + "*\n" + (source ? source + "\n" : "") + "\n" + translateText("📖 ອ່ານຄຳສອນເພີ່ມເຕີມ:") + " " + pageUrl;
+
+        // สร้าง Link สำหรับส่ง WhatsApp
+        var whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
+
+        // เปิดแอปพลิเคชัน WhatsApp หรือเว็บ WhatsApp
+        window.open(whatsappUrl, '_blank');
+    } catch (err) {
+        console.error("WhatsApp Share Error:", err);
+    }
+}
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        /* Initial Setup */
+        window.onload = function() {
+            renderDevotees();
+        };
+         // =========================================================================
+// ระบบสลับภาษา 2 ภาษา (🇱🇦 ພາສາລາວ / 🇬🇧 English)
+// =========================================================================
+
+// 1. คลังคำแปลเปรียบเทียบภาษาอังกฤษจากข้อความเดิมภาษาลาว
+const autoTranslations = {
+    en: {
+        // แถบประกาศด้านบนสุด (Top Bar)
+        "ຂໍຕ້ອນຮັບສູ່": "Welcome to",
+        "ວັດເຊກະພານກາງ": "Wat Sekaman Kang",
+        "ຍິນດີຕ້ອນຮັບທຸກທ່ານ": "Welcome all visitors",
+        "ຟັງສຽງຮັງ": "Listen Bell",
+        "ຟັງສຽງກອງ": "Listen Gong",
+        "ວັນພຣະຕໍ່ໄປ: 15 ຄ່ຳ": "Next Monk Day: 15th Moon",
+
+        // เมนูนำทาง (Header / Navbar)
+        "ບ້ານເຊກະພານ, ເມືອງ ສາມັກຄີໄຊ, ແຂວງ ອັດຕະປື": "Sekaman Village, Samakkixay District, Attapeu",
+        "ໜ້າຫຼັກ": "Home",
+        "ກ່ຽວກັບວັດ": "About Us",
+        "ກິດຈະກຳວັດ": "Activities",
+        "ຮ່ວມບໍລິຈາກ/ທຳບຸນ": "Donation",
+        "ຕິດຕໍ່ເຮົາ": "Contact Us",
+
+        // ส่วนต้อนรับหลัก (Hero Section)
+        "ສູນລວມຈິດໃຈ ແລະ ພຣະພຸດທະສາສະໜາ": "Center of Buddhist Faith",
+        "ບ້ານເຊກະພານ, ເມືອງ ສາມັກຄີໄຊ, ແຂວງ ອັດຕະປື, ສປປ ລາວ": "Sekaman Village, Samakkixay District, Attapeu Province, Laos",
+        "ເຂົ້າເບິ່ງທ່ານຮູບສະມາຊິກພາຍໃນວັດ": "View Organization Structure",
+
+        // ส่วนประวัติความเป็นมา (About Section)
+        "ກ່ຽວກັບເຮົາ": "ABOUT US",
+        "ປະວັດຄວາມເປັນມາຂອງວັດ": "History of the Temple",
+        "ວັດເຊກະພານກາງ ຕັ້ງຢູ່ບ້ານເຊກະພານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ ເປັນສາສະນະສະຖານທີ່ສຳຄັນອັນເປັນສູນລວມຈິດໃຈຂອງພຸດທະສາສະນິກະຊົນໃນເຂດລຸ່ມນ້ຳເຊກະພານ.": "Wat Sekaman Kang is located in Sekaman Village, Samakkixay District, Attapeu Province, Laos. It is a major Buddhist temple serving as a spiritual sanctuary for local communities.",
+        "ວັດแห่งນີ້ເປັນສູນກາງໃນການປະກອບພິທີກຳທາງພຣະພຸດທະສາສະໜາ, ອົບຮົມສັ່ງສອນສີລະທຳ, ຕະຫຼອດຮອດການສືບສານປະເພນີອັນດີງາມຂອງທ້ອງຖິ່ນໃຫ້ຄົງຢູ່ສືບໄປ.": "The temple serves as a center for religious ceremonies, moral teachings, and preserving local cultural traditions for future generations.",
+
+        // ส่วนทำบุญ / บริจาค (Donation Section)
+        "ຮ່ວມທຳບຸນ": "DONATION",
+        "ຮ່ວມທຳບຸນ / ບໍລິຈາກສ້າງບຳລຸງວັດ": "Make a Donation / Merit Making",
+        "ເຊີນຊວນພຸດທະສາສະນິກະຊົນຮ່ວມທຳບຸນສົມທົບທຶນຕາມກຳລັງສັດທາ ເພື່ອບູລະນະປະຕິສັງຂອນ ແລະ ພັດທະນາວັດເຊກະພານກາງ.": "We invite Buddhists to contribute according to their faith for the renovation and development of Wat Sekaman Kang.",
+        "ບັນຊີ ທະນາຄານການຄ້າຕ່າງປະເທດລາວ (BCEL)": "Banque Pour Le Commerce Exterieur Lao (BCEL)",
+        "ຊື່ບັນຊີ: ວັດເຊກະພານກາງ ( Wat Sekaman Kang )": "Account Name: Wat Sekaman Kang",
+
+        // ส่วนติดต่อและแผนที่ (Contact & Map Section)
+        "LOCATION & CONTACT": "LOCATION & CONTACT",
+        "ຕິດຕໍ່ເຮົາ & ແຜນທີ່ການເດີນທາງ": "Contact Us & Location Map",
+        "ທີ່ຢູ່": "Address",
+        "ໂທລະສັບ / WhatsApp": "Phone / WhatsApp",
+        "ອີເມວ": "Email",
+        "ເບິ່ງແຜນທີ່ຕຳແໜ່ງວັດ": "View Location Map",
+
+        // ส่วนฟอร์มส่งข้อความ (Contact Form)
+        "ສົ່ງຂໍ້ຄວາມ ຫຼື ສອບຖາມຂໍ້ມູນ": "Send Us a Message",
+        "ຊື່ ແລະ ນາມສະກຸນ": "Full Name",
+        "ເບີໂທລະສັບ": "Phone Number",
+        "ຂໍ້ຄວາມທີ່ຕ້ອງການສົ່ງ": "Message",
+        "ສົ່ງຂໍ້ຄວາມ": "Send Message",
+        "ຕົວຢ່າງ: ທ່ານ ສົມໄຊ": "e.g. Mr. Somchai",
+        "020 XXXXXXXX": "020 XXXXXXXX",
+        "ພິມຂໍ້ຄວາມຂອງທ່ານຢູ່ທີ່ນີ້...": "Type your message here...",
+
+        // ป๊อปอัปแผนที่ (Map Modal)
+        "ແຜນທີ່ ແລະ ການເດີນທາງ": "Map & Directions",
+        "ແຜນທີ່ຕຳແໜ່ງ ອັດຕະປື ເຊກະພານ": "Attapeu Sekaman Location Map",
+        "ທ່ານສາມາດເດີນທາງຕາມເສັ້ນທາງຫຼັກເລກທີ 16A ແຄມນ້ຳເຊກະພານ.": "You can travel along Route 16A along the Sekaman River.",
+        "ນຳທາງດ້ວຍ Google Maps": "Navigate with Google Maps",
+        "ປິດ": "Close",
+
+        // ส่วนท้ายเว็บ (Footer)
+        "© 2026 ວັດເຊກະພານກາງ ( Wat Sekaman Kang ). ສະຫງວນລິຂະສິດທັງໝົດ.": "© 2026 Wat Sekaman Kang. All rights reserved."
+    }
+};
+
+// Complete English translation set for every built-in interface string.
+// User-entered names and wishes are intentionally kept as entered.
+Object.assign(autoTranslations.en, {
+    "ວັດເຊກະໝານກາງ - Wat Xekaman Kang": "Wat Xekaman Kang",
+    "ແຈ້ງເຕືອນ": "Notification",
+    "ຕົກລົງ / ປິດ": "OK / Close",
+    "ວັດເຊກະໝານກາງ": "Wat Xekaman Kang",
+    "ວັດເຊກະພານກາງ": "Wat Xekaman Kang",
+    "ປະວັດຄວາມເປັນມາ": "History",
+    "ສິ່ງສັກສິດ": "Sacred Sites",
+    "ໄຕ້ທຽນອອນໄລນ໌": "Online Candle Offering",
+    "ທຳມະຄຳສອນ": "Dhamma Teachings",
+    "ກິດຈະກຳ-ງານບຸນ": "Activities & Festivals",
+    "ຕິດຕໍ່-ແຜນທີ່": "Contact & Map",
+    "ຮ່ວມເຮັດບຸນ": "Make Merit",
+    "ຮ່ວມເຮັດບຸນບໍລິຈາກ": "Make Merit & Donate",
+    "ສາທຸ ສາທຸ ສາທຸ - ຍິນດີຕ້ອນຮັບສູ່ດິນແດນແຫ່ງທຳ": "Sadhu, Sadhu, Sadhu — welcome to the land of Dhamma",
+    "ສູນລວມຈິດໃຈ, ທຳມະທານ, ມໍລະດົກທາງສະຖາປັດຕະຍະກຳ ແລະ ຄວາມສະຫງົບສຸກແຫ່ງລຸ່ມນ້ຳເຊກະໝານ": "A center of faith, Dhamma, architectural heritage, and peace along the Sekaman River",
+    "ໄຕ້ທຽນ & ຖວາຍດອກບົວ": "Light a Candle & Offer a Lotus",
+    "ອ່ານປະວັດຄວາມເປັນມາ": "Read Our History",
+    "ຕັກບາດເຊົ້າ": "Morning Alms Offering",
+    "ທຸກໆເຊົ້າ ເວລາ 06:00 ໂມງ": "Every morning at 6:00 AM",
+    "ທຳວັດສູດມົນ": "Morning and Evening Chanting",
+    "ເຊົ້າ 07:00 | ແລງ 18:00": "Morning 7:00 AM | Evening 6:00 PM",
+    "ປະຕິບັດທຳ & ສະມາທິ": "Dhamma Practice & Meditation",
+    "ທຸກໆວັນສີນ ແລະ ວັນອາທິດ": "Every observance day and Sunday",
+    "ປະວັດຄວາມເປັນມາ ວັດເຊກະໝານກາງ": "History of Wat Xekaman Kang",
+    "ປີ ແຫ່ງຄວາມສັດທາ": "Years of Faith",
+    "ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ດິນແດນອຸດົມສົມບູນດ້ວຍທຳມະຊາດ ແລະ ວັດທະນະທຳອັນງົດງາມ. ເປັນວັດເກົ່າແກ່ທີ່ສ້າງຂຶ້ນໂດຍຄວາມສັດທາຮ່ວມກັນຂອງພຸດທະສາສະນິກະຊົນ ເພື່ອເປັນສູນລວມຈິດໃຈ, ບ່ອນອົບຮົມສີລະທຳ ແລະ ບ່ອນສຶກສາພຣະທຳຄຳສອນຂອງອົງພຣະສຳມາສຳພຸດທະເຈົ້າ.": "Situated beside the Sekaman River in a land rich in nature and culture, this historic temple was built through the shared faith of Buddhists as a spiritual center, a place for moral training, and a place to study the Buddha's teachings.",
+    "ຊື່ຂອງວັດ \"ເຊກະໝານກາງ\" ມີທີ່ມາຈາກທີ່ຕັ້ງທີ່ຢູ່ເຄິ່ງກາງຂອງລຸ່ມນ້ຳເຊກະໝານ ເຊິ່ງເປັນສາຍນ້ຳຫຼັກທີ່ລ້ຽງຊີວິດປະຊາຊົນ. ພຣະອຸໂບສົດ ແລະ ສິ່ງກໍ່ສ້າງພາຍໃນວັດໄດ້ຮັບການອອກແບບຕາມສະຖາປັດຕະຍະກຳລາວອັນເປັນເອກະລັກ ມີຊໍ່ຟ້າ, ໃບລະກາ, ແລະ ລວດລາຍກົບກຽວຢ່າງອ່ອນຊ້ອຍ.": "The name ‘Xekaman Kang’ comes from the temple's location in the middle of the Sekaman River basin, a vital waterway for the community. Its ordination hall and buildings feature distinctive Lao architecture, with elegant roof finials, decorative gables, and intricate carved motifs.",
+    "ປັດຈຸບັນ, ວັດເຊກະໝານກາງ ບໍ່ພຽງແຕ່ເປັນສະຖານທີ່ປະກອບພິທີທາງສາສະໜາເທົ່ານັ້ນ, ແຕ່ຍັງເປັນສູນອະນຸລັກສິລະປະວັດທະນະທຳລາວ, ສະຖານທີ່ປະຕິບັດທຳຂອງປະຊາຊົນ ແລະ ຕ້ອນຮັບແຂກບ້ານແຂກເມືອງທີ່ມາຢ້ຽມຢາມດ້ວຍຄວາມອົບອຸ່ນ.": "Today, Wat Xekaman Kang is not only a place for religious ceremonies; it also preserves Lao arts and culture, supports Dhamma practice, and warmly welcomes visitors.",
+    "ທຳມະຊາດຮົມເຢັນ": "Peaceful Nature",
+    "ຕັ້ງຢູ່ຕິດແຄມນ້ຳ": "Located by the riverside",
+    "ສູນຮວມສັດທາ": "Center of Faith",
+    "ຮັກສາປະເພນີອັນດີງາມ": "Preserving fine traditions",
+    "ສິ່ງສັກສິດ ແລະ ສາສະນະສະຖານ": "Sacred Sites and Religious Buildings",
+    "ຊົມຄວາມງາມຂອງສະຖາປັດຕະຍະກຳ ແລະ ສິ່ງສັກສິດຄູ່ບ້ານຄູ່ເມືອງພາຍໃນວັດເຊກະໝານກາງ": "Discover the beauty of the temple's architecture and its community's sacred treasures",
+    "ສາສະນະສະຖານຫຼັກ": "Main Religious Building",
+    "ພາບຖ່າຍມຸມກວ້າງຂອງວັດເຊກະໝານກາງ ສູນລວມສັດທາແຄມນ້ຳເຊກະໝານ": "A panoramic view of Wat Xekaman Kang, a center of faith by the Sekaman River",
+    "ພຣະອຸໂບສົດ": "Ordination Hall",
+    "ພຣະອຸໂບສົດ (ສິມ)": "Ordination Hall (Sim)",
+    "ພຣະອຸໂບສົດສຸວັນນະພູມ ອອກແບບດ້ວຍຊ່າງຝີມືລາວ, ມີຫຼັງຄາຊ້ອນຊັ້ນອັນສົມສ່ວນ ພ້ອມລວດລາຍແກະສະຫຼັກຄຳ": "The Suwannaphum Ordination Hall was designed by Lao artisans, with harmonious tiered roofs and golden carved motifs.",
+    "ພຣະອຸໂບສົດສຸວັນນະພູມ ອອກແບບດ້ວຍຊ່າງຝີມືລາວ, ມີຫຼັງຄາຊ້ອນຊັ້ນອັນສົມສ່ວນ ພ້ອມລວດລາຍແກະສະຫຼັກຄຳທີ່ສະທ້ອນຄວາມຮຸ່ງເຮືອງທາງພຸດທະສາສະໜາ.": "The Suwannaphum Ordination Hall was crafted by Lao artisans, with harmonious tiered roofs and golden carvings that reflect the splendor of Buddhism.",
+    "ຕັ້ງຢູ່ໃຈກາງຂອງວັດ": "Located at the heart of the temple",
+    "ພຣະປະທານ": "Principal Buddha Image",
+    "ພຣະພຸດທະເຊກະໝານ": "Xekaman Buddha Image",
+    "ພຣະພຸດທະຮູບປະທານອົງໃຫຍ່ ຫຼໍ່ດ້ວຍທອງສຳລິດ ປາງມາຣະວິໄຊ ມີພຣະພັກອັນສະຫງົບເຢັນ ເປັນທີ່ເຄົາລົບສັກກະຣະບູຊາ": "A large bronze Buddha image in the Mara-vijaya posture, with a serene expression, revered by worshippers.",
+    "ພຣະພຸດທະຮູບປະທານອົງໃຫຍ່ ຫຼໍ່ດ້ວຍທອງສຳລິດ ປາງມາຣະວິໄຊ ມີພຣະພັກອັນສະຫງົບເຢັນ ເປັນທີ່ເຄົາລົບສັກກະຣະບູຊາຂອງຊາວບ້ານ ແລະ ອາຄັນຕຸກະ.": "A large bronze principal Buddha image in the Mara-vijaya posture, with a serene expression, revered by local people and visitors.",
+    "ປະທັບໃນພຣະອຸໂບສົດ": "Enshrined in the Ordination Hall",
+    "ຫໍພຣະໄຕປິດົກ": "Tripitaka Library",
+    "ຫໍໄຕກາງນ້ຳ": "Waterside Scripture Library",
+    "ຫໍເກບໄພລານ ແລະ ຄຳພີພຣະໄຕປິດົກໂບຮານ ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ເພື່ອປ້ອງກັນປວກ ແລະ ແມງໄມ້": "A riverside repository for palm-leaf manuscripts and ancient Tripitaka scriptures, built to protect them from termites and insects.",
+    "ຫໍເກບໄພລານ ແລະ ຄຳພີພຣະໄຕປິດົກໂບຮານ ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ເພື່ອປ້ອງກັນປວກ ແລະ ແມງໄມ້, ອຸດົມດ້ວຍຄຳສອນອັນລຳ້ຄ່າ.": "A riverside repository for palm-leaf manuscripts and ancient Tripitaka scriptures, designed to protect them from termites and insects and preserve their invaluable teachings.",
+    "ບ່ອນເກັບຮັກສາຄຳພີໂບຮານ": "Repository of ancient scriptures",
+    "ໄຕ້ທຽນ & ຖວາຍດອກບົວອອນໄລນ໌": "Light a Candle & Offer a Lotus Online",
+    "ສົ່ງຜົນບຸນ ແລະ ຄຳອະທິຖານຂອງທ່ານ ເພື່ອຄວາມສົມຫວັງ, ຄວາມສະຫງົບສຸກ ແລະ ເປັນສິຣິມົງຄົນແກ່ຊີວິດ": "Offer your merit and prayer for fulfillment, peace, and blessings in life",
+    "ກະລຸນາປ້ອນຊື່ ແລະ ຄຳອະທິຖານ ຈາກນັ້ນກົດປຸ່ມ \"ໄຕ້ທຽນ & ຖວາຍດອກບົວ\"": "Enter your name and prayer, then select ‘Light a Candle & Offer a Lotus’.",
+    "ຊື່ ແລະ ນາມສະກຸນ ຜູ້ຮ່ວມເຮັດບຸນ": "Full Name of the Merit Maker",
+    "ຕົວຢ່າງ: ທ່ານ ທອງດີ + ຄອບຄົວ": "e.g. Mr. Thongdy + family",
+    "ເລືອກສີດອກບົວຖວາຍ": "Choose a Lotus Color",
+    "🌸 ດອກບົວສີຊົມພູ (ຄວາມເມດຕາ & ຄວາມຮັກ)": "🌸 Pink lotus (kindness & love)",
+    "🪷 ດອກບົວສີຂາວ (ຄວາມບໍລິສຸດ & ປັນຍາ)": "🪷 White lotus (purity & wisdom)",
+    "🌼 ດອກບົວສີເຫຼືອງ (ຄວາມຈະເລີນຮຸ່ງເຮືອງ)": "🌼 Yellow lotus (prosperity)",
+    "ຄຳອະທິຖານ / ຂໍພອນ": "Prayer / Blessing Request",
+    "ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ, ສຸຂະພາບແຂງແຮງ, ປາສະຈາກໂຣກໄພໄຂ້ເຈັບ...": "May my family be happy, healthy, and free from illness...",
+    "ລາຍຊື່ຜູ້ໄຕ້ທຽນຖວາຍດອກບົວບໍ່ດົນມານີ້": "Recent Candle and Lotus Offerings",
+    "ລຶບປະວັດ": "Clear History",
+    "ທຳມະຄຳສອນປະຈຳວັນ": "Daily Dhamma Teaching",
+    "\"ຄວາມເວັ້ນຈາກບາບທັງປວງ, ການຍັງກຸສົນໃຫ້ເຖິງພ້ອມ, ການເຮັດຈິດໃຈຂອງຕົນໃຫ້ຜ່ອງໃສ ນີ້ແມ່ນຄຳສອນຂອງພຣະພຸດທະເຈົ້າທັງຫຼາຍ.\"": "‘Avoid all evil, cultivate good, and purify your mind — this is the teaching of all Buddhas.’",
+    "- ພຣະທຳມະຄຳສອນ ໂອວາດປາຕິໂມກ -": "— Ovada Patimokkha —",
+    "ສຸ່ມຄຳສອນໃໝ່": "New Random Teaching",
+    "ຄັດລອກຂໍ້ຄວາມ": "Copy Text",
+    "ແບ່ງປັນ Facebook": "Share on Facebook",
+    "ສົ່ງທາງ WhatsApp": "Send via WhatsApp",
+    "ງານບຸນປະເພນີ ແລະ ຕາຕະລາງກິດຈະກຳ": "Traditional Festivals & Activity Schedule",
+    "ຂໍເຊີນຊວນສັດທາສາທຸຊົນທັງຫຼາຍ ຮ່ວມງານບຸນປະເພນີປະຈຳປີ ແລະ ກິດຈະກຳທາງສາສະໜາ": "All devotees are invited to join our annual traditional festivals and religious activities.",
+    "ງານບຸນປະຈຳປີ": "Annual Festival",
+    "ເດືອນ 11 ລາວ": "11th Lao lunar month",
+    "ງານບຸນອອກພັນສາ & ລອຍກະໂທງ": "End of Buddhist Lent & Floating Lantern Festival",
+    "ພິທີຕັກບາດເທໂວ, ຟັງພຣະທຳເທດສະໜາ, ໄຕ້ປະທີບໂຄມໄຟ ແລະ ລອຍກະໂທງບູຊາສາຍນ້ຳເຊກະໝານ.": "Alms giving to monks, Dhamma sermons, lantern lighting, and floating offerings to honor the Sekaman River.",
+    "ຕະຫຼອດມື້": "All day",
+    "ແຄມນ້ຳເຊກະໝານ": "Sekaman Riverside",
+    "ບຸນມະຫາຊາດ": "Vessantara Festival",
+    "ເດືອນ 4 ລາວ": "4th Lao lunar month",
+    "ງານບຸນມະຫາຊາດ (ບຸນຜະເວດ)": "Vessantara Festival (Bun Phawet)",
+    "ພິທີແຫ່ຜ້າຜະເວດ, ຟັງເທດສະໜາມະຫາຊາດ 13 ກັນ 1000 ພຣະຄາຖາ ເພື່ອສີຣິມົງຄົນ.": "A procession of the Vessantara cloth and listening to all 13 chapters of the Great Birth Sermon for blessings.",
+    "3 ມື້ 3 ຄືນ": "3 days and 3 nights",
+    "ກິດຈະກຳປະຈຳອາທິດ": "Weekly Activity",
+    "ທຸກໆວັນອາທິດ": "Every Sunday",
+    "ອົບຮົມສະມາທິ & ສຶກສາທຳ": "Meditation Training & Dhamma Study",
+    "ຮຽນຮູ້ການເຈີນສະມາທິພາວະນາ, ຝຶກຈິດໃຈໃຫ້ສະຫງົບ ແລະ ແລກປ່ຽນຄຳສອນທຳມະ.": "Learn meditation, train the mind for calm, and share Dhamma teachings.",
+    "14:00 - 16:00 ໂມງ": "2:00 PM – 4:00 PM",
+    "ຫໍແຈກ (ສາລາການເປຣຽນ)": "Dhamma Hall (Study Pavilion)",
+    "ຮ່ວມເຮັດບຸນບໍລິຈາກ ບູລະນະວັດເຊກະໝານກາງ": "Make Merit and Donate for the Restoration of Wat Xekaman Kang",
+    "ຂໍເຊີນຊວນສາທຸຊົນຜູ້ມີຈິດສັດທາ ຮ່ວມບໍລິຈາກທຶນຮັກສາສ້ອມແປງພຣະອຸໂບສົດ, ຄ່ານ້ຳ-ຄ່າໄຟ, ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ ແລະ ສ້າງສາທາລະນະປະໂຫຍດໃນຊຸມຊົນ.": "Devotees are invited to contribute to repairs of the ordination hall, utility costs, education for monks and novices, and community benefit projects.",
+    "ຮ່ວມສ້າງ ແລະ ບູລະນະສິມ/ພຣະອຸໂບສົດ": "Help Build and Restore the Ordination Hall",
+    "ອຸປະຖຳການສຶກສາພຣະທຳມະວິນັຍ": "Support Dhamma and Monastic Education",
+    "ກອງທຶນສາທາລະນະສຸກ ແລະ ບຸນປະເພນີ": "Public Welfare and Traditional Festival Fund",
+    "ອອກໃບອະນຸໂມທະນາບຸນ (Digital Receipt)": "Create a Merit Certificate (Digital Receipt)",
+    "ສະແກນ QR Code ເພື່ອຮ່ວມບໍລິຈາກ (BCEL One)": "Scan the QR Code to Donate (BCEL One)",
+    "ຊື່ບັນຊີ: Khamsavanh LEUAMTHININ Monk)": "Account Name: Khamsavanh LEUAMTHININ (Monk)",
+    "ທະນາຄານ:": "Bank:",
+    "ທະນາຄານການຄ້າຕ່າງປະເທດລາວ (BCEL)": "Banque Pour Le Commerce Exterieur Lao (BCEL)",
+    "ເລກບັນຊີ (LAK):": "Account Number (LAK):",
+    "ເລກບັນຊີ (THB):": "Account Number (THB):",
+    "ຄັດລອກເລກບັນຊີ": "Copy Account Number",
+    "ເຂົ້າເບິ່ງທຳນຽບສະມາຊິກພາຍໃນວັດ": "View the Temple Member Directory",
+    "ບ້ານເຊກະໝານກາງ, ເມືອງ ສາມັກຄີໄຊ ແລະ ແຂວງ ອັດຕະປື, ສປປລາວ": "Xekaman Kang Village, Samakkixay District, Attapeu Province, Laos",
+    "ຫົວຂໍ້": "Subject",
+    "ຂໍ້ຄວາມ": "Message",
+    "ລິ້ງຄ໌ດ່ວນ": "Quick Links",
+    "ຄຳອຸທິດສ່ວນບຸນ": "Dedication of Merit",
+    "\"ອິດທັງ ເມ ຍາຕີນັງ ໂຫຕຸ ສຸຂິຕາ ໂຫນຕຸ ຍາຕະໂຍ\"": "‘May this merit reach all my relatives; may they be happy.’",
+    "ຂໍສ່ວນບຸນນີ້ຈົ່ງສຳເລັດແກ່ຍາດຕິພີ່ນ້ອງທັງຫຼາຍຂອງຂ້າພະເຈົ້າ ຂໍໃຫ້ຍາດຕິພີ່ນ້ອງທັງຫຼາຍຈົ່ງມີຄວາມສຸກ.": "May this merit be shared with all my relatives. May they all be happy.",
+    "© 2026 ວັດເຊກະໝານກາງ (Wat Xekaman Kang). ສະງວນລິຂະສິດ / All Rights Reserved.": "© 2026 Wat Xekaman Kang. All rights reserved.",
+    "ສ້າງຂຶ້ນດ້ວຍຄວາມສັດທາໃນພຣະພຸດທະສາສະໜາ 🇱🇦": "Built with faith in Buddhism 🇱🇦",
+    "ພຣະອາຈານ ຄຳສະຫວັນ ເລື່ອມທິນິນ": "Venerable Khamsavanh Leuamthinin",
+    "ສູນລວມຈິດໃຈ, ທຳມະທານ ແລະ ມໍລະດົກທາງພຸດທະສາສະໜາ ລຸ່ມນ້ຳເຊກະໝານ. ຂໍໃຫ້ຜົນບຸນອັນເກີດຈາກການສຶກສາ ແລະ ຮ່ວມສ້າງບຸນ ຈົ່ງດົນບັນດານໃຫ້ທ່ານມີຄວາມສຸກ ຄວາມຈະເລີນ.": "A center of faith, Dhamma, and Buddhist heritage along the Sekaman River. May the merit from learning and making merit together bring you happiness and prosperity.",
+    "ຄະນະກໍາມະການບໍລິຫານງານ ອພສ ເມືອງສາມັກຄີໄຊ": "Administrative Committee, Samakkixay District",
+    "ຄະນະກໍາມາທິການສຶກສາສົງເມືອງ": "District Monastic Education Committee",
+    "ສະໄໝທີ VIII (2025-2030)": "8th Term (2025–2030)",
+    "ເລືອກພາສາ / Select Language": "Select Language",
+    "🇱🇦 ພາສາລາວ": "🇱🇦 Lao",
+    "1. 🇱🇦 ພາສາລາວ (Lao)": "1. 🇱🇦 Lao",
+    "ແຜນທີ່ຕຳແໜ່ງ ອັດຕະປື ເຊກະໝານ": "Attapeu Xekaman Location Map",
+    "ບ້ານເຊກະພານ, ເມືອງ ແລະ ແຂວງໃນເຂດລຸ່ມນ້ຳເຊກະພານ, ສປປ ລາວ": "Xekaman Village in the Sekaman River basin, Laos",
+    "ກະລຸນາປ້ອນຂໍ້ມູນເພື່ອອອກໃບອະນຸໂມທະນາບຸນດິຈິທັລ ສຳລັບເກັບໄວ້ເປັນສິຣິມົງຄົນ:": "Please enter the details for a digital merit certificate to keep as a blessing.",
+    "ຊື່ ແລະ ນາມສະກຸນ ຜູ້ບໍລິຈາກ": "Donor's Full Name",
+    "ຕົວຢ່າງ: ທ່ານ ສົມໄຊ ວົງສາ": "e.g. Mr. Somchai Vongsa",
+    "ຈຳນວນເງິນບໍລິຈາກ (ກີບ / ບາດ)": "Donation Amount (Kip / Baht)",
+    "ຕົວຢ່າງ: 100,000 ກີບ": "e.g. 100,000 Kip",
+    "ວັດຖຸປະສົງການເຮັດບຸນ": "Merit-Making Purpose",
+    "ບູລະນະພຣະອຸໂບສົດ (ສິມ)": "Restore the Ordination Hall (Sim)",
+    "ຄ່ານ້ຳ-ຄ່າໄຟຟ້າວັດ": "Temple Water and Electricity Costs",
+    "ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ": "Education Fund for Monks and Novices",
+    "ກອງທຶນສາທາລະນະກຸສົນ": "Public Charity Fund",
+    "ສ້າງໃບອະນຸໂມທະນາບຸນ": "Create Merit Certificate",
+    "ອອກໃບອະນຸໂມທະນາບຸນ": "Create Merit Certificate",
+    "ໃບອະນຸໂມທະນາບຸນ": "Merit Certificate",
+    "ຂໍອະນຸໂມທະນາບຸນຂອບໃຈ ນຳ:": "With gratitude for the merit-making of:",
+    "ໄດ້ຮ່ວມບໍລິຈາກເຮັດບຸນ ຈຳນວນເງິນ:": "has donated for merit-making in the amount of:",
+    "ເພື່ອວັດຖຸປະສົງ:": "For the purpose of:",
+    "ວັນທີ:": "Date:",
+    "ໃບອະນຸໂມທະນາບຸນດິຈິທັລ": "Digital Merit Certificate",
+    "ສ້າງໃບອະນຸໂມທະນາບຸນສຳເລັດ! ສາທຸ": "Merit certificate created successfully! Sadhu.",
+    "ສຳເລັດ": "Complete",
+    "ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ ສຸຂະພາບແຂງແຮງ": "May the family be happy and healthy",
+    "5 ນາທີກ່ອນ": "5 minutes ago",
+    "ຂໍໃຫ້ການຄ້າຂາຍຈະເລີນຮຸ່ງເຮືອງ": "May business prosper",
+    "18 ນາທີກ່ອນ": "18 minutes ago",
+    "ຂໍໃຫ້ແຄ້ວຄາດປອດໄພຈາກໂຣກໄພທັງປວງ": "May you be safe from all illnesses",
+    "1 ຊົ່ວໂມງກ່ອນ": "1 hour ago",
+    "ເພິ່ງນີ້": "Just now",
+    "ສາທຸ!": "Sadhu!",
+    "ທ່ານໄດ້ໄຕ້ທຽນ ແລະ ຖວາຍດອກບົວສຳເລັດແລ້ວ! ຂໍໃຫ້ສົມປະຖາໜາ": "Your candle and lotus offering was successful! May your wish be fulfilled.",
+    "ສາທຸ ສາທຸ": "Sadhu, Sadhu",
+    "ລຶບປະວັດການເຮັດບຸນແລ້ວ": "Merit-making history cleared",
+    "ສຽງລະຄັງວັດດັງຂຶ້ນ... ສາທຸ": "The temple bell rings… Sadhu.",
+    "ສຽງຄ້ອງວັດດັງຂຶ້ນ... ສາທຸ": "The temple gong rings… Sadhu.",
+    "ສຽງສັກສິດ": "Sacred Sound",
+    "ສຸ່ມທຳມະຄຳສອນໃໝ່ແລ້ວ": "A new Dhamma teaching has been selected",
+    "ທຳມະທານ": "Dhamma Gift",
+    "ຄັດລອກຂໍ້ຄວາມທຳມະຄຳສອນສຳເລັດແລ້ວ!": "Dhamma teaching copied successfully!",
+    "ຄັດລອກແລ້ວ": "Copied",
+    "ຄັດລອກເລກບັນຊີ BCEL 160-12-00-00123456-001 ສຳເລັດແລ້ວ!": "BCEL account number 160-12-00-00123456-001 copied successfully!",
+    "ສົ່ງຂໍ້ຄວາມສຳເລັດແລ້ວ!": "Message sent successfully!",
+    "ສົ່ງຂໍ້ຄວາມສຳເລັດ": "Message Sent",
+    "ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່": "An error occurred. Please try again.",
+    "ສົ່ງບໍ່ສຳເລັດ": "Message Not Sent",
+    "📖 ອ່ານຄຳສອນເພີ່ມເຕີມ:": "📖 Read more Dhamma teachings:",
+    "- ພຣະພຸດທະໂອວາດ -": "— Teaching of the Buddha —",
+    "- ພຣະທຳມະຄຳສອນ -": "— Dhamma Teaching —",
+    "- ຄຳສອນພຣະທຳ -": "— Dhamma Teaching —",
+    "- ໂອວາດປາຕິໂມກ -": "— Ovada Patimokkha —",
+    "- ຄຳສອນເຕືອນໃຈ -": "— Reflection —",
+    "- ຂໍ້ຄິດເຕືອນໃຈ -": "— Reflection —",
+    "- ມັງຄະລາສູດ -": "— Mangala Sutta —",
+    "- ຂໍ້ຄິດປະຕິບັດ -": "— Practical Guidance —",
+    "- ພິຈາລະນາມໍຣະນະສະຕິ -": "— Reflection on Death —",
+    "- ສຸພາສິດເຕືອນໃຈ -": "— Wise Saying —"
+});
+
+// English counterparts for all 100 rotating Dhamma quotations, in QUOTES order.
+autoTranslations.en.quotes = [
+    "Avoid all evil, cultivate good, and purify your mind — this is the teaching of all Buddhas.",
+    "Generosity conquers stinginess, and loving-kindness conquers anger.",
+    "A well-trained mind brings happiness.",
+    "Heedfulness is the path to the deathless.",
+    "One is one's own refuge; who else could be one's refuge?",
+    "Doing good brings good; doing evil brings evil. The law of karma always bears fruit.",
+    "Patience is the highest spiritual practice.",
+    "The mindful are happy wherever they are.",
+    "Loving-kindness sustains the world.",
+    "Conquering oneself is better than winning a thousand battles.",
+    "Happiness arises from the peace of the mind.",
+    "The past is gone and the future has not arrived; live mindfully in the present.",
+    "Being angry with another is like lighting a fire to burn yourself.",
+    "Making merit is a noble treasure that accompanies one through every life.",
+    "Wisdom arises through reflection and practice.",
+    "Gratitude and appreciation are the marks of a good person.",
+    "Do not focus on the faults of others; examine your own faults.",
+    "Moral conduct brings happiness and peace to those who practice it.",
+    "Freedom from illness is the greatest gain.",
+    "Purity and impurity belong to oneself; no one can purify another.",
+    "Those who give are loved by many.",
+    "Contentment is the greatest wealth.",
+    "Familiarity is the greatest kinship.",
+    "Nibbana is the highest happiness.",
+    "Refraining from all evil brings peace.",
+    "Those who persevere can overcome suffering.",
+    "Beautiful and truthful speech is worth more than a thousand meaningless words.",
+    "Keeping good company leads to progress.",
+    "Avoiding foolish company is the highest blessing.",
+    "Honoring those worthy of honor is the highest blessing.",
+    "Caring for one's parents is the highest blessing.",
+    "Practicing the Dhamma is the highest blessing.",
+    "A bright mind leads to a good destination.",
+    "Anger destroys friendship and peace.",
+    "Greed brings endless suffering.",
+    "Delusion blinds us to the truth.",
+    "Mindfulness protects the mind from falling into wrong paths.",
+    "The Five Precepts are an island of protection that brings peace to life.",
+    "Refraining from killing brings a long life.",
+    "Refraining from stealing brings security in one's possessions.",
+    "Refraining from sexual misconduct brings happiness to the family.",
+    "Refraining from false speech brings respect from others.",
+    "Refraining from intoxicants brings clear awareness and wisdom.",
+    "The good one has done never disappears.",
+    "Time waits for no one; hurry to do good today.",
+    "Death is certain, but no one knows when it will come.",
+    "All things arise, remain, and pass away according to their nature.",
+    "All conditioned things are impermanent; reflect with care and diligence.",
+    "Forgiveness brings peace to the heart of the one who forgives.",
+    "Each breath in and out is life's precious gift.",
+    "Be a good listener more than a speaker of empty words.",
+    "Humility brings kindness from elders.",
+    "Honesty and integrity are the foundation of a good life.",
+    "Diligence and thrift are virtues that lead to prosperity.",
+    "Contentment brings happiness according to one's circumstances.",
+    "Jealousy destroys one's own happiness.",
+    "True love is wishing for others to be happy.",
+    "Compassion is wishing for others to be free from suffering.",
+    "Sympathetic joy is rejoicing in the goodness of others.",
+    "Equanimity is letting go with wisdom.",
+    "Making merit is not only giving; it also includes keeping moral precepts and meditating.",
+    "Meditation gives the mind strength and steady peace.",
+    "Wisdom is the light that guides us through darkness.",
+    "Where there is effort, there is success.",
+    "Obstacles are important lessons in training oneself.",
+    "Accepting the truth is the first step toward peace.",
+    "Do not tie your happiness to the words of others.",
+    "Criticism is like the wind: it comes and goes; do not keep it in your heart.",
+    "Goodness done in the dark will shine in the light.",
+    "Listening to the Dhamma at the right time is the highest blessing.",
+    "Discussing the Dhamma at the right time is the highest blessing.",
+    "Respect is the highest blessing.",
+    "Humility is the highest blessing.",
+    "Patience is the highest blessing.",
+    "Being teachable is the highest blessing.",
+    "Seeing spiritual practitioners is the highest blessing.",
+    "Keeping the mind unshaken by worldly conditions is the highest blessing.",
+    "A sorrowless mind is the highest blessing.",
+    "A mind free from defilement is the highest blessing.",
+    "A serene mind is the highest blessing.",
+    "Gratitude to one's benefactors brings prosperity.",
+    "When suffering arises, use mindfulness and wisdom to resolve it.",
+    "Do not let anger control your actions.",
+    "Forgiveness is freeing oneself from suffering.",
+    "True happiness is not found in possessions, but in the mind.",
+    "Be a creator of happiness for those around you.",
+    "Having good friends leads us along a good path.",
+    "Guarding the senses leads to peace.",
+    "Carelessness is the path to decline.",
+    "Reflect on aging, illness, and death so that you do not become careless.",
+    "Love of the Dhamma brings happiness.",
+    "Those who practice the Dhamma are protected by it.",
+    "Peace of mind arises from letting go of craving.",
+    "Training oneself is the greatest thing.",
+    "Freedom from bias brings justice.",
+    "Live every day with kindness and wisdom.",
+    "Giving knowledge is the highest gift.",
+    "Happiness follows those with a good mind like a shadow.",
+    "Suffering follows those with an unwholesome mind like a wheel follows an ox's hoof.",
+    "Freedom from mental illness is freedom from defilements."
+];
+
+function getPreferredLanguage() {
+    return localStorage.getItem('preferred_lang') || 'lo';
+}
+
+function translateText(text, lang = getPreferredLanguage()) {
+    const dict = autoTranslations[lang];
+    return dict && typeof dict[text] === 'string' ? dict[text] : text;
+}
+
+function translateDom(root, lang = getPreferredLanguage()) {
+    const dict = autoTranslations[lang];
+    if (!dict || !root) return;
+
+    const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT']);
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+            return node.parentElement && !ignoredTags.has(node.parentElement.tagName)
+                ? NodeFilter.FILTER_ACCEPT
+                : NodeFilter.FILTER_REJECT;
+        }
+    });
+
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) textNodes.push(node);
+    textNodes.forEach(textNode => {
+        const original = textNode.nodeValue.trim();
+        if (dict[original]) {
+            textNode.nodeValue = textNode.nodeValue.replace(original, dict[original]);
+            return;
+        }
+
+        let translated = textNode.nodeValue;
+        Object.entries(dict).forEach(([source, translation]) => {
+            if (typeof translation === 'string' && source && translated.includes(source)) {
+                translated = translated.replaceAll(source, translation);
             }
         });
+        textNode.nodeValue = translated;
+    });
+
+    const elements = root.querySelectorAll ? root.querySelectorAll('*') : [];
+    elements.forEach(element => {
+        ['placeholder', 'title', 'alt', 'aria-label'].forEach(attribute => {
+            const original = element.getAttribute(attribute);
+            if (original && dict[original.trim()]) element.setAttribute(attribute, dict[original.trim()]);
+        });
+        if (element.tagName === 'OPTION' && dict[element.value]) element.value = dict[element.value];
+    });
+}
+
+function translateHtml(html, lang = getPreferredLanguage()) {
+    if (lang === 'lo') return html;
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    translateDom(template.content, lang);
+    return template.innerHTML;
+}
+
+// 2. ฟังก์ชันเปิด Pop-up แสดงตัวเลือก 2 ภาษา
+function openLangModal() {
+    const oldModal = document.getElementById('custom-lang-modal');
+    if (oldModal) oldModal.remove();
+
+    const modalHtml = `
+        <div id="custom-lang-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:99999; display:flex; align-items:center; justify-content:center; padding:16px;">
+            <div style="background:#fff; border-radius:16px; max-width:340px; width:100%; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,0.3); border:2px solid #D4AF37;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                    <h3 style="font-weight:bold; color:#800000; font-size:16px; margin:0;">ເລືອກພາສາ / Select Language</h3>
+                    <button onclick="closeLangModalCustom()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#888;">&times;</button>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <button onclick="selectLanguage('lo', '1. 🇱🇦 ພາສາລາວ')" style="text-align:left; padding:12px 16px; border-radius:12px; border:1px solid #e5e7eb; background:#fff; font-weight:bold; color:#333; cursor:pointer;">
+                        1. 🇱🇦 ພາສາລາວ (Lao)
+                    </button>
+                    <button onclick="selectLanguage('en', '2. 🇬🇧 English')" style="text-align:left; padding:12px 16px; border-radius:12px; border:1px solid #e5e7eb; background:#fff; font-weight:bold; color:#333; cursor:pointer;">
+                        2. 🇬🇧 English
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', translateHtml(modalHtml));
+}
+
+// 3. ปิด Pop-up
+function closeLangModalCustom() {
+    const modal = document.getElementById('custom-lang-modal');
+    if (modal) modal.remove();
+}
+
+// 4. ฟังก์ชันสลับภาษา
+function selectLanguage(lang, label) {
+    const labelEl = document.getElementById('current-lang-label');
+    if (labelEl) labelEl.innerText = label;
+
+    localStorage.setItem('preferred_lang', lang);
+    localStorage.setItem('preferred_lang_label', label);
+
+    closeLangModalCustom();
+
+    // ถ้าเลือกภาษาลาว ให้รีโหลดหน้าเว็บกลับค่าเริ่มต้น
+    if (lang === 'lo') {
+        location.reload();
+        return;
+    }
+
+    if (!autoTranslations[lang]) return;
+    document.documentElement.lang = lang;
+    document.title = translateText(document.title, lang);
+    translateDom(document.body, lang);
+    renderDevotees();
+}
+
+// 5. โหลดภาษาเดิมที่เลือกไว้อัตโนมัติเมื่อเปิดเว็บ
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('preferred_lang') || 'lo';
+    const savedLabel = localStorage.getItem('preferred_lang_label') || '1. 🇱🇦 ພາສາລາວ';
+    if (savedLang !== 'lo') {
+        setTimeout(() => {
+            selectLanguage(savedLang, savedLabel);
+        }, 300);
+    }
+});
     </script>
+    
 </body>
 </html>

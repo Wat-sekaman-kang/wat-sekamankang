@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ທຳນຽບສະມາຊິກພາຍໃນວັດ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ใช้ Font Awesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans Lao', 'sans-serif'], // ใช้ฟอนต์ພາສາລາວเพื่อความสวยงาม
+                    },
+                    colors: {
+                        temple: {
+                            dark: '#4A1C1C', // สีแดงเลือดหมูเข้ม (สีพื้นหลังหลัก)
+                            gold: '#D4AF37', // สีทอง
+                            lightgold: '#F3E5AB', // สีทองอ่อน
+                            bg: '#FDFBF7', // สีพื้นหลังหน้าเว็บ (ขาวนวล)
+                            robe: '#E67E22' // สีจีวร
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.3);
+            border-color: #D4AF37;
+        }
+
+        .tab-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: #4A1C1C;
+            color: #D4AF37;
+            border-color: #D4AF37;
+        }
+        
+        .tab-btn:not(.active):hover {
+            background-color: #F3E5AB;
+            color: #4A1C1C;
+        }
+
+        /* ลายไทยประดับมุม */
+        .corner-ornament {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #D4AF37;
+            opacity: 0.6;
+        }
+        .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+        
+        /* ເພີ່ມ Animation ໃໝ່ສຳລັບລູກຫຼິ້ນຄວາມສວຍງາມ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* ເຊື່ອງໄວ້ກ່ອນອະນິເມຊັ່ນເຮັດວຽກ */
+        }
+        
+        @keyframes shine {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+        .text-shine {
+            background: linear-gradient(to right, #D4AF37 20%, #FFF8DC 40%, #FFF8DC 60%, #D4AF37 80%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 4s linear infinite;
+        }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen flex flex-col">
+
+    <header class="bg-temple-dark text-white py-12 relative overflow-hidden shadow-lg border-b-4 border-temple-gold">
+        <!-- ลวดลายพื้นหลัง Header -->
+        <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 2px, transparent 8px);"></div>
+        
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <div class="inline-block p-4 rounded-full bg-temple-gold text-temple-dark mb-4 shadow-xl border-2 border-white transform transition-transform hover:scale-110 duration-500">
+                <!-- ເພີ່ມຄລາສ animate-[spin_10s_linear_infinite] ໃຫ້ກົງລໍ້ໝຸນຊ້າໆ -->
+                <i class="fa-solid fa-dharmachakra text-4xl animate-[spin_10s_linear_infinite]"></i>
+            </div>
+            <!-- ເພີ່ມຄລາສ text-shine ໃຫ້ຫົວຂໍ້ມີແສງສະທ້ອນ -->
+            <h1 class="text-3xl md:text-5xl font-bold mb-2 text-shine drop-shadow-md">ທຳນຽບສະມາຊິກພາຍໃນວັດ</h1>
+            <p class="text-lg md:text-xl text-temple-lightgold font-light max-w-2xl mx-auto mt-4">
+                ລວບລວມປະຫວັດ ແລະ ທຳນຽບລາຍນາມ ພະພິກຂຸ ສາມະເນນ ແລະ ບຸກຄະລາກອນພາຍໃນວັດ ແບ່ງຕາມປີ (ພ.ສ.)
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+        
+        <!-- ส่วนเลือกปี (Tabs) -->
+        <div class="mb-10 text-center">
+            <h2 class="text-xl font-semibold mb-4 text-temple-dark flex items-center justify-center gap-2">
+                <i class="fa-solid fa-calendar-alt text-temple-gold"></i>
+                ເລືອກປີ (ພ.ສ.)
+            </h2>
+            <div id="year-tabs" class="flex flex-wrap justify-center gap-3">
+                <!-- ปุ่มปีจะถูกสร้างที่นี่ด้วย JavaScript -->
+            </div>
+        </div>
+
+        <!-- กล่องแสดงข้อความกำลังโหลด -->
+        <div id="loading" class="text-center py-10 hidden">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-temple-gold mb-3"></i>
+            <p class="text-gray-500">ກຳລັງໂຫຼດຂໍ້ມູນ...</p>
+        </div>
+
+        <!-- พื้นที่แสดงรายชื่อ (Grid) -->
+        <div id="members-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- การ์ดสมาชิกจะถูกสร้างที่นี่ด้วย JavaScript -->
+        </div>
+
+        <!-- กรณีไม่พบข้อมูล -->
+        <div id="no-data" class="hidden text-center py-16 bg-white rounded-lg shadow-sm border border-gray-200 mt-6">
+            <i class="fa-solid fa-folder-open text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-medium text-gray-600">ບໍ່ພົບຂໍ້ມູນສະມາຊິກໃນປີທີ່ເລືອກ</h3>
+        </div>
+
+    </main>
+
+    <footer class="bg-temple-dark text-temple-lightgold py-8 border-t-4 border-temple-gold mt-auto">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <i class="fa-solid fa-leaf mb-3 text-temple-gold text-xl"></i>
+            <p>© <span id="current-year-footer"></span> ຈັດທຳຂຶ້ນເພື່ອເປັນທຳນຽບປະຫວັດພາຍໃນວັດ</p>
+            <p class="mt-1 opacity-70">ຂໍ້ມູນອາດມີການປ່ຽນແປງຕາມຄວາມເໝາະສົມ</p>
+        </div>
+    </footer>
+
+    <script>
+        // ข้อมูลจำลอง (Mock Data) ของสมาชิกภายในวัด
+        // RankLevel: 1 = เจ้าอาวาส, 2 = รองเจ้าอาวาส, 3 = ผู้ช่วยเจ้าอาวาส, 4 = พระลูกวัด, 5 = สามเณร, 6 = มัคนายก/บุคลากร
+        const membersData = [
+            // ข้อมูลปี 2567
+            {
+                year: "2567",
+                id: 101,
+                name: "ພະຄູວິຈິດທຳມະຄຸນ (ສົມຊາຍ)",
+                position: "ເຈົ້າອາວາດ",
+                rankLevel: 1,
+                age: 65,
+                vassa: 45,
+                education: "ນັກທຳຊັ້ນເອກ",
+                duty: "ບໍລິຫານຈັດການກິດຈະການພາຍໃນວັດທັງໝົດ",
+                imageUrl: "images/monk1.jpg" // ປ່ຽນຊື່ໄຟລ໌ໃຫ້ກົງກັບຮູບໃນໂຟນເດີ images ຂອງທ່ານ
+            },
+            {
+                year: "2567",
+                id: 102,
+                name: "ພະມະຫາພົງສະກອນ ປັນຍາວະຊິໂຣ",
+                position: "ຮອງເຈົ້າອາວາດ",
+                rankLevel: 2,
+                age: 48,
+                vassa: 27,
+                education: "ນັກທຳຊັ້ນເອກ",
+                duty: "ຜູ້ຊ່ວຍວຽກບໍລິຫານ ແລະ ວຽກງານການສຶກສາ",
+                imageUrl: "images/monk2.jpg"
+            },
+            {
+                year: "2567",
+                id: 103,
+                name: "ພະສະໝຸວິໄນ ກະຕະປຸນໂຍ",
+                position: "ພະລູກວັດ / ເລຂານຸການ",
+                rankLevel: 4,
+                age: 35,
+                vassa: 12,
+                education: "ນັກທຳຊັ້ນເອກ",
+                duty: "ວຽກເອກະສານ ແລະ ວຽກງານປະຊາສຳພັນ",
+                imageUrl: "images/monk3.jpg"
+            },
+            {
+                year: "2567",
+                id: 104,
+                name: "ພະກິດຕິ ກິດຕິໂກ",
+                position: "ພະລູກວັດ",
+                rankLevel: 4,
+                age: 29,
+                vassa: 5,
+                education: "ນັກທຳຊັ້ນໂທ",
+                duty: "ເບິ່ງແຍງຄວາມສະອາດ ແລະ ເສນາສະນະ",
+                imageUrl: "images/monk4.jpg"
+            },
+            {
+                year: "2567",
+                id: 105,
+                name: "ສາມະເນນນັດຖະວຸດ ໃຈດີ",
+                position: "ສາມະເນນ",
+                rankLevel: 5,
+                age: 15,
+                vassa: 2,
+                education: "ນັກທຳຊັ້ນຕີ / ມ.3",
+                duty: "ສຶກສາພະປະລິຍັດຕິທຳ",
+                imageUrl: "images/novice1.jpg"
+            },
+            {
+                year: "2567",
+                id: 106,
+                name: "ທ້າວ ບຸນມາ ຮັກສາສິນ",
+                position: "ມັກຄະນາຍົກ",
+                rankLevel: 6,
+                age: 58,
+                vassa: "-",
+                education: "ປະລິນຍາຕີ",
+                duty: "ນຳສວດມົນ ແລະ ປະສານງານຄາລະວາດ",
+                imageUrl: "images/layman1.jpg"
+            },
+
+            // ข้อมูลปี 2566
+            {
+                year: "2566",
+                id: 201,
+                name: "ພະຄູວິຈິດທຳມະຄຸນ (ສົມຊາຍ)",
+                position: "ເຈົ້າອາວາດ",
+                rankLevel: 1,
+                age: 64,
+                vassa: 44,
+                education: "ນັກທຳຊັ້ນເອກ",
+                duty: "ບໍລິຫານຈັດການກິດຈະການພາຍໃນວັດທັງໝົດ",
+                imageUrl: "images/monk1.jpg"
+            },
+            {
+                year: "2566",
+                id: 202,
+                name: "ພະມະຫາພົງສະກອນ ປັນຍາວະຊິໂຣ",
+                position: "ຮອງເຈົ້າອາວາດ",
+                rankLevel: 2,
+                age: 47,
+                vassa: 26,
+                education: "ນັກທຳຊັ້ນເອກ",
+                duty: "ຜູ້ຊ່ວຍວຽກບໍລິຫານ ແລະ ວຽກງານການສຶກສາ",
+                imageUrl: "images/monk2.jpg"
+            },
+            {
+                year: "2566",
+                id: 203,
+                name: "ພະສົມບູນ ສຸປຸນໂຍ",
+                position: "ພະລູກວັດ",
+                rankLevel: 4,
+                age: 70,
+                vassa: 20,
+                education: "ນັກທຳຊັ້ນຕີ",
+                duty: "ເບິ່ງແຍງຄວາມຮຽບຮ້ອຍທົ່ວໄປ (ມໍລະນະພາບທ້າຍປີ 66)",
+                imageUrl: "images/monk_somboon.jpg"
+            },
+             {
+                year: "2566",
+                id: 204,
+                name: "ທ້າວ ບຸນມາ ຮັກສາສິນ",
+                position: "ມັກຄະນາຍົກ",
+                rankLevel: 6,
+                age: 57,
+                vassa: "-",
+                education: "ປະລິນຍາຕີ",
+                duty: "ນຳສວດມົນ ແລະ ປະສານງານຄາລະວາດ",
+                imageUrl: "images/layman1.jpg"
+            }
+        ];
+
+        // ฟังก์ชันหลักที่เริ่มทำงานเมื่อโหลดหน้าเว็บ
+        document.addEventListener('DOMContentLoaded', () => {
+            // ตั้งค่าปีปัจจุบันใน Footer
+            document.getElementById('current-year-footer').textContent = new Date().getFullYear() + 543; // แปลงเป็น พ.ศ. คร่าวๆ
+
+            // ดึงปีทั้งหมดที่มีในระบบ โดยไม่ให้ซ้ำกัน และเรียงจากมากไปน้อย
+            const availableYears = [...new Set(membersData.map(item => item.year))].sort((a, b) => b - a);
+            
+            if(availableYears.length > 0) {
+                renderTabs(availableYears);
+                // แสดงข้อมูลของปีล่าสุดเป็นค่าเริ่มต้น
+                displayMembersByYear(availableYears[0]);
+            }
+        });
+
+        function renderTabs(years) {
+            const tabsContainer = document.getElementById('year-tabs');
+            tabsContainer.innerHTML = ''; // เคลียร์ของเก่า
+
+            years.forEach((year, index) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn px-6 py-2 rounded-full border-2 border-gray-300 font-semibold shadow-sm focus:outline-none ${index === 0 ? 'active' : 'text-gray-600 bg-white'}`;
+                btn.textContent = `ພ.ສ. ${year}`;
+                btn.onclick = (e) => {
+                    // อัพเดทคลาส active
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.classList.remove('active');
+                        b.classList.add('text-gray-600', 'bg-white');
+                        b.classList.remove('text-temple-gold', 'bg-temple-dark', 'border-temple-gold');
+                    });
+                    
+                    btn.classList.add('active');
+                    btn.classList.remove('text-gray-600', 'bg-white');
+                    
+                    displayMembersByYear(year);
+                };
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function displayMembersByYear(year) {
+            const grid = document.getElementById('members-grid');
+            const noData = document.getElementById('no-data');
+            
+            // ทำให้ดูเหมือนกำลังโหลดเพื่อ UX ที่ดี
+            grid.innerHTML = '';
+            grid.classList.add('hidden');
+            noData.classList.add('hidden');
+            
+            // กรองข้อมูลตามปี
+            let filteredMembers = membersData.filter(member => member.year === year);
+            
+            // เรียงลำดับตามตำแหน่ง (rankLevel จากน้อยไปมาก)
+            filteredMembers.sort((a, b) => a.rankLevel - b.rankLevel);
+
+            if (filteredMembers.length === 0) {
+                noData.classList.remove('hidden');
+                return;
+            }
+
+            // สร้างการ์ดสำหรับสมาชิกแต่ละคน
+            filteredMembers.forEach((member, index) => {
+                const card = document.createElement('div');
+                // กำหนดสไตล์ของการ์ด (สีทองสำหรับตำแหน่งระดับสูง สีปกติสำหรับตำแหน่งทั่วไป)
+                const isHighRank = member.rankLevel <= 2;
+                const badgeColor = isHighRank ? 'bg-temple-gold text-temple-dark' : 'bg-temple-dark text-white';
+                const borderColor = isHighRank ? 'border-temple-gold' : 'border-gray-200';
+                
+                // ເພີ່ມ animate-fade-in-up ແລະ ຕັ້ງຄ່າ delay ໃຫ້ກາດແຕ່ລະອັນຂຶ້ນມາບໍ່ພ້ອມກັນ (Staggered effect)
+                card.className = `card-hover animate-fade-in-up bg-white rounded-xl overflow-hidden border-t-4 ${borderColor} shadow-md hover:shadow-2xl relative group`;
+                card.style.animationDelay = `${index * 100}ms`; // ໄລ່ລະດັບເວລາ 100ms ຕໍ່ 1 ກາດ
+                
+                // รูปแบบป้ายระบุตำแหน่ง (สามเณร ฆราวาส จีวร จะใช้คนละสีเล็กน้อย)
+                let roleIcon = 'fa-user';
+                if(member.rankLevel <= 4) roleIcon = 'fa-person-praying';
+                else if(member.rankLevel === 5) roleIcon = 'fa-child-reaching';
+
+                card.innerHTML = `
+                    <div class="corner-ornament corner-tl"></div>
+                    <div class="corner-ornament corner-tr"></div>
+                    
+                    <div class="p-6 flex flex-col items-center relative z-10">
+                        <!-- รูปภาพ -->
+                        <div class="relative w-32 h-32 mb-4">
+                            <div class="absolute inset-0 rounded-full border-4 border-temple-lightgold opacity-50 transform scale-110 group-hover:scale-105 transition-transform"></div>
+                            <img src="${member.imageUrl}" alt="${member.name}" 
+                                class="w-full h-full object-cover rounded-full border-4 ${isHighRank ? 'border-temple-gold' : 'border-white'} shadow-md">
+                        </div>
+                        
+                        <!-- ชื่อและตำแหน่ง -->
+                        <div class="${badgeColor} px-4 py-1 rounded-full text-sm font-bold mb-3 shadow-sm flex items-center gap-2">
+                            <i class="fa-solid ${roleIcon}"></i>
+                            ${member.position}
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 text-center mb-4 min-h-[56px] flex items-center justify-center">${member.name}</h3>
+                        
+                        <!-- ข้อมูลรายละเอียด (Divided List) -->
+                        <div class="w-full space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
+                            <div class="flex justify-between border-b border-gray-50 pb-2">
+                                <span class="font-medium text-gray-500"><i class="fa-solid fa-cake-candles mr-2 opacity-60"></i>ອາຍຸ</span>
+                                <span class="font-semibold">${member.age} ປີ</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-50 pb-2">
+                                <span class="font-medium text-gray-500"><i class="fa-solid fa-hands-praying mr-2 opacity-60"></i>ພັນສາ</span>
+                                <span class="font-semibold">${member.vassa !== "-" ? member.vassa + " ພັນສາ" : "-"}</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-50 pb-2">
+                                <span class="font-medium text-gray-500"><i class="fa-solid fa-graduation-cap mr-2 opacity-60"></i>ວິທະຍະຖານະ</span>
+                                <span class="font-semibold text-right w-1/2 truncate" title="${member.education}">${member.education}</span>
+                            </div>
+                            <div class="pt-2">
+                                <span class="block font-medium text-gray-500 mb-1"><i class="fa-solid fa-briefcase mr-2 opacity-60"></i>ໜ້າທີ່ຮັບຜິດຊອບ</span>
+                                <span class="block text-gray-700 bg-orange-50 p-2 rounded text-xs leading-relaxed border border-orange-100 group-hover:bg-orange-100 transition-colors duration-300">
+                                    ${member.duty}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // แสดง Grid หลังจากสร้างการ์ดเสร็จ
+            grid.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
