@@ -70,82 +70,55 @@
         }
         @keyframes hero-drift { from { transform: scale(1.04); } to { transform: scale(1.1) translateX(-.7%); } }
         .history-gallery { margin-top: 4rem; }
-        .gallery-slider {
+        .home-gallery-slider {
             overflow: hidden;
             border: 1px solid rgba(212, 175, 55, .58);
             border-radius: 1.5rem;
-            background: #2D080E;
+            background: #fffdfa;
             box-shadow: 0 22px 50px rgba(45, 8, 14, .18);
         }
-        .gallery-slide-stage { position: relative; min-height: 34rem; overflow: hidden; isolation: isolate; background: #2D080E; }
+        .home-gallery-stage { position: relative; height: 520px; overflow: hidden; isolation: isolate; background: #2D080E; }
         #homeSlideImage {
             width: 100%;
-            height: 34rem;
+            height: 100%;
             object-fit: cover;
-            opacity: .93;
-            transform: scale(1.035);
+            opacity: .95;
+            transform: scale(1.025);
             will-change: opacity, transform;
-            transition: opacity .52s ease, transform 7s cubic-bezier(.16, 1, .3, 1), filter .52s ease;
-            animation: gallery-ken-burns 12s ease-out both;
+            transition: opacity .42s ease, transform 7s cubic-bezier(.16, 1, .3, 1), filter .42s ease;
+            animation: home-gallery-ken-burns 12s ease-out both;
         }
-        #homeSlideImage.is-changing { opacity: .12; transform: scale(1.075); filter: saturate(.7) blur(1px); }
-        @keyframes gallery-ken-burns { from { transform: scale(1.035); } to { transform: scale(1.11); } }
-        .gallery-slide-wash { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(45, 8, 14, .9), rgba(45, 8, 14, .45) 55%, rgba(45, 8, 14, .08)), linear-gradient(0deg, rgba(45, 8, 14, .68), transparent 58%); pointer-events: none; }
-        .gallery-slide-content { position: absolute; z-index: 2; right: 1.5rem; bottom: 1.5rem; left: 1.5rem; max-width: 42rem; }
-        .gallery-slide-caption {
-            padding: 1rem 1.15rem;
-            border: 1px solid rgba(243, 229, 171, .3);
-            border-radius: 1rem;
-            background: rgba(45, 8, 14, .55);
-            backdrop-filter: blur(8px);
-        }
-        .gallery-slide-caption strong { display: block; color: #F3E5AB; font-size: clamp(1.1rem, 3vw, 1.5rem); }
-        .gallery-slide-caption span { display: block; margin-top: .15rem; color: rgba(255, 251, 235, .9); font-size: .86rem; }
-        .gallery-slide-tools {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: .55rem;
-            margin-top: .85rem;
-        }
-        .gallery-slide-btn {
-            display: inline-grid;
-            width: 2.6rem;
-            height: 2.6rem;
+        .home-gallery-stage.is-changing #homeSlideImage { opacity: .1; transform: scale(1.08); filter: saturate(.7) blur(1px); }
+        @keyframes home-gallery-ken-burns { from { transform: scale(1.025); } to { transform: scale(1.1); } }
+        .home-gallery-number { position: absolute; z-index: 3; top: 22px; right: 24px; padding: 7px 10px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 8px; background: rgba(0, 0, 0, .35); color: #fff; font-size: .78rem; font-variant-numeric: tabular-nums; }
+        .home-gallery-controls { position: absolute; z-index: 4; top: 50%; right: 18px; left: 18px; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; }
+        .home-gallery-controls button {
+            display: grid;
+            width: 46px;
+            height: 46px;
+            padding: 0;
             place-items: center;
-            color: #F3E5AB;
-            border: 1px solid rgba(243, 229, 171, .65);
-            border-radius: 999px;
-            background: rgba(45, 8, 14, .58);
-            font-size: 1.5rem;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .65);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, .38);
+            font-size: 2rem;
             line-height: 1;
-            transition: transform .2s ease, background .2s ease;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: background .2s ease, transform .2s ease;
         }
-        .gallery-slide-btn:hover { transform: translateY(-2px); background: #4A0E17; }
-        .gallery-slide-status {
-            min-width: 4.7rem;
-            color: #F3E5AB;
-            font-size: .78rem;
-            font-weight: 700;
-            letter-spacing: .12em;
-        }
-        .gallery-slide-pause {
-            padding: .55rem .8rem;
-            color: #F3E5AB;
-            border: 1px solid rgba(243, 229, 171, .45);
-            border-radius: 999px;
-            background: rgba(45, 8, 14, .58);
-            font-size: .73rem;
-            font-weight: 700;
-            transition: background .2s ease;
-        }
-        .gallery-slide-pause:hover { background: #4A0E17; }
-        .gallery-slide-dots { display: flex; flex-wrap: wrap; gap: .42rem; margin-top: .9rem; }
-        .gallery-slide-dot { width: .55rem; height: .55rem; padding: 0; border: 0; border-radius: 99px; background: rgba(243, 229, 171, .48); transition: width .25s ease, background .25s ease, transform .25s ease; }
-        .gallery-slide-dot:hover { transform: scale(1.18); background: #F3E5AB; }
-        .gallery-slide-dot.is-active { width: 1.85rem; background: #D4AF37; }
-        .gallery-slide-link { display: inline-flex; align-items: center; gap: .42rem; margin-top: 1rem; color: #F3E5AB; font-size: .82rem; font-weight: 700; text-decoration: none; transition: color .2s ease, transform .2s ease; }
-        .gallery-slide-link:hover { color: #fff; transform: translateX(3px); }
+        .home-gallery-controls button:hover { background: #4A0E17; transform: scale(1.06); }
+        .home-gallery-info { position: relative; z-index: 2; padding: 25px 35px 15px; color: #33231f; background: #fffdfa; }
+        .home-gallery-info h3 { margin: 0; color: #4A0E17; font-size: clamp(1.4rem, 3.5vw, 1.8rem); line-height: 1.28; }
+        .home-gallery-info p { margin: 6px 0 0; color: #685b52; font-size: .96rem; }
+        .home-gallery-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 18px 20px; background: #fffdfa; }
+        .home-gallery-dots { display: flex; flex-wrap: wrap; gap: 7px; }
+        .home-gallery-dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: #d9cdbd; cursor: pointer; transition: width .25s ease, background .25s ease, transform .2s ease; }
+        .home-gallery-dot:hover { transform: scale(1.2); background: #b28d1b; }
+        .home-gallery-dot.is-active { width: 25px; border-radius: 8px; background: #4A0E17; }
+        .home-gallery-pause { padding: 6px 9px; color: #4A0E17; border: 1px solid #dac9ae; border-radius: 7px; background: #fff; font-size: .78rem; font-weight: 700; cursor: pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
+        .home-gallery-pause:hover { background: #fff7df; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(87, 18, 27, .12); }
         .temple-button-motion { transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
         .temple-button-motion:hover { transform: translateY(-2px); filter: brightness(1.04); box-shadow: 0 8px 18px rgba(45, 8, 14, .18); }
         .temple-button-motion:active { transform: translateY(0) scale(.96); }
@@ -175,9 +148,9 @@
         .language-option { display: flex; align-items: center; gap: .55rem; width: 100%; padding: .62rem .7rem; color: #33231f; border: 0; border-radius: .65rem; background: transparent; text-align: left; font-size: .82rem; font-weight: 700; transition: background .18s ease, color .18s ease, transform .18s ease; }
         .language-option:hover, .language-option[aria-current="true"] { color: #4A0E17; background: #fff1c8; transform: translateX(2px); }
         .language-option-flag { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: #f7ebcb; font-size: .9rem; }
-        @media (max-width: 640px) { .gallery-slide-stage, #homeSlideImage { min-height: 27rem; height: 27rem; } .gallery-slide-content { right: 1rem; bottom: 1rem; left: 1rem; } .history-gallery { margin-top: 2.75rem; } }
+        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } }
         @media (prefers-reduced-motion: reduce) {
-            #homeSlideImage, .gallery-slide-btn, .gallery-slide-pause, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
+            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
         }
         .lao-pattern {
             background-color: #4A0E17;
@@ -430,24 +403,22 @@
 
         <!-- Activity gallery, intentionally placed in the temple history section -->
         <div class="history-gallery" role="region" aria-roledescription="carousel" aria-label="ຮູບພາບກິດຈະກຳຂອງວັດ">
-            <div class="gallery-slider">
-                <div id="homeSlideStage" class="gallery-slide-stage" tabindex="0">
+            <div class="home-gallery-slider">
+                <div id="homeSlideStage" class="home-gallery-stage" tabindex="0">
                     <img id="homeSlideImage" src="images/events/event1.jpg" alt="ພາບກິດຈະກຳຂອງວັດ" decoding="async">
-                    <div class="gallery-slide-wash" aria-hidden="true"></div>
-                    <div class="gallery-slide-content">
-                        <div class="gallery-slide-caption" aria-live="polite">
-                            <strong id="homeSlideTitle">ພາບກິດຈະກຳຂອງວັດ</strong>
-                            <span id="homeSlideDescription">ຊົມພາບບັນຍາກາດງານບຸນ ແລະ ກິດຈະກຳພາຍໃນວັດ</span>
-                        </div>
-                        <div class="gallery-slide-tools" aria-label="Gallery slideshow controls">
-                            <button id="homeSlidePrevious" type="button" class="gallery-slide-btn" aria-label="Previous image">‹</button>
-                            <span id="homeSlideCounter" class="gallery-slide-status">01 / 05</span>
-                            <button id="homeSlideNext" type="button" class="gallery-slide-btn" aria-label="Next image">›</button>
-                            <button id="homeSlidePause" type="button" class="gallery-slide-pause">ຢຸດສະໄລດ໌</button>
-                        </div>
-                        <div id="homeSlideDots" class="gallery-slide-dots" aria-label="ເລືອກຮູບສະໄລດ໌"></div>
-                        <a href="gallery.html" class="gallery-slide-link"><span>ຊົມຄັງຮູບທັງໝົດ</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    <div id="homeSlideCounter" class="home-gallery-number" aria-live="polite">01 / 20</div>
+                    <div class="home-gallery-controls" aria-label="Gallery slideshow controls">
+                        <button id="homeSlidePrevious" type="button" aria-label="Previous image">‹</button>
+                        <button id="homeSlideNext" type="button" aria-label="Next image">›</button>
                     </div>
+                </div>
+                <div class="home-gallery-info" aria-live="polite">
+                    <h3 id="homeSlideTitle">ພາບກິດຈະກຳຂອງວັດ</h3>
+                    <p id="homeSlideDescription">ຊົມພາບບັນຍາກາດງານບຸນ ແລະ ກິດຈະກຳພາຍໃນວັດ</p>
+                </div>
+                <div class="home-gallery-bottom">
+                    <div id="homeSlideDots" class="home-gallery-dots" aria-label="ເລືອກຮູບສະໄລດ໌"></div>
+                    <button id="homeSlidePause" type="button" class="home-gallery-pause">ຢຸດສະໄລດ໌</button>
                 </div>
             </div>
         </div>
@@ -2261,26 +2232,35 @@ function getHomeSlideLanguage() {
     return HOME_GALLERY_SLIDES[homeSlideIndex][language] ? language : 'lo';
 }
 
+function createHomeSlideFallback(title) {
+    const safeTitle = String(title).replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'
+    })[character]);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-label="${safeTitle}"><rect width="1200" height="700" fill="#2d080e"/><path d="M0 560 300 350l190 130 240-245 470 325v140H0z" fill="#4a0e17"/><circle cx="960" cy="155" r="58" fill="#d4af37" opacity=".9"/><text x="600" y="620" fill="#f3e5ab" font-family="sans-serif" font-size="34" text-anchor="middle">${safeTitle}</text></svg>`;
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 function updateHomeGallerySlide(index) {
     homeSlideIndex = (index + HOME_GALLERY_SLIDES.length) % HOME_GALLERY_SLIDES.length;
     const slide = HOME_GALLERY_SLIDES[homeSlideIndex];
     const language = getHomeSlideLanguage();
-    const labels = HOME_SLIDE_LABELS[language];
+    const labels = HOME_SLIDE_LABELS[language] || HOME_SLIDE_LABELS.lo;
     const image = document.getElementById('homeSlideImage');
+    const stage = document.getElementById('homeSlideStage');
     const title = document.getElementById('homeSlideTitle');
     const description = document.getElementById('homeSlideDescription');
     const counter = document.getElementById('homeSlideCounter');
     const pause = document.getElementById('homeSlidePause');
-    if (!image || !title || !description || !counter || !pause) return;
+    if (!image || !stage || !title || !description || !counter || !pause) return;
 
     window.clearTimeout(homeSlideChangeTimer);
-    image.classList.add('is-changing');
+    stage.classList.add('is-changing');
     homeSlideChangeTimer = window.setTimeout(() => {
         image.src = slide.src;
         image.alt = slide[language][0];
-        image.classList.remove('is-changing');
+        stage.classList.remove('is-changing');
     }, 230);
-    image.onerror = () => { image.onerror = null; image.src = 'wat-logo.jpg'; };
+    image.onerror = () => { image.onerror = null; image.src = createHomeSlideFallback(slide[language][0]); };
     title.textContent = slide[language][0];
     description.textContent = slide[language][1];
     counter.textContent = `${String(homeSlideIndex + 1).padStart(2, '0')} / ${String(HOME_GALLERY_SLIDES.length).padStart(2, '0')}`;
@@ -2298,7 +2278,7 @@ function renderHomeSlideDots(language) {
     HOME_GALLERY_SLIDES.forEach((slide, index) => {
         const dot = document.createElement('button');
         dot.type = 'button';
-        dot.className = `gallery-slide-dot${index === homeSlideIndex ? ' is-active' : ''}`;
+        dot.className = `home-gallery-dot${index === homeSlideIndex ? ' is-active' : ''}`;
         dot.setAttribute('aria-label', `${language === 'th' ? 'เลือกภาพที่' : language === 'en' ? 'Select image' : 'ເລືອກຮູບທີ'} ${index + 1}: ${slide[language][0]}`);
         dot.setAttribute('aria-current', String(index === homeSlideIndex));
         dot.addEventListener('click', () => updateHomeGallerySlide(index));
@@ -2329,11 +2309,11 @@ function initHomeGallerySlider() {
         if (Math.abs(distance) > 45) updateHomeGallerySlide(homeSlideIndex + (distance > 0 ? -1 : 1));
     }, { passive: true });
     stage.addEventListener('keydown', event => {
-        if (event.key === 'ArrowLeft') { event.preventDefault(); updateHomeGallerySlide(homeSlideIndex - 1); }
-        if (event.key === 'ArrowRight') { event.preventDefault(); updateHomeGallerySlide(homeSlideIndex + 1); }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); event.stopPropagation(); updateHomeGallerySlide(homeSlideIndex - 1); }
+        if (event.key === 'ArrowRight') { event.preventDefault(); event.stopPropagation(); updateHomeGallerySlide(homeSlideIndex + 1); }
     });
     document.addEventListener('keydown', event => {
-        if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(event.target.tagName)) return;
+        if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(event.target.tagName) || stage.contains(event.target)) return;
         if (event.key === 'ArrowLeft') updateHomeGallerySlide(homeSlideIndex - 1);
         if (event.key === 'ArrowRight') updateHomeGallerySlide(homeSlideIndex + 1);
     });
