@@ -119,6 +119,16 @@
         .home-gallery-dot.is-active { width: 25px; border-radius: 8px; background: #4A0E17; }
         .home-gallery-pause { padding: 6px 9px; color: #4A0E17; border: 1px solid #dac9ae; border-radius: 7px; background: #fff; font-size: .78rem; font-weight: 700; cursor: pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
         .home-gallery-pause:hover { background: #fff7df; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(87, 18, 27, .12); }
+        .dhamma-action-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: .85rem; }
+        .dhamma-action-button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.9rem; padding: .65rem 1rem; border-radius: 999px; box-shadow: 0 6px 14px rgba(45, 8, 14, .13); font-size: .875rem; font-weight: 600; line-height: 1.2; transition: transform .2s ease, box-shadow .2s ease, filter .2s ease, background-color .2s ease; }
+        .dhamma-action-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(45, 8, 14, .2); filter: brightness(1.03); }
+        .dhamma-action-button:active { transform: translateY(0) scale(.95); box-shadow: 0 3px 8px rgba(45, 8, 14, .16); }
+        .dhamma-action-button i { transition: transform .22s ease; }
+        .dhamma-action-button:hover i { transform: rotate(-8deg) scale(1.12); }
+        .dhamma-action-button--random:hover i, .dhamma-action-button--random.is-animating i { animation: dhamma-icon-spin .55s ease-in-out; }
+        .dhamma-quote-content.is-refreshing { animation: dhamma-quote-reveal .45s ease-out both; }
+        @keyframes dhamma-icon-spin { from { transform: rotate(0) scale(1); } to { transform: rotate(360deg) scale(1.12); } }
+        @keyframes dhamma-quote-reveal { from { opacity: .35; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
         .temple-button-motion { transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
         .temple-button-motion:hover { transform: translateY(-2px); filter: brightness(1.04); box-shadow: 0 8px 18px rgba(45, 8, 14, .18); }
         .temple-button-motion:active { transform: translateY(0) scale(.96); }
@@ -148,9 +158,9 @@
         .language-option { display: flex; align-items: center; gap: .55rem; width: 100%; padding: .62rem .7rem; color: #33231f; border: 0; border-radius: .65rem; background: transparent; text-align: left; font-size: .82rem; font-weight: 700; transition: background .18s ease, color .18s ease, transform .18s ease; }
         .language-option:hover, .language-option[aria-current="true"] { color: #4A0E17; background: #fff1c8; transform: translateX(2px); }
         .language-option-flag { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: #f7ebcb; font-size: .9rem; }
-        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } }
+        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } .dhamma-action-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 24rem); gap: .6rem; margin-inline: auto; } .dhamma-action-button { min-width: 0; min-height: 2.55rem; padding: .5rem .45rem; gap: .35rem; font-size: .7rem; text-align: center; } .dhamma-action-button i { font-size: .85rem; } }
         @media (prefers-reduced-motion: reduce) {
-            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
+            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .dhamma-action-button, .dhamma-quote-content, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
         }
         .lao-pattern {
             background-color: #4A0E17;
@@ -636,7 +646,7 @@
             <i class="fa-solid fa-quote-left text-6xl text-laoGold/20 absolute top-4 left-6"></i>
             <i class="fa-solid fa-quote-right text-6xl text-laoGold/20 absolute bottom-4 right-6"></i>
 
-            <div class="relative z-10 max-w-3xl mx-auto">
+            <div id="dhammaQuoteContent" class="dhamma-quote-content relative z-10 max-w-3xl mx-auto">
                 <p id="dhammaText" class="text-xl sm:text-3xl font-lao-serif font-bold text-laoMaroon leading-relaxed mb-6">
                     "ຄວາມເວັ້ນຈາກບາບທັງປວງ, ການຍັງກຸສົນໃຫ້ເຖິງພ້ອມ, ການເຮັດຈິດໃຈຂອງຕົນໃຫ້ຜ່ອງໃສ ນີ້ແມ່ນຄຳສອນຂອງພຣະພຸດທະເຈົ້າທັງຫຼາຍ."
                 </p>
@@ -644,26 +654,23 @@
                     - ພຣະທຳມະຄຳສອນ ໂອວາດປາຕິໂມກ -
                 </p>
 
-                <div class="flex flex-wrap justify-center gap-4">
-                    <button onclick="getRandomQuote()" class="bg-laoMaroon text-laoGold font-semibold px-6 py-3 rounded-full shadow-md hover:bg-laoMaroonDark transition-all active:scale-95 flex items-center gap-2">
+                <div class="dhamma-action-buttons">
+                    <button onclick="getRandomQuote(this)" class="dhamma-action-button dhamma-action-button--random bg-laoMaroon text-laoGold hover:bg-laoMaroonDark">
                         <i class="fa-solid fa-arrows-rotate"></i>
                         <span>ສຸ່ມຄຳສອນໃໝ່</span>
                     </button>
-                    <button onclick="copyDhammaQuote()" class="bg-white text-laoMaroon border border-laoGold/50 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-amber-50 transition-all active:scale-95 flex items-center gap-2">
+                    <button onclick="copyDhammaQuote()" class="dhamma-action-button bg-white text-laoMaroon border border-laoGold/50 hover:bg-amber-50">
                         <i class="fa-solid fa-copy"></i>
                         <span>ຄັດລອກຂໍ້ຄວາມ</span>
                     </button>
-                    <!-- ปุ่มแชร์ Facebook -->
-        <button type="button" onclick="shareToFacebook()" style="background-color: #1877f2;" class="text-white font-semibold px-5 py-3 rounded-full shadow-md hover:opacity-90 transition-all active:scale-95 flex items-center gap-2">
-            <i class="fab fa-facebook"></i>
-            <span>ແບ່ງປັນ Facebook</span>
-        </button>
-
-        <!-- ปุ่มแชร์ WhatsApp -->
-        <button type="button" onclick="shareToWhatsApp()" style="background-color: #25d366;" class="text-white font-semibold px-5 py-3 rounded-full shadow-md hover:opacity-90 transition-all active:scale-95 flex items-center gap-2">
-            <i class="fab fa-whatsapp"></i>
-            <span>ສົ່ງທາງ WhatsApp</span>
-        </button>
+                    <button type="button" onclick="shareToFacebook()" style="background-color: #1877f2;" class="dhamma-action-button text-white hover:opacity-90">
+                        <i class="fab fa-facebook"></i>
+                        <span>ແບ່ງປັນ Facebook</span>
+                    </button>
+                    <button type="button" onclick="shareToWhatsApp()" style="background-color: #25d366;" class="dhamma-action-button text-white hover:opacity-90">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>ສົ່ງທາງ WhatsApp</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1482,12 +1489,19 @@
     { text: "ຄວາມທຸກຍ່ອມຕາມຜູ້ມີຈິດໃຈຊົ່ວ ເໝືອນລໍ້ລົດຕາມຮອບຕີນງົວ.", source: "- ພຣະພຸດທະໂອວາດ -" },
     { text: "ຄວາມບໍ່ມີໂຣກທາງໃຈ ຄືຄວາມປາດສະຈາກກິເລດ.", source: "- ພຣະທຳມະຄຳສອນ -" }
 ];
-        function getRandomQuote() {
+        function getRandomQuote(button) {
             const randomIndex = Math.floor(Math.random() * QUOTES.length);
             const quote = QUOTES[randomIndex];
             const localizedQuote = autoTranslations[getPreferredLanguage()]?.quotes?.[randomIndex];
             document.getElementById('dhammaText').innerText = localizedQuote || quote.text;
             document.getElementById('dhammaSource').innerText = translateText(quote.source);
+            const quoteContent = document.getElementById('dhammaQuoteContent');
+            quoteContent?.classList.remove('is-refreshing');
+            button?.classList.remove('is-animating');
+            window.requestAnimationFrame(() => {
+                quoteContent?.classList.add('is-refreshing');
+                button?.classList.add('is-animating');
+            });
             showToast("ສຸ່ມທຳມະຄຳສອນໃໝ່ແລ້ວ", "ທຳມະທານ", "fa-quote-left");
         }
 
