@@ -304,6 +304,21 @@
         </div>
     </section>
 
+    <!-- Temple news loaded from the private Google Sheet -->
+    <section id="temple-news" class="bg-white py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-10">
+                <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">NEWS &amp; UPDATES</span>
+                <h2 class="gold-sparkle inline-block text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">ຂ່າວສານຈາກວັດ</h2>
+                <p class="text-gray-600 max-w-xl mx-auto text-sm sm:text-base">ຕິດຕາມຂ່າວສານ ແລະ ກິດຈະກຳໃໝ່ຈາກວັດ</p>
+                <div class="w-24 h-1 bg-laoGold mx-auto rounded-full mt-4"></div>
+            </div>
+
+            <p id="templeNewsStatus" class="text-center text-sm text-gray-500" role="status" aria-live="polite">ກຳລັງໂຫຼດຂ່າວສານ...</p>
+            <div id="templeNewsList" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+        </div>
+    </section>
+
     <!-- Sacred Highlights Section -->
     <section id="sacred" class="py-20 bg-amber-50 border-y border-laoGold/20 px-4">
         <div class="max-w-7xl mx-auto">
@@ -734,7 +749,7 @@
                     <p class="text-xs text-gray-500 mb-6">ຊື່ບັນຊີ: Khamsavanh LEUAMTHININ Monk)</p>
 
                  <!-- QR Simulation Frame -->
-<div class="inline-block relative cursor-pointer" onclick="openQRImage()">
+<div id="qrImageTrigger" class="inline-block relative cursor-zoom-in focus:outline-none focus-visible:ring-4 focus-visible:ring-laoGold focus-visible:ring-offset-4 rounded-xl" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="qrImageModal" aria-label="ເປີດຮູບ QR Code ຂະໜາດໃຫຍ່" onclick="openQRImage()" onkeydown="handleImageTriggerKey(event, 'qr')">
     <div class="w-full h-full bg-white rounded-xl p-3 flex flex-col items-center justify-center border-2 border-gray-200 overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
         <img src="QR.jpg" id="qrImgSrc" alt="QR Code" class="w-full h-full object-contain">
     </div>
@@ -744,9 +759,10 @@
 </div>
 
 <!-- QR Code Modal -->
-<div id="qrImageModal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; padding: 16px;" onclick="closeQRImage()">
+<div id="qrImageModal" role="dialog" aria-modal="true" aria-labelledby="qrImageModalTitle" aria-hidden="true" tabindex="-1" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; padding: 16px;" onclick="closeQRImage()">
     <div style="position: relative; max-width: 500px; width: 100%; text-align: center;" onclick="event.stopPropagation()">
-        <button onclick="closeQRImage()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; background: none; border: none; cursor: pointer;">&times;</button>
+        <h2 id="qrImageModalTitle" class="sr-only">ຮູບ QR Code</h2>
+        <button id="qrImageClose" type="button" data-image-modal-close onclick="closeQRImage()" aria-label="ປິດຮູບ QR Code" title="ປິດ (Esc)" style="position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; background: none; border: none; cursor: pointer;">&times;</button>
         <img id="qrModalImg" src="" alt="QR Code" style="max-height: 80vh; width: auto; max-width: 100%; border-radius: 16px; border: 3px solid #af9164; margin: 0 auto;">
     </div>
 </div>
@@ -786,7 +802,7 @@
 <!-- Monk Profile Section -->
 <div class="mb-10 text-center">
     <div class="inline-block relative cursor-pointer">
-        <img src="Monk.jpg" id="monkProfileImg" alt="Monk" onclick="openMonkImage()" class="w-60 h-60 sm:w-64 sm:h-64 rounded-full object-cover border-4 border-laoGold shadow-xl mx-auto block hover:scale-105 transition-transform duration-300">
+        <img src="Monk.jpg" id="monkProfileImg" alt="ພຣະອາຈານ ຄຳສະຫວັນ ເລື່ອມທິນິນ" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="monkImageModal" title="ເປີດຮູບຂະໜາດໃຫຍ່" onclick="openMonkImage()" onkeydown="handleImageTriggerKey(event, 'monk')" class="w-60 h-60 sm:w-64 sm:h-64 rounded-full object-cover border-4 border-laoGold shadow-xl mx-auto block hover:scale-105 transition-transform duration-300 cursor-zoom-in focus:outline-none focus-visible:ring-4 focus-visible:ring-laoGold focus-visible:ring-offset-4">
     </div>
 
     <div class="mt-6 mb-5">
@@ -803,10 +819,11 @@
 </div>
 
 <!-- Pop-up Modal เฉพาะรูปพระอาจารย์ -->
-<div id="monkImageModal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; padding: 16px;" onclick="closeMonkImage()">
+<div id="monkImageModal" role="dialog" aria-modal="true" aria-labelledby="monkImageModalTitle" aria-hidden="true" tabindex="-1" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; padding: 16px;" onclick="closeMonkImage()">
     <div style="position: relative; max-width: 600px; width: 100%; text-align: center;" onclick="event.stopPropagation()">
-        <button onclick="closeMonkImage()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; background: none; border: none; cursor: pointer;">&times;</button>
-        <img id="monkModalImg" src="" alt="Monk" style="max-height: 80vh; width: auto; max-width: 100%; border-radius: 16px; border: 3px solid #af9164; margin: 0 auto;">
+        <h2 id="monkImageModalTitle" class="sr-only">ຮູບພຣະອາຈານ</h2>
+        <button id="monkImageClose" type="button" data-image-modal-close onclick="closeMonkImage()" aria-label="ປິດຮູບພຣະອາຈານ" title="ປິດ (Esc)" style="position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; background: none; border: none; cursor: pointer;">&times;</button>
+        <img id="monkModalImg" src="" alt="ຮູບພຣະອາຈານ ຄຳສະຫວັນ ເລື່ອມທິນິນ" style="max-height: 80vh; width: auto; max-width: 100%; border-radius: 16px; border: 3px solid #af9164; margin: 0 auto;">
     </div>
 </div>
 

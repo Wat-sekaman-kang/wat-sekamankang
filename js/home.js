@@ -1,38 +1,86 @@
 /* Interactive behavior for index.html. */
 
-function openQRImage() {
-        var profileImgSrc = document.getElementById('qrImgSrc');
-        var modal = document.getElementById('qrImageModal');
-        var modalImg = document.getElementById('qrModalImg');
-        if (profileImgSrc && modal && modalImg) {
-            modalImg.src = profileImgSrc.src;
-            modal.style.display = 'flex';
-        }
-    }
+function openImageModal(modalId, sourceImageId, modalImageId, openerId) {
+    const sourceImage = document.getElementById(sourceImageId);
+    const modal = document.getElementById(modalId);
+    const modalImage = document.getElementById(modalImageId);
+    const closeButton = modal?.querySelector('[data-image-modal-close]');
 
-    function closeQRImage() {
-        var modal = document.getElementById('qrImageModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    }
+    if (!sourceImage || !modal || !modalImage) return;
+
+    modalImage.src = sourceImage.currentSrc || sourceImage.src;
+    modal.dataset.openerId = openerId;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    window.setTimeout(() => closeButton?.focus(), 0);
+}
+
+function closeImageModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal || modal.style.display === 'none') return;
+
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    const opener = document.getElementById(modal.dataset.openerId);
+    window.setTimeout(() => opener?.focus(), 0);
+}
+
+function openQRImage() {
+    openImageModal('qrImageModal', 'qrImgSrc', 'qrModalImg', 'qrImageTrigger');
+}
+
+function closeQRImage() {
+    closeImageModal('qrImageModal');
+}
 
 function openMonkImage() {
-        var profileImg = document.getElementById('monkProfileImg');
-        var modal = document.getElementById('monkImageModal');
-        var modalImg = document.getElementById('monkModalImg');
-        if (profileImg && modal && modalImg) {
-            modalImg.src = profileImg.src;
-            modal.style.display = 'flex';
-        }
-    }
+    openImageModal('monkImageModal', 'monkProfileImg', 'monkModalImg', 'monkProfileImg');
+}
 
-    function closeMonkImage() {
-        var modal = document.getElementById('monkImageModal');
-        if (modal) {
-            modal.style.display = 'none';
+function closeMonkImage() {
+    closeImageModal('monkImageModal');
+}
+
+function handleImageTriggerKey(event, imageType) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    if (imageType === 'qr') openQRImage();
+    if (imageType === 'monk') openMonkImage();
+}
+
+function getOpenImageModal() {
+    return ['qrImageModal', 'monkImageModal']
+        .map(id => document.getElementById(id))
+        .find(modal => modal?.style.display === 'flex');
+}
+
+function initImageModalAccessibility() {
+    document.addEventListener('keydown', event => {
+        const modal = getOpenImageModal();
+        if (!modal) return;
+
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeImageModal(modal.id);
+            return;
         }
-    }
+
+        if (event.key !== 'Tab') return;
+        const focusable = [...modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+            .filter(element => element.offsetParent !== null);
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    });
+}
 
 /* ===================================================
            Web Audio API Sound Engine (Bell & Gong Synthesizer)
@@ -1679,6 +1727,112 @@ function initPageEnhancements() {
     toggleBackToTop();
 }
 
+const TEMPLE_NEWS_API_URL = 'https://script.google.com/macros/s/AKfycbxrS_whx41LS1lLbnGe7vAsSiktzPVpLT2KsfpaSHiRM2Dy_dNMvLg0eLFwOaTC2Dcb/exec';
+
+function setTempleNewsStatus(message, isError = false) {
+    const status = document.getElementById('templeNewsStatus');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('text-red-700', isError);
+    status.classList.toggle('text-gray-500', !isError);
+}
+
+function isSafeTempleNewsImage(value) {
+    try {
+        const imageUrl = new URL(value, window.location.href);
+        return imageUrl.protocol === 'https:' || imageUrl.protocol === 'http:';
+    } catch {
+        return false;
+    }
+}
+
+function createTempleNewsCard(item) {
+    const card = document.createElement('article');
+    card.className = 'overflow-hidden rounded-2xl border border-amber-200 bg-amber-50/40 shadow-md transition-shadow hover:shadow-xl';
+
+    if (isSafeTempleNewsImage(item.image)) {
+        const image = document.createElement('img');
+        image.src = item.image;
+        image.alt = item.title || 'ຂ່າວສານຈາກວັດ';
+        image.loading = 'lazy';
+        image.decoding = 'async';
+        image.className = 'h-52 w-full object-cover';
+        image.addEventListener('error', () => image.remove());
+        card.append(image);
+    }
+
+    const content = document.createElement('div');
+    content.className = 'p-6';
+
+    if (item.date) {
+        const date = document.createElement('p');
+        date.className = 'mb-2 text-xs font-bold tracking-wide text-laoGoldDark';
+        date.textContent = item.date;
+        content.append(date);
+    }
+
+    const title = document.createElement('h3');
+    title.className = 'font-lao-serif text-xl font-bold text-laoMaroon';
+    title.textContent = item.title;
+    content.append(title);
+
+    if (item.detail) {
+        const detail = document.createElement('p');
+        detail.className = 'mt-3 whitespace-pre-line text-sm leading-relaxed text-gray-600';
+        detail.textContent = item.detail;
+        content.append(detail);
+    }
+
+    card.append(content);
+    return card;
+}
+
+function renderTempleNews(items) {
+    const list = document.getElementById('templeNewsList');
+    if (!list) return;
+
+    list.replaceChildren();
+    if (!items.length) {
+        setTempleNewsStatus('ຍັງບໍ່ມີຂ່າວສານທີ່ເລືອກໃຫ້ສະແດງ');
+        return;
+    }
+
+    items.forEach(item => list.append(createTempleNewsCard(item)));
+    setTempleNewsStatus('');
+}
+
+function initTempleNews() {
+    const list = document.getElementById('templeNewsList');
+    if (!list || !TEMPLE_NEWS_API_URL) return;
+
+    const callbackName = `__watXekamanNews_${Date.now()}`;
+    const script = document.createElement('script');
+    let settled = false;
+
+    function finish(payload, failed = false) {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        script.remove();
+        delete window[callbackName];
+
+        if (failed || !payload || !Array.isArray(payload.items)) {
+            setTempleNewsStatus('ບໍ່ສາມາດໂຫຼດຂ່າວສານໄດ້ໃນຂະນະນີ້', true);
+            return;
+        }
+
+        renderTempleNews(payload.items);
+    }
+
+    const timeout = window.setTimeout(() => finish(null, true), 12000);
+    window[callbackName] = payload => finish(payload);
+    script.async = true;
+    script.referrerPolicy = 'no-referrer';
+    script.onerror = () => finish(null, true);
+    script.src = `${TEMPLE_NEWS_API_URL}?callback=${encodeURIComponent(callbackName)}&_=${Date.now()}`;
+    document.head.append(script);
+}
+
 // 5. โหลดภาษาเดิมที่เลือกไว้อัตโนมัติเมื่อเปิดเว็บ
 document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('preferred_lang') || 'lo';
@@ -1688,6 +1842,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMeritDashboard();
     initThemeToggle();
     initContactFormProtection();
+    initImageModalAccessibility();
     getRandomQuote(null, false);
     updateDailyDhammaProgress();
     updateEventCountdown();
@@ -1697,6 +1852,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHomeGallerySlider();
     replaceSacredImageSources();
     initPageEnhancements();
+    initTempleNews();
     document.querySelectorAll('button, a[href]').forEach(element => {
         const classes = typeof element.className === 'string' ? element.className : '';
         if (!/(?:hover:|transition|active:)/.test(classes) && !element.closest('.language-menu-popover')) {
