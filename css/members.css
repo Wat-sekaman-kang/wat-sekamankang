@@ -1,0 +1,67 @@
+/* Styles specific to temple_members.html. */
+
+body {
+            background-color: #FDFBF7;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.3);
+            border-color: #D4AF37;
+        }
+
+        .tab-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: #4A1C1C;
+            color: #D4AF37;
+            border-color: #D4AF37;
+        }
+        
+        .tab-btn:not(.active):hover {
+            background-color: #F3E5AB;
+            color: #4A1C1C;
+        }
+
+        /* ลายไทยประดับมุม */
+        .corner-ornament {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #D4AF37;
+            opacity: 0.6;
+        }
+        .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+        
+        /* ເພີ່ມ Animation ໃໝ່ສຳລັບລູກຫຼິ້ນຄວາມສວຍງາມ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* ເຊື່ອງໄວ້ກ່ອນອະນິເມຊັ່ນເຮັດວຽກ */
+        }
+        
+        @keyframes shine {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+        .text-shine {
+            background: linear-gradient(to right, #D4AF37 20%, #FFF8DC 40%, #FFF8DC 60%, #D4AF37 80%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 4s linear infinite;
+        }
