@@ -128,6 +128,126 @@
             }
         ];
 
+        const MEMBER_COPY = {
+            lo: {
+                label: '🇱🇦 ພາສາລາວ',
+                navHome: 'ໜ້າຫຼັກ', navGallery: 'ຄັງຮູບພາບ', navMembers: 'ທຳນຽບວັດ',
+                eyebrow: 'TEMPLE DIRECTORY', heroTitle: 'ທຳນຽບສະມາຊິກພາຍໃນວັດ',
+                heroText: 'ລວບລວມລາຍນາມພຣະສົງ ສາມະເນນ ແລະ ບຸກຄະລາກອນ ແບ່ງຕາມປີ ພ.ສ.',
+                directoryKicker: 'HISTORICAL DIRECTORY', directoryTitle: 'ເລືອກປີຂໍ້ມູນ', directoryText: 'ເລືອກປີເພື່ອເບິ່ງທຳນຽບຄະນະວັດໃນແຕ່ລະຊ່ວງເວລາ',
+                loading: 'ກຳລັງໂຫຼດຂໍ້ມູນ...', emptyTitle: 'ບໍ່ພົບຂໍ້ມູນສະມາຊິກໃນປີທີ່ເລືອກ', footerText: 'ທຳນຽບປະຫວັດພາຍໃນວັດ',
+                era: 'ພ.ສ.', age: 'ອາຍຸ', vassa: 'ພັນສາ', education: 'ວິທະຍະຖານະ', duty: 'ໜ້າທີ່ຮັບຜິດຊອບ', yearUnit: 'ປີ', vassaUnit: 'ພັນສາ', dark: 'ເປີດໂໝດກາງຄືນ', light: 'ກັບສູ່ໂໝດກາງວັນ', top: 'ກັບຂຶ້ນເທິງສຸດ'
+            },
+            th: {
+                label: '🇹🇭 ภาษาไทย',
+                navHome: 'หน้าหลัก', navGallery: 'คลังรูปภาพ', navMembers: 'ทำเนียบวัด',
+                eyebrow: 'ทำเนียบวัด', heroTitle: 'ทำเนียบสมาชิกภายในวัด',
+                heroText: 'รวบรวมรายนามพระสงฆ์ สามเณร และบุคลากรภายในวัด แยกตามปี พ.ศ.',
+                directoryKicker: 'ทำเนียบย้อนหลัง', directoryTitle: 'เลือกปีข้อมูล', directoryText: 'เลือกปีเพื่อดูทำเนียบคณะวัดในแต่ละช่วงเวลา',
+                loading: 'กำลังโหลดข้อมูล...', emptyTitle: 'ไม่พบข้อมูลสมาชิกในปีที่เลือก', footerText: 'ทำเนียบประวัติภายในวัด',
+                era: 'พ.ศ.', age: 'อายุ', vassa: 'พรรษา', education: 'การศึกษา', duty: 'หน้าที่รับผิดชอบ', yearUnit: 'ปี', vassaUnit: 'พรรษา', dark: 'เปิดโหมดกลางคืน', light: 'กลับสู่โหมดกลางวัน', top: 'กลับขึ้นด้านบน'
+            },
+            en: {
+                label: '🇬🇧 English',
+                navHome: 'Home', navGallery: 'Gallery', navMembers: 'Temple directory',
+                eyebrow: 'TEMPLE DIRECTORY', heroTitle: 'Temple member directory',
+                heroText: 'A directory of monks, novices, and temple staff, organised by Buddhist Era year.',
+                directoryKicker: 'HISTORICAL DIRECTORY', directoryTitle: 'Choose a record year', directoryText: 'Select a year to view the temple directory for that period.',
+                loading: 'Loading information...', emptyTitle: 'No member record was found for the selected year.', footerText: 'Temple historical directory',
+                era: 'B.E.', age: 'Age', vassa: 'Vassa', education: 'Education', duty: 'Responsibilities', yearUnit: 'years', vassaUnit: 'vassa', dark: 'Use dark mode', light: 'Use light mode', top: 'Back to top'
+            }
+        };
+
+        let activeMemberLanguage = localStorage.getItem('preferred_lang') || 'lo';
+        let selectedMemberYear = null;
+
+        function getMemberCopy() {
+            return MEMBER_COPY[activeMemberLanguage] || MEMBER_COPY.lo;
+        }
+
+        function closeMembersLanguageMenu() {
+            const menu = document.getElementById('membersLanguageMenu');
+            const trigger = document.getElementById('membersLanguageTrigger');
+            if (!menu || !trigger) return;
+            menu.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        function applyMemberLanguage(language, refreshDirectory = true) {
+            activeMemberLanguage = MEMBER_COPY[language] ? language : 'lo';
+            const copy = getMemberCopy();
+            document.documentElement.lang = activeMemberLanguage;
+            document.querySelectorAll('[data-members-i18n]').forEach(element => {
+                const key = element.dataset.membersI18n;
+                if (copy[key]) element.textContent = copy[key];
+            });
+            document.getElementById('membersLanguageLabel').textContent = copy.label;
+            document.querySelectorAll('[data-members-language]').forEach(button => {
+                button.setAttribute('aria-current', String(button.dataset.membersLanguage === activeMemberLanguage));
+            });
+            updateMembersThemeToggle();
+            if (refreshDirectory && selectedMemberYear) {
+                const years = [...new Set(membersData.map(item => item.year))].sort((a, b) => b - a);
+                renderTabs(years);
+                displayMembersByYear(selectedMemberYear);
+            }
+        }
+
+        function selectMemberLanguage(language) {
+            try { localStorage.setItem('preferred_lang', language); } catch (error) {}
+            applyMemberLanguage(language);
+            closeMembersLanguageMenu();
+        }
+
+        function updateMembersThemeToggle() {
+            const button = document.getElementById('membersThemeToggle');
+            const icon = document.getElementById('membersThemeIcon');
+            if (!button || !icon) return;
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            const copy = getMemberCopy();
+            const label = isDark ? copy.light : copy.dark;
+            button.setAttribute('aria-pressed', String(isDark));
+            button.setAttribute('aria-label', label);
+            button.title = label;
+            icon.className = `fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`;
+        }
+
+        function initMembersEnhancements() {
+            try {
+                const savedTheme = localStorage.getItem('temple_theme');
+                document.documentElement.classList.toggle('dark-mode', savedTheme === 'dark');
+            } catch (error) {}
+            applyMemberLanguage(activeMemberLanguage);
+
+            document.getElementById('membersLanguageTrigger').addEventListener('click', () => {
+                const menu = document.getElementById('membersLanguageMenu');
+                const trigger = document.getElementById('membersLanguageTrigger');
+                const isOpen = menu.classList.toggle('is-open');
+                trigger.setAttribute('aria-expanded', String(isOpen));
+            });
+            document.querySelectorAll('[data-members-language]').forEach(button => {
+                button.addEventListener('click', () => selectMemberLanguage(button.dataset.membersLanguage));
+            });
+            document.getElementById('membersThemeToggle').addEventListener('click', () => {
+                const isDark = !document.documentElement.classList.contains('dark-mode');
+                document.documentElement.classList.toggle('dark-mode', isDark);
+                try { localStorage.setItem('temple_theme', isDark ? 'dark' : 'light'); } catch (error) {}
+                updateMembersThemeToggle();
+            });
+            document.addEventListener('click', event => {
+                if (!event.target.closest('#membersLanguageMenu')) closeMembersLanguageMenu();
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') closeMembersLanguageMenu();
+            });
+
+            const backToTop = document.getElementById('membersBackToTop');
+            const toggleBackToTop = () => backToTop.classList.toggle('is-visible', window.scrollY > 420);
+            backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            window.addEventListener('scroll', toggleBackToTop, { passive: true });
+            toggleBackToTop();
+        }
+
         // ฟังก์ชันหลักที่เริ่มทำงานเมื่อโหลดหน้าเว็บ
         document.addEventListener('DOMContentLoaded', () => {
             // ตั้งค่าปีปัจจุบันใน Footer
@@ -137,6 +257,7 @@
             const availableYears = [...new Set(membersData.map(item => item.year))].sort((a, b) => b - a);
             
             if(availableYears.length > 0) {
+                selectedMemberYear = availableYears[0];
                 renderTabs(availableYears);
                 // แสดงข้อมูลของปีล่าสุดเป็นค่าเริ่มต้น
                 displayMembersByYear(availableYears[0]);
@@ -150,7 +271,8 @@
             years.forEach((year, index) => {
                 const btn = document.createElement('button');
                 btn.className = `tab-btn px-6 py-2 rounded-full border-2 border-gray-300 font-semibold shadow-sm focus:outline-none ${index === 0 ? 'active' : 'text-gray-600 bg-white'}`;
-                btn.textContent = `ພ.ສ. ${year}`;
+                btn.textContent = `${getMemberCopy().era} ${year}`;
+                btn.setAttribute('aria-pressed', String(year === selectedMemberYear));
                 btn.onclick = (e) => {
                     // อัพเดทคลาส active
                     document.querySelectorAll('.tab-btn').forEach(b => {
@@ -162,10 +284,16 @@
                     btn.classList.add('active');
                     btn.classList.remove('text-gray-600', 'bg-white');
                     
+                    selectedMemberYear = year;
                     displayMembersByYear(year);
                 };
                 tabsContainer.appendChild(btn);
             });
+        }
+
+        function createMemberImageFallback() {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><linearGradient id="gold" x1="0" x2="1"><stop stop-color="#fff5cb"/><stop offset="1" stop-color="#d4af37"/></linearGradient></defs><rect width="160" height="160" fill="#4a0e17"/><circle cx="80" cy="80" r="58" fill="url(#gold)" opacity=".95"/><path fill="#4a0e17" d="M80 35 89 61l26-9-15 23 23 15-27 3 1 27-22-16-22 16 1-27-27-3 23-15-15-23 26 9z"/></svg>`;
+            return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
         }
 
         function displayMembersByYear(year) {
@@ -195,6 +323,7 @@
                 const isHighRank = member.rankLevel <= 2;
                 const badgeColor = isHighRank ? 'bg-temple-gold text-temple-dark' : 'bg-temple-dark text-white';
                 const borderColor = isHighRank ? 'border-temple-gold' : 'border-gray-200';
+                const copy = getMemberCopy();
                 
                 // ເພີ່ມ animate-fade-in-up ແລະ ຕັ້ງຄ່າ delay ໃຫ້ກາດແຕ່ລະອັນຂຶ້ນມາບໍ່ພ້ອມກັນ (Staggered effect)
                 card.className = `card-hover animate-fade-in-up bg-white rounded-xl overflow-hidden border-t-4 ${borderColor} shadow-md hover:shadow-2xl relative group`;
@@ -247,9 +376,26 @@
                         </div>
                     </div>
                 `;
+
+                const fieldLabels = [copy.age, copy.vassa, copy.education, copy.duty];
+                card.querySelectorAll('.w-full.space-y-2 .font-medium').forEach((label, labelIndex) => {
+                    const textNode = [...label.childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+                    if (textNode) textNode.textContent = ` ${fieldLabels[labelIndex]}`;
+                });
+                const values = card.querySelectorAll('.w-full.space-y-2 > div > span.font-semibold');
+                if (values[0]) values[0].textContent = `${member.age} ${copy.yearUnit}`;
+                if (values[1]) values[1].textContent = member.vassa !== '-' ? `${member.vassa} ${copy.vassaUnit}` : '-';
+
+                const memberImage = card.querySelector('img');
+                memberImage.onerror = () => {
+                    memberImage.onerror = null;
+                    memberImage.src = createMemberImageFallback();
+                };
                 grid.appendChild(card);
             });
 
             // แสดง Grid หลังจากสร้างการ์ดเสร็จ
             grid.classList.remove('hidden');
         }
+
+        document.addEventListener('DOMContentLoaded', initMembersEnhancements);

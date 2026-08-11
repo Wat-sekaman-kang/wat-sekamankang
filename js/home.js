@@ -181,12 +181,12 @@ function openMonkImage() {
         <div class="space-y-4 text-center">
             <div class="bg-amber-100 p-6 rounded-2xl border border-amber-300">
                 <i class="fa-solid fa-map-location-dot text-5xl text-laoMaroon mb-3"></i>
-                <h4 class="font-bold text-lg text-laoMaroon font-lao-serif">ແຜນທີ່ຕຳແໜ່ງ ອັດຕະປື ເຊກະພານ</h4>
-                <p class="text-xs text-gray-600 mt-2">ບ້ານເຊກະພານ, ເມືອງ ແລະ ແຂວງໃນເຂດລຸ່ມນ້ຳເຊກະພານ, ສປປ ລາວ</p>
+                <h4 class="font-bold text-lg text-laoMaroon font-lao-serif">ແຜນທີ່ຕຳແໜ່ງ ວັດເຊກະໝານກາງ</h4>
+                <p class="text-xs text-gray-600 mt-2">ບ້ານເຊກະໝານກາງ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ</p>
             </div>
-            <p class="text-sm text-gray-700">ທ່ານສາມາດເດີນທາງຕາມເສັ້ນທາງຫຼັກເລກທີ 16A ແຄມນ້ຳເຊກະພານ.</p>
+            <p class="text-sm text-gray-700">ກົດປຸ່ມດ້ານລຸ່ມເພື່ອຄົ້ນຫາວັດເຊກະໝານກາງໃນ Google Maps.</p>
             <div class="pt-2">
-                <a href="https://www.google.com/maps/search/?api=1&query=วัดเซกะพานกลาง" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all text-sm">
+                <a href="https://www.google.com/maps/search/?api=1&query=Wat%20Xekaman%20Kang%2C%20Samakkhixay%2C%20Attapeu%2C%20Laos" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all text-sm">
                     <i class="fa-solid fa-location-arrow"></i>
                     <span>ນຳທາງດ້ວຍ Google Maps</span>
                 </a>
@@ -199,13 +199,14 @@ function openMonkImage() {
         function openReceiptGeneratorModal() {
             const content = `
                 <form onsubmit="generateReceiptSubmit(event)" class="space-y-4">
-                    <p class="text-xs text-gray-600">ກະລຸນາປ້ອນຂໍ້ມູນເພື່ອອອກໃບອະນຸໂມທະນາບຸນດິຈິທັລ ສຳລັບເກັບໄວ້ເປັນສິຣິມົງຄົນ:</p>
+                    <p class="text-xs text-gray-600">ກະລຸນາປ້ອນຂໍ້ມູນເພື່ອສ້າງບັດອະນຸໂມທະນາບຸນ ສຳລັບເກັບໄວ້ເປັນສິຣິມົງຄົນ.</p>
+                    <p class="rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900"><i class="fa-solid fa-circle-info mr-1"></i> ບັດນີ້ເປັນບັນທຶກສ່ວນຕົວ ບໍ່ແມ່ນໃບເສັດ ແລະ ບໍ່ແມ່ນການຢືນຢັນການໂອນເງິນ.</p>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຊື່ ແລະ ນາມສະກຸນ ຜູ້ບໍລິຈາກ</label>
                         <input type="text" id="receiptName" required placeholder="ຕົວຢ່າງ: ທ່ານ ສົມໄຊ ວົງສາ" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:border-laoGold focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຈຳນວນເງິນບໍລິຈາກ (ກີບ / ບາດ)</label>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ຈຳນວນທີ່ຕ້ອງການລະບຸ (ກີບ / ບາດ)</label>
                         <input type="text" id="receiptAmount" required placeholder="ຕົວຢ່າງ: 100,000 ກີບ" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:border-laoGold focus:outline-none">
                     </div>
                     <div>
@@ -218,11 +219,11 @@ function openMonkImage() {
                         </select>
                     </div>
                     <button type="submit" class="w-full gold-gradient text-laoMaroon font-bold py-3 rounded-xl shadow hover:scale-[1.01] transition-transform">
-                        ສ້າງໃບອະນຸໂມທະນາບຸນ
+                        ສ້າງບັດອະນຸໂມທະນາບຸນ
                     </button>
                 </form>
             `;
-            openModal("ອອກໃບອະນຸໂມທະນາບຸນ", content);
+            openModal("ບັດອະນຸໂມທະນາບຸນ", content);
         }
 
         function generateReceiptSubmit(e) {
@@ -234,20 +235,22 @@ function openMonkImage() {
 
             const content = `
                 <div class="border-4 border-laoGold p-6 rounded-2xl bg-amber-50/80 text-center relative font-lao-serif">
-                    <div class="text-laoMaroon font-bold text-2xl mb-1">ໃບອະນຸໂມທະນາບຸນ</div>
-                    <div class="text-xs text-laoGoldDark font-semibold uppercase mb-4">WAT XEKAMAN KANG MERIT CERTIFICATE</div>
+                    <div class="text-laoMaroon font-bold text-2xl mb-1">ບັດອະນຸໂມທະນາບຸນ</div>
+                    <div class="text-xs text-laoGoldDark font-semibold uppercase mb-3">WAT XEKAMAN KANG · PERSONAL MERIT ACKNOWLEDGEMENT</div>
+                    <div class="mb-4 inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-[.68rem] font-sans font-bold text-amber-900"><i class="fa-solid fa-circle-info"></i> ບັນທຶກສ່ວນຕົວ · ບໍ່ແມ່ນໃບເສັດ</div>
                     <p class="text-xs text-gray-600 mb-6">ຂໍອະນຸໂມທະນາບຸນຂອບໃຈ ນຳ:</p>
                     <p class="text-2xl font-bold text-laoMaroon mb-2">${name}</p>
-                    <p class="text-sm text-gray-700 mb-4">ໄດ້ຮ່ວມບໍລິຈາກເຮັດບຸນ ຈຳນວນເງິນ: <strong class="text-laoMaroon">${amount}</strong></p>
+                    <p class="text-sm text-gray-700 mb-4">ຈຳນວນທີ່ລະບຸ: <strong class="text-laoMaroon">${amount}</strong></p>
                     <p class="text-xs text-gray-600 mb-6">ເພື່ອວັດຖຸປະສົງ: <strong>${purpose}</strong></p>
+                    <p class="mb-4 text-[.68rem] leading-relaxed text-gray-500">ເອກະສານນີ້ສ້າງຈາກຂໍ້ມູນທີ່ທ່ານລະບຸ ແລະ ບໍ່ຮັບຮອງວ່າການຊຳລະເງິນໄດ້ສຳເລັດ.</p>
                     <div class="border-t border-laoGold/40 pt-4 mt-4 flex justify-between items-center text-xs text-gray-500 font-sans">
                         <span>ວັນທີ: ${dateStr}</span>
                         <span class="font-bold text-laoMaroon">ວັດເຊກະໝານກາງ</span>
                     </div>
                 </div>
             `;
-            openModal("ໃບອະນຸໂມທະນາບຸນດິຈິທັລ", content);
-            showToast("ສ້າງໃບອະນຸໂມທະນາບຸນສຳເລັດ! ສາທຸ", "ສຳເລັດ", "fa-certificate");
+            openModal("ບັດອະນຸໂມທະນາບຸນ", content);
+            showToast("ສ້າງບັດອະນຸໂມທະນາບຸນສຳເລັດ! ສາທຸ", "ສຳເລັດ", "fa-certificate");
         }
 
         /* ===================================================
@@ -741,15 +744,46 @@ function openMonkImage() {
             showToast("ຄັດລອກຂໍ້ຄວາມທຳມະຄຳສອນສຳເລັດແລ້ວ!", "ຄັດລອກແລ້ວ", "fa-copy");
         }
 
-        function copyAccountNo() {
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = "160-12-00-00123456-001";
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-            showToast("ຄັດລອກເລກບັນຊີ BCEL 160-12-00-00123456-001 ສຳເລັດແລ້ວ!", "ຄັດລອກແລ້ວ", "fa-copy");
+        function copyAccountNo(currency) {
+            const accounts = {
+                lak: { number: '040-12-00-01285365-001', label: 'LAK' },
+                thb: { number: '0801231883147', label: 'THB' }
+            };
+            const account = accounts[currency] || accounts.lak;
+            const successMessage = `ຄັດລອກເລກບັນຊີ ${account.label}: ${account.number} ສຳເລັດແລ້ວ!`;
+
+            const finishCopy = () => showToast(successMessage, 'ຄັດລອກແລ້ວ', 'fa-copy');
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(account.number).then(finishCopy).catch(() => copyAccountNoFallback(account.number, finishCopy));
+                return;
+            }
+            copyAccountNoFallback(account.number, finishCopy);
         }
+
+        function copyAccountNoFallback(accountNumber, onSuccess) {
+            const field = document.createElement('textarea');
+            field.value = accountNumber;
+            field.setAttribute('readonly', '');
+            field.style.position = 'fixed';
+            field.style.opacity = '0';
+            document.body.appendChild(field);
+            field.select();
+            document.execCommand('copy');
+            field.remove();
+            onSuccess();
+        }
+
+const CONTACT_MIN_FILL_TIME_MS = 3000;
+const CONTACT_SUBMISSION_COOLDOWN_MS = 60000;
+
+function resetContactFormTimer(form) {
+    if (form) form.dataset.openedAt = String(Date.now());
+}
+
+function initContactFormProtection() {
+    const form = document.getElementById('contactForm');
+    resetContactFormTimer(form);
+}
 
 function handleContactSubmit(e) {
     e.preventDefault();
@@ -757,6 +791,27 @@ function handleContactSubmit(e) {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyRNp_doGL4rXXaGYJWxE8KgLB_DJiJ5cx-EMn6qxmcSJdLcPdqP4AdFudpmV406Rxo5A/exec';
 
     const form = e.target;
+    const now = Date.now();
+    const openedAt = Number(form.dataset.openedAt || 0);
+    const honeypot = form.elements.website?.value.trim();
+    let lastSubmissionAt = 0;
+    try { lastSubmissionAt = Number(localStorage.getItem('contact_last_submission_at') || 0); } catch (error) {}
+
+    if (honeypot) {
+        form.reset();
+        resetContactFormTimer(form);
+        return;
+    }
+    if (!openedAt || now - openedAt < CONTACT_MIN_FILL_TIME_MS) {
+        showToast('ກະລຸນາລໍຖ້າອີກຄູ່ໜຶ່ງແລ້ວລອງສົ່ງໃໝ່', 'ກວດສອບຂໍ້ຄວາມ', 'fa-shield-halved');
+        return;
+    }
+    if (now - lastSubmissionAt < CONTACT_SUBMISSION_COOLDOWN_MS) {
+        showToast('ກະລຸນາລໍຖ້າ 1 ນາທີ ກ່ອນສົ່ງຂໍ້ຄວາມອີກຄັ້ງ', 'ສົ່ງຖີ່ເກີນໄປ', 'fa-clock');
+        return;
+    }
+    try { localStorage.setItem('contact_last_submission_at', String(now)); } catch (error) {}
+
     const inputs = form.querySelectorAll('input');
     const textarea = form.querySelector('textarea');
 
@@ -764,7 +819,8 @@ function handleContactSubmit(e) {
         name: inputs[0] ? inputs[0].value : '',
         phone: inputs[1] ? inputs[1].value : '',
         subject: inputs[2] ? inputs[2].value : '',
-        message: textarea ? textarea.value : ''
+        message: textarea ? textarea.value : '',
+        consent: form.elements.contactConsent?.checked || false
     };
 
     fetch(scriptURL, {
@@ -784,6 +840,7 @@ function handleContactSubmit(e) {
         }
         inputs.forEach(input => input.value = '');
         if (textarea) textarea.value = '';
+        resetContactFormTimer(form);
     })
     .catch(error => {
         showToast("ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່", "ສົ່ງບໍ່ສຳເລັດ", "fa-exclamation-triangle");
@@ -1630,6 +1687,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDevotees();
     renderMeritDashboard();
     initThemeToggle();
+    initContactFormProtection();
     getRandomQuote(null, false);
     updateDailyDhammaProgress();
     updateEventCountdown();
