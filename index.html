@@ -129,6 +129,12 @@
         .dhamma-quote-content.is-refreshing { animation: dhamma-quote-reveal .45s ease-out both; }
         @keyframes dhamma-icon-spin { from { transform: rotate(0) scale(1); } to { transform: rotate(360deg) scale(1.12); } }
         @keyframes dhamma-quote-reveal { from { opacity: .35; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+        .scroll-reveal { opacity: 0; transform: translateY(26px); transition: opacity .65s ease, transform .65s cubic-bezier(.16, 1, .3, 1); }
+        .scroll-reveal.is-visible { opacity: 1; transform: translateY(0); }
+        .back-to-top { position: fixed; z-index: 80; right: 1.35rem; bottom: 1.35rem; display: grid; width: 3rem; height: 3rem; padding: 0; place-items: center; color: #4A0E17; border: 1px solid rgba(212, 175, 55, .75); border-radius: 50%; background: linear-gradient(145deg, #fffdf8, #f8ebbf); box-shadow: 0 8px 22px rgba(45, 8, 14, .24); cursor: pointer; opacity: 0; pointer-events: none; transform: translateY(14px) scale(.9); transition: opacity .24s ease, transform .24s ease, box-shadow .2s ease; }
+        .back-to-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+        .back-to-top:hover { box-shadow: 0 12px 28px rgba(45, 8, 14, .3); transform: translateY(-3px) scale(1.04); }
+        .back-to-top:active { transform: translateY(0) scale(.94); }
         .temple-button-motion { transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
         .temple-button-motion:hover { transform: translateY(-2px); filter: brightness(1.04); box-shadow: 0 8px 18px rgba(45, 8, 14, .18); }
         .temple-button-motion:active { transform: translateY(0) scale(.96); }
@@ -158,9 +164,9 @@
         .language-option { display: flex; align-items: center; gap: .55rem; width: 100%; padding: .62rem .7rem; color: #33231f; border: 0; border-radius: .65rem; background: transparent; text-align: left; font-size: .82rem; font-weight: 700; transition: background .18s ease, color .18s ease, transform .18s ease; }
         .language-option:hover, .language-option[aria-current="true"] { color: #4A0E17; background: #fff1c8; transform: translateX(2px); }
         .language-option-flag { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: #f7ebcb; font-size: .9rem; }
-        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } .dhamma-action-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 24rem); gap: .6rem; margin-inline: auto; } .dhamma-action-button { min-width: 0; min-height: 2.55rem; padding: .5rem .45rem; gap: .35rem; font-size: .7rem; text-align: center; } .dhamma-action-button i { font-size: .85rem; } }
+        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } .dhamma-action-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 24rem); gap: .6rem; margin-inline: auto; } .dhamma-action-button { min-width: 0; min-height: 2.55rem; padding: .5rem .45rem; gap: .35rem; font-size: .7rem; text-align: center; } .dhamma-action-button i { font-size: .85rem; } .back-to-top { right: .9rem; bottom: .9rem; width: 2.7rem; height: 2.7rem; } }
         @media (prefers-reduced-motion: reduce) {
-            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .dhamma-action-button, .dhamma-quote-content, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
+            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .dhamma-action-button, .dhamma-quote-content, .scroll-reveal, .back-to-top, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
         }
         .lao-pattern {
             background-color: #4A0E17;
@@ -205,6 +211,9 @@
 
     <!-- Notification Toast Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none max-w-sm w-full px-4"></div>
+    <button id="backToTop" class="back-to-top" type="button" aria-label="ກັບຂຶ້ນເທິງສຸດ" title="ກັບຂຶ້ນເທິງສຸດ">
+        <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
 
     <!-- Generic Modal Dialog -->
     <div id="appModal" class="fixed inset-0 z-[90] hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
@@ -2358,6 +2367,45 @@ function replaceSacredImageSources() {
     });
 }
 
+function initPageEnhancements() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealTargets = [
+        '#history > .grid', '#history > .history-gallery', '#sacred > .max-w-7xl',
+        '#virtual-merit > .max-w-7xl', '#dhamma > .bg-gradient-to-br', '#events > .max-w-7xl',
+        '#donation > .max-w-6xl', '#contact > .max-w-7xl', 'footer > .max-w-7xl'
+    ].flatMap(selector => [...document.querySelectorAll(selector)]);
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealTargets.forEach(element => element.classList.add('is-visible'));
+    } else {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            });
+        }, { threshold: .12, rootMargin: '0px 0px -36px' });
+        revealTargets.forEach((element, index) => {
+            element.classList.add('scroll-reveal');
+            element.style.transitionDelay = `${Math.min(index % 3, 2) * 70}ms`;
+            observer.observe(element);
+        });
+    }
+
+    const backToTop = document.getElementById('backToTop');
+    if (!backToTop) return;
+    const toggleBackToTop = () => {
+        const isVisible = window.scrollY > 520;
+        backToTop.classList.toggle('is-visible', isVisible);
+        backToTop.tabIndex = isVisible ? 0 : -1;
+    };
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+    window.addEventListener('scroll', toggleBackToTop, { passive: true });
+    toggleBackToTop();
+}
+
 // 5. โหลดภาษาเดิมที่เลือกไว้อัตโนมัติเมื่อเปิดเว็บ
 document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('preferred_lang') || 'lo';
@@ -2365,6 +2413,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(savedLang);
     initHomeGallerySlider();
     replaceSacredImageSources();
+    initPageEnhancements();
     document.querySelectorAll('button, a[href]').forEach(element => {
         const classes = typeof element.className === 'string' ? element.className : '';
         if (!/(?:hover:|transition|active:)/.test(classes) && !element.closest('.language-menu-popover')) {

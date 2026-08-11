@@ -176,6 +176,7 @@
         width: 100%; 
         height: 100%; 
         object-fit: cover; 
+        cursor: zoom-in;
         opacity: .96; 
         transform: scale(1.025); 
         will-change: opacity, transform, filter; 
@@ -254,6 +255,23 @@
     .site-footer p { margin: 0; font-size: .86rem; }
     .site-footer small { display: block; margin-top: 4px; color: #d9c6a3; }
 
+    .gallery-lightbox { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; padding: 24px 76px; background: rgba(18, 5, 7, .94); opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s ease; }
+    .gallery-lightbox.is-open { opacity: 1; visibility: visible; }
+    .gallery-lightbox-frame { display: grid; width: min(100%, 1100px); max-height: 100%; gap: 12px; margin: 0; text-align: center; }
+    .gallery-lightbox-image-wrap { display: grid; min-height: 0; place-items: center; overflow: hidden; border: 1px solid rgba(255, 255, 255, .22); border-radius: 18px; background: #0f0507; touch-action: pan-y; }
+    .gallery-lightbox-image { display: block; max-width: 100%; max-height: calc(100vh - 150px); object-fit: contain; cursor: zoom-in; transform: scale(1); transition: transform .28s ease; }
+    .gallery-lightbox.is-zoomed .gallery-lightbox-image { cursor: zoom-out; transform: scale(1.65); }
+    .gallery-lightbox-caption { color: #fff3d4; font-size: .9rem; line-height: 1.45; }
+    .gallery-lightbox-caption strong { display: block; color: var(--gold-light); font-size: 1rem; }
+    .gallery-lightbox-close, .gallery-lightbox-nav { position: absolute; z-index: 2; display: grid; width: 46px; height: 46px; padding: 0; place-items: center; color: #fff; border: 1px solid rgba(255, 255, 255, .55); border-radius: 50%; background: rgba(27, 7, 10, .75); font-size: 1.8rem; line-height: 1; transition: transform .2s ease, background .2s ease; }
+    .gallery-lightbox-close { top: 18px; right: 20px; font-size: 1.5rem; }
+    .gallery-lightbox-nav { top: 50%; transform: translateY(-50%); }
+    .gallery-lightbox-nav:hover, .gallery-lightbox-close:hover { background: var(--wine); transform: translateY(-50%) scale(1.06); }
+    .gallery-lightbox-close:hover { transform: scale(1.06); }
+    .gallery-lightbox-prev { left: 18px; }
+    .gallery-lightbox-next { right: 18px; }
+    body.gallery-lightbox-open { overflow: hidden; }
+
     @media (max-width: 860px) {
         .site-nav { display: none; }
         .topbar { min-height: 68px; padding: 9px 16px; }
@@ -277,6 +295,12 @@
         .slider-bottom { align-items: flex-start; }
         .thumbnail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
         .service-card { padding: 22px; }
+        .gallery-lightbox { padding: 18px 52px; }
+        .gallery-lightbox-nav { width: 40px; height: 40px; font-size: 1.55rem; }
+        .gallery-lightbox-prev { left: 7px; }
+        .gallery-lightbox-next { right: 7px; }
+        .gallery-lightbox-close { top: 9px; right: 9px; width: 38px; height: 38px; }
+        .gallery-lightbox-image { max-height: calc(100vh - 130px); }
     }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
@@ -390,6 +414,18 @@
     <small data-i18n="footerNote">ເວັບໄຊທ໌ຂໍ້ມູນ ແລະ ປະຊາສຳພັນຂອງວັດ</small>
 </footer>
 
+<div id="galleryLightbox" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="ເບິ່ງຮູບພາບເຕັມຈໍ" aria-hidden="true">
+    <button id="galleryLightboxClose" class="gallery-lightbox-close" type="button" aria-label="ປິດ">×</button>
+    <button id="galleryLightboxPrevious" class="gallery-lightbox-nav gallery-lightbox-prev" type="button" aria-label="ຮູບກ່ອນໜ້າ">‹</button>
+    <figure id="galleryLightboxFrame" class="gallery-lightbox-frame">
+        <div class="gallery-lightbox-image-wrap">
+            <img id="galleryLightboxImage" class="gallery-lightbox-image" src="" alt="">
+        </div>
+        <figcaption id="galleryLightboxCaption" class="gallery-lightbox-caption"></figcaption>
+    </figure>
+    <button id="galleryLightboxNext" class="gallery-lightbox-nav gallery-lightbox-next" type="button" aria-label="ຮູບຖັດໄປ">›</button>
+</div>
+
 <script>
     const slides = [
         { src: 'images/events/event1.jpg', lo: 'ບັນຍາກາດກິດຈະກຳຂອງວັດ 1', th: 'บรรยากาศกิจกรรมของวัด 1', en: 'Temple activities 1', loDesc: 'ຮູບພາບຈາກກິດຈະກຳ ແລະ ງານບຸນຂອງວັດເຊກະໝານກາງ', thDesc: 'ภาพจากกิจกรรมและงานบุญของวัดเซกะหมานกลาง', enDesc: 'Scenes from ceremonies and activities at Wat Xekaman Kang.' },
@@ -419,6 +455,8 @@
     let autoplayTimer;
     let touchStartX = 0;
     let slideChangeTimer;
+    let lightboxIndex = 0;
+    let lightboxTouchStartX = 0;
 
     const slideImage = document.getElementById('slideImage');
     const slideTitle = document.getElementById('slideTitle');
@@ -428,10 +466,54 @@
     const thumbnails = document.getElementById('thumbnailGrid');
     const pauseButton = document.getElementById('pauseButton');
     const stage = document.getElementById('slideStage');
+    const galleryLightbox = document.getElementById('galleryLightbox');
+    const galleryLightboxImage = document.getElementById('galleryLightboxImage');
+    const galleryLightboxCaption = document.getElementById('galleryLightboxCaption');
+    const galleryLightboxFrame = document.getElementById('galleryLightboxFrame');
 
     function currentText(key) { return translations[activeLanguage][key]; }
     function slideText(slide) { return slide[activeLanguage] || slide.lo; }
     function slideDescriptionText(slide) { return slide[`${activeLanguage}Desc`] || slide.loDesc; }
+
+    function isGalleryLightboxOpen() {
+        return galleryLightbox.classList.contains('is-open');
+    }
+
+    function showGalleryLightboxImage(index) {
+        lightboxIndex = (index + slides.length) % slides.length;
+        const slide = slides[lightboxIndex];
+        galleryLightboxImage.src = slide.src;
+        galleryLightboxImage.alt = slideText(slide);
+        galleryLightboxCaption.replaceChildren();
+        const title = document.createElement('strong');
+        title.textContent = slideText(slide);
+        const description = document.createElement('span');
+        description.textContent = slideDescriptionText(slide);
+        galleryLightboxCaption.append(title, description);
+        galleryLightbox.classList.remove('is-zoomed');
+    }
+
+    function openGalleryLightbox(index = activeIndex) {
+        window.clearInterval(autoplayTimer);
+        showGalleryLightboxImage(index);
+        galleryLightbox.classList.add('is-open');
+        galleryLightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('gallery-lightbox-open');
+        document.getElementById('galleryLightboxClose').focus();
+    }
+
+    function closeGalleryLightbox() {
+        if (!isGalleryLightboxOpen()) return;
+        galleryLightbox.classList.remove('is-open', 'is-zoomed');
+        galleryLightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('gallery-lightbox-open');
+        showSlide(lightboxIndex);
+        slideImage.focus();
+    }
+
+    function toggleGalleryLightboxZoom() {
+        galleryLightbox.classList.toggle('is-zoomed');
+    }
 
     function closeGalleryLanguageMenu() {
         const menu = document.getElementById('galleryLanguageMenu');
@@ -449,8 +531,13 @@
     }
 
     function fallbackImage(image) {
+        const title = image.alt || 'Temple gallery';
+        const safeTitle = String(title).replace(/[&<>"']/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'
+        })[character]);
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-label="${safeTitle}"><rect width="1200" height="700" fill="#2d080e"/><path d="M0 560 300 350l190 130 240-245 470 325v140H0z" fill="#4a0e17"/><circle cx="960" cy="155" r="58" fill="#d4af37" opacity=".9"/><text x="600" y="620" fill="#f3e5ab" font-family="sans-serif" font-size="34" text-anchor="middle">${safeTitle}</text></svg>`;
         image.onerror = null;
-        image.src = 'wat-logo.jpg';
+        image.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
     }
 
     function renderControls() {
@@ -485,6 +572,7 @@
         slideChangeTimer = window.setTimeout(() => {
             slideImage.src = slide.src;
             slideImage.alt = slideText(slide);
+            slideImage.setAttribute('aria-label', slideText(slide));
             stage.classList.remove('is-changing');
         }, 220);
         slideTitle.textContent = slideText(slide);
@@ -533,13 +621,20 @@
         resetAutoplay();
     });
     stage.addEventListener('keydown', event => {
-        if (event.key === 'ArrowLeft') { event.preventDefault(); showSlide(activeIndex - 1); }
-        if (event.key === 'ArrowRight') { event.preventDefault(); showSlide(activeIndex + 1); }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); event.stopPropagation(); showSlide(activeIndex - 1); }
+        if (event.key === 'ArrowRight') { event.preventDefault(); event.stopPropagation(); showSlide(activeIndex + 1); }
     });
     document.addEventListener('keydown', event => {
+        if (isGalleryLightboxOpen()) {
+            if (event.key === 'Escape') closeGalleryLightbox();
+            if (event.key === 'ArrowLeft') showGalleryLightboxImage(lightboxIndex - 1);
+            if (event.key === 'ArrowRight') showGalleryLightboxImage(lightboxIndex + 1);
+            if (event.key === 'Escape' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') event.preventDefault();
+            return;
+        }
         if (event.key === 'Escape') { closeGalleryLanguageMenu(); return; }
         const isFormControl = /INPUT|TEXTAREA|SELECT|BUTTON/.test(event.target.tagName);
-        if (isFormControl) return;
+        if (isFormControl || stage.contains(event.target)) return;
         if (event.key === 'ArrowLeft') showSlide(activeIndex - 1);
         if (event.key === 'ArrowRight') showSlide(activeIndex + 1);
     });
@@ -548,7 +643,31 @@
         const distance = event.changedTouches[0].screenX - touchStartX;
         if (Math.abs(distance) > 45) showSlide(activeIndex + (distance > 0 ? -1 : 1));
     }, { passive: true });
+    slideImage.tabIndex = 0;
+    slideImage.setAttribute('role', 'button');
+    slideImage.addEventListener('click', () => openGalleryLightbox(activeIndex));
+    slideImage.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openGalleryLightbox(activeIndex);
+        }
+    });
     slideImage.addEventListener('error', event => fallbackImage(event.currentTarget));
+    galleryLightboxImage.addEventListener('error', event => fallbackImage(event.currentTarget));
+    document.getElementById('galleryLightboxClose').addEventListener('click', closeGalleryLightbox);
+    document.getElementById('galleryLightboxPrevious').addEventListener('click', () => showGalleryLightboxImage(lightboxIndex - 1));
+    document.getElementById('galleryLightboxNext').addEventListener('click', () => showGalleryLightboxImage(lightboxIndex + 1));
+    galleryLightboxImage.addEventListener('click', toggleGalleryLightboxZoom);
+    galleryLightbox.addEventListener('click', event => {
+        if (event.target === galleryLightbox) closeGalleryLightbox();
+    });
+    galleryLightboxFrame.addEventListener('touchstart', event => {
+        lightboxTouchStartX = event.changedTouches[0].screenX;
+    }, { passive: true });
+    galleryLightboxFrame.addEventListener('touchend', event => {
+        const distance = event.changedTouches[0].screenX - lightboxTouchStartX;
+        if (Math.abs(distance) > 45) showGalleryLightboxImage(lightboxIndex + (distance > 0 ? -1 : 1));
+    }, { passive: true });
     document.addEventListener('click', event => {
         if (!event.target.closest('#galleryLanguageMenu')) closeGalleryLanguageMenu();
     });
