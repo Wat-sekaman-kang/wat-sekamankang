@@ -35,6 +35,17 @@
         }
     </script>
 
+    <script>
+        try {
+            const savedTempleTheme = localStorage.getItem('temple_theme');
+            if (savedTempleTheme === 'dark' || (!savedTempleTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch (error) {
+            // The website still works if browser storage is unavailable.
+        }
+    </script>
+
     <style>
         body {
             font-family: 'Noto Sans Lao', sans-serif;
@@ -127,6 +138,42 @@
         .dhamma-action-button:hover i { transform: rotate(-8deg) scale(1.12); }
         .dhamma-action-button--random:hover i, .dhamma-action-button--random.is-animating i { animation: dhamma-icon-spin .55s ease-in-out; }
         .dhamma-quote-content.is-refreshing { animation: dhamma-quote-reveal .45s ease-out both; }
+        .daily-dhamma-meta { margin: 0 auto 1.75rem; max-width: 32rem; color: #7b6241; font-size: .8rem; letter-spacing: .01em; }
+        .daily-dhamma-progress { height: 5px; margin-top: .55rem; overflow: hidden; border-radius: 999px; background: rgba(184, 134, 11, .16); }
+        .daily-dhamma-progress > span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #b8860b, #e5c75f); transition: width .6s ease; }
+        .next-event-countdown { position: relative; overflow: hidden; border: 1px solid rgba(184, 134, 11, .32); border-radius: 1.5rem; background: linear-gradient(135deg, #fffdf8, #fff7e2); box-shadow: 0 12px 28px rgba(45, 8, 14, .08); }
+        .next-event-countdown::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 93% 14%, rgba(212, 175, 55, .18), transparent 22rem); }
+        .countdown-unit { min-width: 4.15rem; padding: .75rem .55rem; border: 1px solid rgba(184, 134, 11, .2); border-radius: .9rem; background: rgba(255, 255, 255, .62); text-align: center; }
+        .countdown-value { display: block; color: #4a0e17; font-size: clamp(1.35rem, 3.5vw, 2rem); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+        .countdown-label { display: block; margin-top: .2rem; color: #806943; font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+        .gold-sparkle { position: relative; isolation: isolate; }
+        .gold-sparkle::before, .gold-sparkle::after { position: absolute; z-index: 1; color: #d4af37; content: '✦'; font-size: .7em; line-height: 1; opacity: 0; pointer-events: none; text-shadow: 0 0 12px rgba(212, 175, 55, .72); animation: gold-sparkle 5.5s ease-in-out infinite; }
+        .gold-sparkle::before { top: -.35em; left: -.8em; }
+        .gold-sparkle::after { right: -.85em; bottom: -.15em; animation-delay: 2.7s; }
+        @keyframes gold-sparkle { 0%, 100% { opacity: 0; transform: translateY(3px) scale(.65) rotate(0deg); } 42%, 58% { opacity: .68; transform: translateY(-2px) scale(1) rotate(22deg); } }
+        .theme-toggle { display: inline-grid; width: 2.65rem; height: 2.65rem; padding: 0; place-items: center; color: #f3e5ab; border: 1px solid rgba(212, 175, 55, .58); border-radius: 999px; background: rgba(45, 8, 14, .78); box-shadow: 0 5px 13px rgba(0, 0, 0, .16); cursor: pointer; transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease; }
+        .theme-toggle:hover { color: #4a0e17; background: #f3e5ab; box-shadow: 0 8px 18px rgba(0, 0, 0, .25); transform: translateY(-1px); }
+        .merit-community { background: linear-gradient(145deg, #fffdf9 0%, #fff7e2 100%); border-block: 1px solid rgba(184, 134, 11, .22); }
+        .merit-stat-card { position: relative; overflow: hidden; min-height: 8.8rem; padding: 1.25rem; border: 1px solid rgba(184, 134, 11, .25); border-radius: 1.25rem; background: rgba(255, 255, 255, .72); box-shadow: 0 10px 24px rgba(45, 8, 14, .07); }
+        .merit-stat-card::after { position: absolute; right: -1rem; bottom: -1.6rem; color: rgba(212, 175, 55, .11); font-family: Georgia, serif; font-size: 7rem; content: '✦'; }
+        .merit-stat-value { position: relative; z-index: 1; display: block; margin-top: .35rem; color: #4a0e17; font-family: 'Noto Serif Lao', serif; font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+        .merit-feed-window { position: relative; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+        .merit-feed-track { display: flex; width: max-content; gap: .9rem; padding: .35rem .15rem; animation: merit-feed-scroll 32s linear infinite; }
+        .merit-feed-window:hover .merit-feed-track { animation-play-state: paused; }
+        .merit-feed-card { display: flex; width: min(20rem, 80vw); align-items: center; gap: .75rem; padding: .85rem 1rem; border: 1px solid rgba(184, 134, 11, .24); border-radius: 1rem; background: #fffdf8; box-shadow: 0 6px 15px rgba(45, 8, 14, .06); }
+        .merit-feed-icon { display: grid; width: 2.25rem; height: 2.25rem; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #fff0c8; font-size: 1.1rem; }
+        @keyframes merit-feed-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        html.dark-mode { color-scheme: dark; }
+        html.dark-mode body { background: #17070c; color: #f4e6c1; }
+        html.dark-mode #events, html.dark-mode .merit-community { background: #260a12 !important; border-color: rgba(212, 175, 55, .28); }
+        html.dark-mode .bg-white, html.dark-mode .bg-amber-50, html.dark-mode .home-gallery-slider, html.dark-mode .home-gallery-info, html.dark-mode .home-gallery-bottom, html.dark-mode .next-event-countdown, html.dark-mode .merit-stat-card, html.dark-mode .merit-feed-card { background-color: #2a0c14 !important; }
+        html.dark-mode [class*="bg-amber-"] { background-color: #2d0e17 !important; }
+        html.dark-mode .text-gray-800, html.dark-mode .text-gray-700, html.dark-mode .text-gray-600, html.dark-mode .text-gray-500, html.dark-mode .text-stone-600 { color: #e5d4ad !important; }
+        html.dark-mode .bg-white .text-laoMaroon, html.dark-mode .bg-amber-50 .text-laoMaroon, html.dark-mode .home-gallery-info .text-laoMaroon, html.dark-mode .next-event-countdown .text-laoMaroon, html.dark-mode .merit-stat-value { color: #f3d77e !important; }
+        html.dark-mode .gold-gradient.text-laoMaroon { color: #4a0e17 !important; }
+        html.dark-mode .border-amber-200, html.dark-mode .border-gray-100, html.dark-mode .border-gray-200, html.dark-mode .border-gray-300 { border-color: rgba(212, 175, 55, .22) !important; }
+        html.dark-mode .theme-toggle { color: #4a0e17; background: #f3e5ab; }
+        html.dark-mode .theme-toggle:hover { color: #f3e5ab; background: #4a0e17; }
         @keyframes dhamma-icon-spin { from { transform: rotate(0) scale(1); } to { transform: rotate(360deg) scale(1.12); } }
         @keyframes dhamma-quote-reveal { from { opacity: .35; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
         .scroll-reveal { opacity: 0; transform: translateY(26px); transition: opacity .65s ease, transform .65s cubic-bezier(.16, 1, .3, 1); }
@@ -164,9 +211,9 @@
         .language-option { display: flex; align-items: center; gap: .55rem; width: 100%; padding: .62rem .7rem; color: #33231f; border: 0; border-radius: .65rem; background: transparent; text-align: left; font-size: .82rem; font-weight: 700; transition: background .18s ease, color .18s ease, transform .18s ease; }
         .language-option:hover, .language-option[aria-current="true"] { color: #4A0E17; background: #fff1c8; transform: translateX(2px); }
         .language-option-flag { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: #f7ebcb; font-size: .9rem; }
-        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } .dhamma-action-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 24rem); gap: .6rem; margin-inline: auto; } .dhamma-action-button { min-width: 0; min-height: 2.55rem; padding: .5rem .45rem; gap: .35rem; font-size: .7rem; text-align: center; } .dhamma-action-button i { font-size: .85rem; } .back-to-top { right: .9rem; bottom: .9rem; width: 2.7rem; height: 2.7rem; } }
+        @media (max-width: 640px) { .home-gallery-stage { height: 405px; } .home-gallery-info { padding: 20px 20px 10px; } .home-gallery-number { top: 14px; right: 15px; } .home-gallery-controls { right: 11px; left: 11px; } .home-gallery-controls button { width: 40px; height: 40px; } .home-gallery-bottom { align-items: flex-start; } .history-gallery { margin-top: 2.75rem; } .dhamma-action-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 24rem); gap: .6rem; margin-inline: auto; } .dhamma-action-button { min-width: 0; min-height: 2.55rem; padding: .5rem .45rem; gap: .35rem; font-size: .7rem; text-align: center; } .dhamma-action-button i { font-size: .85rem; } .countdown-unit { min-width: 3.45rem; padding: .62rem .38rem; } .back-to-top { right: .9rem; bottom: .9rem; width: 2.7rem; height: 2.7rem; } }
         @media (prefers-reduced-motion: reduce) {
-            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .dhamma-action-button, .dhamma-quote-content, .scroll-reveal, .back-to-top, .language-menu-trigger, .language-option, .temple-button-motion { transition: none; animation: none; }
+            #homeSlideImage, .home-gallery-controls button, .home-gallery-pause, .dhamma-action-button, .dhamma-quote-content, .daily-dhamma-progress > span, .gold-sparkle::before, .gold-sparkle::after, .merit-feed-track, .scroll-reveal, .back-to-top, .language-menu-trigger, .language-option, .theme-toggle, .temple-button-motion { transition: none; animation: none; }
         }
         .lao-pattern {
             background-color: #4A0E17;
@@ -300,11 +347,14 @@
                     <a href="#contact" class="px-3 py-2 rounded-lg hover:bg-laoGold/20 hover:text-laoGold transition-colors text-amber-100">ຕິດຕໍ່-ແຜນທີ່</a>
                 </nav>
 
-                <!-- Donate Action Button -->
-                <div class="hidden sm:flex items-center gap-3">
+                <!-- Theme & donation actions -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="เปิดโหมดกลางคืน" title="เปิดโหมดกลางคืน">
+                        <i id="themeToggleIcon" class="fa-solid fa-moon" aria-hidden="true"></i>
+                    </button>
                     <a href="#donation" class="bg-gradient-to-r from-laoGold via-amber-400 to-laoGoldDark text-laoMaroon font-bold px-5 py-2.5 rounded-full shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-amber-200 flex items-center gap-2">
                         <i class="fa-solid fa-hand-holding-heart"></i>
-                        <span>ຮ່ວມເຮັດບຸນ</span>
+                        <span class="hidden sm:inline">ຮ່ວມເຮັດບຸນ</span>
                     </a>
                 </div>
 
@@ -367,7 +417,7 @@
     <section id="history" class="py-20 px-4 max-w-7xl mx-auto">
         <div class="text-center mb-16">
             <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">BACKGROUND & HISTORY</span>
-            <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+            <h2 class="gold-sparkle inline-block text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
                 ປະຫວັດຄວາມເປັນມາ ວັດເຊກະໝານກາງ
             </h2>
             <div class="w-24 h-1 bg-laoGold mx-auto rounded-full"></div>
@@ -641,11 +691,50 @@
         </div>
     </section>
 
+    <!-- Community Merit Activity -->
+    <section id="merit-community" class="merit-community py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-9">
+                <span id="meritStatsEyebrow" class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm"></span>
+                <h2 id="meritStatsTitle" class="mt-2 text-3xl sm:text-4xl font-bold font-lao-serif text-laoMaroon"></h2>
+                <p id="meritStatsNote" class="mt-3 text-xs sm:text-sm text-gray-500"></p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                <article class="merit-stat-card">
+                    <span id="meritParticipantsLabel" class="text-xs font-bold tracking-wide text-laoGoldDark"></span>
+                    <strong id="meritParticipants" class="merit-stat-value" data-value="0">0</strong>
+                    <span id="meritParticipantsDetail" class="mt-2 block text-xs text-gray-500"></span>
+                </article>
+                <article class="merit-stat-card">
+                    <span id="meritWishesLabel" class="text-xs font-bold tracking-wide text-laoGoldDark"></span>
+                    <strong id="meritWishes" class="merit-stat-value" data-value="0">0</strong>
+                    <span id="meritWishesDetail" class="mt-2 block text-xs text-gray-500"></span>
+                </article>
+                <article class="merit-stat-card">
+                    <span id="meritLotusesLabel" class="text-xs font-bold tracking-wide text-laoGoldDark"></span>
+                    <strong id="meritLotuses" class="merit-stat-value" data-value="0">0</strong>
+                    <span id="meritLotusesDetail" class="mt-2 block text-xs text-gray-500"></span>
+                </article>
+            </div>
+
+            <div class="mt-8">
+                <div class="mb-3 flex items-center gap-2 text-sm font-bold text-laoMaroon">
+                    <i class="fa-solid fa-heart text-laoGold" aria-hidden="true"></i>
+                    <span id="meritFeedTitle"></span>
+                </div>
+                <div class="merit-feed-window" aria-live="polite">
+                    <div id="meritLiveFeed" class="merit-feed-track"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Daily Dhamma Wisdom Section -->
     <section id="dhamma" class="py-20 px-4 max-w-5xl mx-auto">
         <div class="text-center mb-12">
             <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">DHAMMA TEACHINGS</span>
-            <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+            <h2 class="gold-sparkle inline-block text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
                 ທຳມະຄຳສອນປະຈຳວັນ
             </h2>
             <div class="w-24 h-1 bg-laoGold mx-auto rounded-full"></div>
@@ -662,6 +751,13 @@
                 <p id="dhammaSource" class="text-sm font-semibold text-laoGoldDark uppercase tracking-wider mb-8">
                     - ພຣະທຳມະຄຳສອນ ໂອວາດປາຕິໂມກ -
                 </p>
+
+                <div class="daily-dhamma-meta" aria-live="polite">
+                    <span id="dhammaDayProgressText"></span>
+                    <div class="daily-dhamma-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="dhammaDayProgressText">
+                        <span id="dhammaDayProgressBar"></span>
+                    </div>
+                </div>
 
                 <div class="dhamma-action-buttons">
                     <button onclick="getRandomQuote(this)" class="dhamma-action-button dhamma-action-button--random bg-laoMaroon text-laoGold hover:bg-laoMaroonDark">
@@ -690,13 +786,29 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <span class="text-laoGoldDark font-bold uppercase tracking-wider text-xs sm:text-sm">ACTIVITIES & FESTIVALS</span>
-                <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
+                <h2 class="gold-sparkle inline-block text-3xl sm:text-5xl font-bold font-lao-serif text-laoMaroon mt-2 mb-4">
                     ງານບຸນປະເພນີ ແລະ ຕາຕະລາງກິດຈະກຳ
                 </h2>
                 <p class="text-gray-600 max-w-xl mx-auto text-sm sm:text-base font-sans">
                     ຂໍເຊີນຊວນສັດທາສາທຸຊົນທັງຫຼາຍ ຮ່ວມງານບຸນປະເພນີປະຈຳປີ ແລະ ກິດຈະກຳທາງສາສະໜາ
                 </p>
                 <div class="w-24 h-1 bg-laoGold mx-auto rounded-full mt-4"></div>
+            </div>
+
+            <div class="next-event-countdown mb-10 p-6 sm:p-8" aria-live="polite">
+                <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="max-w-xl">
+                        <p id="nextEventEyebrow" class="mb-2 text-xs font-bold tracking-[.16em] text-laoGoldDark"></p>
+                        <h3 id="nextEventTitle" class="font-lao-serif text-2xl font-bold text-laoMaroon sm:text-3xl"></h3>
+                        <p id="nextEventDate" class="mt-2 text-sm text-stone-600"></p>
+                    </div>
+                    <div class="flex flex-wrap justify-start gap-2.5 sm:gap-3 lg:justify-end" aria-label="Countdown">
+                        <div class="countdown-unit"><span id="countdownDays" class="countdown-value">00</span><span id="countdownDaysLabel" class="countdown-label"></span></div>
+                        <div class="countdown-unit"><span id="countdownHours" class="countdown-value">00</span><span id="countdownHoursLabel" class="countdown-label"></span></div>
+                        <div class="countdown-unit"><span id="countdownMinutes" class="countdown-value">00</span><span id="countdownMinutesLabel" class="countdown-label"></span></div>
+                        <div class="countdown-unit"><span id="countdownSeconds" class="countdown-value">00</span><span id="countdownSecondsLabel" class="countdown-label"></span></div>
+                    </div>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -775,7 +887,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
                     <span class="text-laoGold font-bold uppercase tracking-wider text-xs sm:text-sm">MAKE MERIT & DONATION</span>
-                    <h2 class="text-3xl sm:text-5xl font-bold font-lao-serif text-laoGoldLight mt-2 mb-6 leading-tight">
+                    <h2 class="gold-sparkle inline-block text-3xl sm:text-5xl font-bold font-lao-serif text-laoGoldLight mt-2 mb-6 leading-tight">
                         ຮ່ວມເຮັດບຸນບໍລິຈາກ ບູລະນະວັດເຊກະໝານກາງ
                     </h2>
                     <p class="text-amber-100/90 text-sm sm:text-base leading-relaxed mb-6 font-sans">
@@ -797,7 +909,7 @@
                         </div>
                     </div>
 
-                    <button onclick="openReceiptGeneratorModal()" class="bg-laoMaroon border border-laoGold/60 hover:bg-laoGold hover:text-laoMaroon font-bold text-amber-100 px-6 py-3 rounded-2xl transition-all flex items-center gap-2">
+                    <button onclick="openReceiptGeneratorModal()" class="gold-sparkle bg-laoMaroon border border-laoGold/60 hover:bg-laoGold hover:text-laoMaroon font-bold text-amber-100 px-6 py-3 rounded-2xl transition-all flex items-center gap-2">
                         <i class="fa-solid fa-file-invoice"></i>
                         <span>ອອກໃບອະນຸໂມທະນາບຸນ (Digital Receipt)</span>
                     </button>
@@ -862,7 +974,7 @@
                         </div>
                     </div>
 
-                    <button onclick="copyAccountNo()" class="w-full mt-4 gold-gradient text-laoMaroon font-bold py-3 rounded-xl shadow hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <button onclick="copyAccountNo()" class="gold-sparkle w-full mt-4 gold-gradient text-laoMaroon font-bold py-3 rounded-xl shadow hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2">
                         <i class="fa-solid fa-copy"></i>
                         <span>ຄັດລອກເລກບັນຊີ</span>
                     </button>
@@ -1321,6 +1433,85 @@
             { name: "ທ່ານ ບຸນມີ", wish: "ຂໍໃຫ້ແຄ້ວຄາດປອດໄພຈາກໂຣກໄພທັງປວງ", time: "1 ຊົ່ວໂມງກ່ອນ", lotus: "🌼" }
         ];
 
+        const MERIT_DASHBOARD_COPY = {
+            lo: {
+                eyebrow: 'ຮ່ວມອະນຸໂມທະນາບຸນ', title: 'ສາຍໃຍແຫ່ງສັດທາ',
+                note: 'ສະຖິຕິນີ້ອັບເດດຈາກລາຍການທີ່ບັນທຶກໃນອຸປະກອນນີ້',
+                participants: 'ຜູ້ຮ່ວມເຮັດບຸນ', wishes: 'ຄຳອະທິຖານ', lotuses: 'ດອກບົວທີ່ຖວາຍ',
+                participantDetail: 'ລາຍການທີ່ສະແດງ', wishDetail: 'ຄຳອວຍພອນຈາກໃຈ', lotusDetail: 'ຮ່ວມບູຊາດ້ວຍສັດທາ', feedTitle: 'ລາຍຊື່ຜູ້ຮ່ວມເຮັດບຸນຫຼ້າສຸດ'
+            },
+            th: {
+                eyebrow: 'ร่วมอนุโมทนาบุญ', title: 'สายใยแห่งศรัทธา',
+                note: 'สถิตินี้อัปเดตจากรายการที่บันทึกในอุปกรณ์นี้',
+                participants: 'ผู้ร่วมทำบุญ', wishes: 'คำอธิษฐาน', lotuses: 'ดอกบัวที่ถวาย',
+                participantDetail: 'รายชื่อที่แสดง', wishDetail: 'คำอวยพรจากใจ', lotusDetail: 'ร่วมบูชาด้วยศรัทธา', feedTitle: 'รายชื่อผู้ร่วมทำบุญล่าสุด'
+            },
+            en: {
+                eyebrow: 'SHARED MERIT', title: 'A circle of faith',
+                note: 'These counts reflect entries saved in this browser.',
+                participants: 'Merit participants', wishes: 'Prayer wishes', lotuses: 'Lotuses offered',
+                participantDetail: 'Entries shown here', wishDetail: 'Wishes from the heart', lotusDetail: 'Offerings made in faith', feedTitle: 'Recent merit participants'
+            }
+        };
+
+        function escapeDynamicHtml(value) {
+            return String(value ?? '').replace(/[&<>'"]/g, character => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            })[character]);
+        }
+
+        function animateMeritNumber(element, target) {
+            if (!element) return;
+            const previous = Number(element.dataset.value || 0);
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            element.dataset.value = String(target);
+            if (reduceMotion || previous === target) {
+                element.textContent = String(target);
+                return;
+            }
+            if (element._meritCounterFrame) cancelAnimationFrame(element._meritCounterFrame);
+            const startedAt = performance.now();
+            const duration = 520;
+            const step = now => {
+                const progress = Math.min(1, (now - startedAt) / duration);
+                element.textContent = String(Math.round(previous + ((target - previous) * (1 - Math.pow(1 - progress, 3)))));
+                if (progress < 1) element._meritCounterFrame = requestAnimationFrame(step);
+            };
+            element._meritCounterFrame = requestAnimationFrame(step);
+        }
+
+        function renderMeritDashboard() {
+            const feed = document.getElementById('meritLiveFeed');
+            if (!feed) return;
+            const devotees = getDevoteeList();
+            const language = getPreferredLanguage();
+            const copy = MERIT_DASHBOARD_COPY[language] || MERIT_DASHBOARD_COPY.lo;
+            const textFields = {
+                meritStatsEyebrow: copy.eyebrow, meritStatsTitle: copy.title, meritStatsNote: copy.note,
+                meritParticipantsLabel: copy.participants, meritWishesLabel: copy.wishes, meritLotusesLabel: copy.lotuses,
+                meritParticipantsDetail: copy.participantDetail, meritWishesDetail: copy.wishDetail, meritLotusesDetail: copy.lotusDetail,
+                meritFeedTitle: copy.feedTitle
+            };
+            Object.entries(textFields).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            });
+            animateMeritNumber(document.getElementById('meritParticipants'), devotees.length);
+            animateMeritNumber(document.getElementById('meritWishes'), devotees.filter(devotee => devotee.wish).length);
+            animateMeritNumber(document.getElementById('meritLotuses'), devotees.filter(devotee => devotee.lotus).length);
+
+            const cards = devotees.slice(0, 8).map(devotee => `
+                <article class="merit-feed-card">
+                    <span class="merit-feed-icon">${escapeDynamicHtml(devotee.lotus || '🪷')}</span>
+                    <span class="min-w-0">
+                        <strong class="block truncate text-sm font-bold text-laoMaroon">${escapeDynamicHtml(devotee.name)}</strong>
+                        <small class="block truncate text-xs text-gray-500">${escapeDynamicHtml(translateText(devotee.time || ''))}</small>
+                    </span>
+                </article>
+            `).join('');
+            feed.innerHTML = cards ? `${cards}${cards.replaceAll('<article', '<article aria-hidden="true"')}` : '';
+        }
+
         function getDevoteeList() {
             const stored = localStorage.getItem('xekaman_devotees');
             if (stored) {
@@ -1336,13 +1527,14 @@
         function renderDevotees() {
             const devotees = getDevoteeList();
             const container = document.getElementById('recentDevoteesList');
+            if (!container) return;
             container.innerHTML = devotees.map(d => `
                 <div class="bg-laoMaroon/70 p-3 rounded-xl border border-laoGold/20 flex justify-between items-center gap-2">
                     <div class="min-w-0">
-                        <span class="font-bold text-laoGold block text-xs sm:text-sm font-lao-serif truncate">${d.lotus || '🪷'} ${d.name}</span>
-                        <p class="text-amber-100/80 text-xs font-light truncate">${translateText(d.wish)}</p>
+                        <span class="font-bold text-laoGold block text-xs sm:text-sm font-lao-serif truncate">${escapeDynamicHtml(d.lotus || '🪷')} ${escapeDynamicHtml(d.name)}</span>
+                        <p class="text-amber-100/80 text-xs font-light truncate">${escapeDynamicHtml(translateText(d.wish))}</p>
                     </div>
-                    <span class="text-[10px] text-amber-200/60 shrink-0 bg-laoMaroonDark/60 px-2 py-1 rounded-md border border-laoGold/10">${translateText(d.time)}</span>
+                    <span class="text-[10px] text-amber-200/60 shrink-0 bg-laoMaroonDark/60 px-2 py-1 rounded-md border border-laoGold/10">${escapeDynamicHtml(translateText(d.time))}</span>
                 </div>
             `).join('');
         }
@@ -1379,6 +1571,7 @@
             });
             saveDevoteeList(currentList);
             renderDevotees();
+            renderMeritDashboard();
 
             showToast("ທ່ານໄດ້ໄຕ້ທຽນ ແລະ ຖວາຍດອກບົວສຳເລັດແລ້ວ! ຂໍໃຫ້ສົມປະຖາໜາ", "ສາທຸ ສາທຸ", "fa-flame");
 
@@ -1390,6 +1583,7 @@
         function clearDevoteeList() {
             localStorage.removeItem('xekaman_devotees');
             renderDevotees();
+            renderMeritDashboard();
             showToast("ລຶບປະວັດການເຮັດບຸນແລ້ວ", "ແຈ້ງເຕືອນ", "fa-trash");
         }
 
@@ -1498,8 +1692,22 @@
     { text: "ຄວາມທຸກຍ່ອມຕາມຜູ້ມີຈິດໃຈຊົ່ວ ເໝືອນລໍ້ລົດຕາມຮອບຕີນງົວ.", source: "- ພຣະພຸດທະໂອວາດ -" },
     { text: "ຄວາມບໍ່ມີໂຣກທາງໃຈ ຄືຄວາມປາດສະຈາກກິເລດ.", source: "- ພຣະທຳມະຄຳສອນ -" }
 ];
-        function getRandomQuote(button) {
-            const randomIndex = Math.floor(Math.random() * QUOTES.length);
+        function getRandomQuote(button, showNotification = true) {
+            let previousQuoteIndex = -1;
+            try {
+                previousQuoteIndex = Number.parseInt(localStorage.getItem('last_dhamma_quote_index'), 10);
+            } catch (error) {
+                previousQuoteIndex = -1;
+            }
+            let randomIndex = Math.floor(Math.random() * QUOTES.length);
+            if (QUOTES.length > 1 && randomIndex === previousQuoteIndex) {
+                randomIndex = (randomIndex + 1 + Math.floor(Math.random() * (QUOTES.length - 1))) % QUOTES.length;
+            }
+            try {
+                localStorage.setItem('last_dhamma_quote_index', String(randomIndex));
+            } catch (error) {
+                // The quote can still be shown when browser storage is unavailable.
+            }
             const quote = QUOTES[randomIndex];
             const localizedQuote = autoTranslations[getPreferredLanguage()]?.quotes?.[randomIndex];
             document.getElementById('dhammaText').innerText = localizedQuote || quote.text;
@@ -1511,7 +1719,189 @@
                 quoteContent?.classList.add('is-refreshing');
                 button?.classList.add('is-animating');
             });
-            showToast("ສຸ່ມທຳມະຄຳສອນໃໝ່ແລ້ວ", "ທຳມະທານ", "fa-quote-left");
+            if (showNotification) showToast("ສຸ່ມທຳມະຄຳສອນໃໝ່ແລ້ວ", "ທຳມະທານ", "fa-quote-left");
+        }
+
+        // The quote is freshly randomized whenever the page is opened. This bar simply marks
+        // the passage of the temple's day and is updated in the Asia/Vientiane time zone.
+        const TEMPLE_TIME_ZONE = 'Asia/Vientiane';
+        const TEMPLE_TIME_ZONE_OFFSET_MS = 7 * 60 * 60 * 1000;
+        const DAILY_DHAMMA_COPY = {
+            lo: { progress: (percent, hours, minutes) => `ມື້ນີ້ຜ່ານໄປ ${percent}% · ເຫຼືອ ${hours} ຊົ່ວໂມງ ${minutes} ນາທີ ຈະເລີ່ມມື້ໃໝ່` },
+            th: { progress: (percent, hours, minutes) => `วันนี้ผ่านไป ${percent}% · เหลือ ${hours} ชั่วโมง ${minutes} นาที จะเริ่มวันใหม่` },
+            en: { progress: (percent, hours, minutes) => `${percent}% of today has passed · ${hours}h ${minutes}m until a new day` }
+        };
+
+        function getTempleDateParts(date = new Date()) {
+            const parts = new Intl.DateTimeFormat('en-CA', {
+                timeZone: TEMPLE_TIME_ZONE,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+            }).formatToParts(date);
+            return Object.fromEntries(parts.filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+        }
+
+        function updateDailyDhammaProgress() {
+            const text = document.getElementById('dhammaDayProgressText');
+            const bar = document.getElementById('dhammaDayProgressBar');
+            const progress = document.querySelector('.daily-dhamma-progress');
+            if (!text || !bar || !progress) return;
+
+            const templeTime = getTempleDateParts();
+            const elapsedSeconds = (templeTime.hour * 3600) + (templeTime.minute * 60) + templeTime.second;
+            const percentage = Math.min(100, (elapsedSeconds / 86400) * 100);
+            const secondsLeft = Math.max(0, 86400 - elapsedSeconds);
+            const hoursLeft = Math.floor(secondsLeft / 3600);
+            const minutesLeft = Math.floor((secondsLeft % 3600) / 60);
+            const language = getPreferredLanguage();
+            const copy = DAILY_DHAMMA_COPY[language] || DAILY_DHAMMA_COPY.lo;
+
+            text.textContent = copy.progress(Math.floor(percentage), hoursLeft, minutesLeft);
+            bar.style.width = `${percentage}%`;
+            progress.setAttribute('aria-valuenow', String(Math.round(percentage)));
+        }
+
+        // Edit this schedule when the temple confirms a special event. Times use the local
+        // temple time zone (Asia/Vientiane). The weekly meditation entry keeps the countdown
+        // accurate year-round without needing to update a stale calendar date by hand.
+        const TEMPLE_EVENT_SCHEDULE = [
+            {
+                id: 'weekly-dhamma-study',
+                type: 'weekly',
+                weekday: 0, // Sunday (0 = Sunday, 6 = Saturday)
+                hour: 14,
+                minute: 0,
+                endTime: '16:00',
+                title: { lo: 'ອົບຮົມສະມາທິ & ສຶກສາທຳ', th: 'อบรมสมาธิและศึกษาธรรม', en: 'Meditation & Dhamma study' },
+                location: { lo: 'ຫໍແຈກ (ສາລາການເປຣຽນ)', th: 'หอแจก (ศาลาการเปรียญ)', en: 'Dhamma hall' }
+            }
+            // Example for a confirmed, one-time event:
+            // { type: 'fixed', start: '2026-10-31T08:30:00+07:00', endTime: '17:00', title: { lo: '...', th: '...', en: '...' }, location: { lo: '...', th: '...', en: '...' } }
+        ];
+
+        const COUNTDOWN_COPY = {
+            lo: { eyebrow: 'ກິດຈະກຳຖັດໄປ', days: 'ມື້', hours: 'ຊົ່ວໂມງ', minutes: 'ນາທີ', seconds: 'ວິນາທີ', at: 'ເວລາວຽງຈັນ' },
+            th: { eyebrow: 'กิจกรรมถัดไป', days: 'วัน', hours: 'ชม.', minutes: 'นาที', seconds: 'วินาที', at: 'เวลาเวียงจันทน์' },
+            en: { eyebrow: 'NEXT TEMPLE ACTIVITY', days: 'days', hours: 'hours', minutes: 'mins', seconds: 'secs', at: 'Vientiane time' }
+        };
+
+        function templeDateFromParts(year, month, day, hour, minute) {
+            return new Date(Date.UTC(year, month - 1, day, hour, minute, 0) - TEMPLE_TIME_ZONE_OFFSET_MS);
+        }
+
+        function getEventStart(event, now = new Date()) {
+            if (event.type === 'fixed') return new Date(event.start);
+
+            const templeToday = getTempleDateParts(now);
+            const currentDate = new Date(Date.UTC(templeToday.year, templeToday.month - 1, templeToday.day));
+            const daysUntilEvent = (event.weekday - currentDate.getUTCDay() + 7) % 7;
+            let start = templeDateFromParts(templeToday.year, templeToday.month, templeToday.day + daysUntilEvent, event.hour, event.minute);
+            if (start <= now) start = templeDateFromParts(templeToday.year, templeToday.month, templeToday.day + daysUntilEvent + 7, event.hour, event.minute);
+            return start;
+        }
+
+        function getUpcomingTempleEvent(now = new Date()) {
+            return TEMPLE_EVENT_SCHEDULE
+                .map(event => ({ ...event, start: getEventStart(event, now) }))
+                .filter(event => !Number.isNaN(event.start.getTime()) && event.start > now)
+                .sort((a, b) => a.start - b.start)[0];
+        }
+
+        function formatTempleEventDate(event, language) {
+            const locale = { lo: 'lo-LA', th: 'th-TH', en: 'en-GB' }[language] || 'lo-LA';
+            const date = new Intl.DateTimeFormat(locale, {
+                timeZone: TEMPLE_TIME_ZONE,
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+            }).format(event.start);
+            const startTime = new Intl.DateTimeFormat(locale, {
+                timeZone: TEMPLE_TIME_ZONE,
+                hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+            }).format(event.start);
+            return `${date} · ${startTime}${event.endTime ? `–${event.endTime}` : ''} · ${event.location[language] || event.location.lo}`;
+        }
+
+        function setCountdownValue(id, value) {
+            const element = document.getElementById(id);
+            if (element) element.textContent = String(value).padStart(2, '0');
+        }
+
+        function updateEventCountdown() {
+            const now = new Date();
+            const event = getUpcomingTempleEvent(now);
+            if (!event) return;
+
+            const language = getPreferredLanguage();
+            const copy = COUNTDOWN_COPY[language] || COUNTDOWN_COPY.lo;
+            const difference = Math.max(0, event.start.getTime() - now.getTime());
+            const days = Math.floor(difference / 86400000);
+            const hours = Math.floor((difference % 86400000) / 3600000);
+            const minutes = Math.floor((difference % 3600000) / 60000);
+            const seconds = Math.floor((difference % 60000) / 1000);
+
+            document.getElementById('nextEventEyebrow').textContent = copy.eyebrow;
+            document.getElementById('nextEventTitle').textContent = event.title[language] || event.title.lo;
+            document.getElementById('nextEventDate').textContent = `${formatTempleEventDate(event, language)} · ${copy.at}`;
+            [['countdownDays', days], ['countdownHours', hours], ['countdownMinutes', minutes], ['countdownSeconds', seconds]].forEach(([id, value]) => setCountdownValue(id, value));
+            [['countdownDaysLabel', copy.days], ['countdownHoursLabel', copy.hours], ['countdownMinutesLabel', copy.minutes], ['countdownSecondsLabel', copy.seconds]].forEach(([id, label]) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = label;
+            });
+        }
+
+        const THEME_TOGGLE_COPY = {
+            lo: { dark: 'ເປີດໂໝດກາງຄືນ', light: 'ກັບສູ່ໂໝດກາງວັນ' },
+            th: { dark: 'เปิดโหมดกลางคืน', light: 'กลับสู่โหมดกลางวัน' },
+            en: { dark: 'Use dark mode', light: 'Use light mode' }
+        };
+
+        function updateThemeToggle() {
+            const button = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeToggleIcon');
+            if (!button || !icon) return;
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            const language = getPreferredLanguage();
+            const copy = THEME_TOGGLE_COPY[language] || THEME_TOGGLE_COPY.lo;
+            const label = isDark ? copy.light : copy.dark;
+            button.setAttribute('aria-pressed', String(isDark));
+            button.setAttribute('aria-label', label);
+            button.title = label;
+            icon.className = `fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`;
+        }
+
+        function toggleTempleTheme() {
+            const isDark = !document.documentElement.classList.contains('dark-mode');
+            document.documentElement.classList.toggle('dark-mode', isDark);
+            try { localStorage.setItem('temple_theme', isDark ? 'dark' : 'light'); } catch (error) {}
+            updateThemeToggle();
+        }
+
+        function initThemeToggle() {
+            const button = document.getElementById('themeToggle');
+            if (!button) return;
+            button.addEventListener('click', toggleTempleTheme);
+            updateThemeToggle();
+        }
+
+        const ACTIVITY_NOTICE_COPY = {
+            lo: { title: 'ແຈ້ງເຕືອນກິດຈະກຳໃໝ່', message: 'ກະລຸນາກຽມຮ່ວມກິດຈະກຳ' },
+            th: { title: 'แจ้งเตือนกิจกรรมใหม่', message: 'ขอเชิญเตรียมร่วมกิจกรรม' },
+            en: { title: 'New activity reminder', message: 'You are warmly invited to join' }
+        };
+
+        function notifyUpcomingActivity() {
+            const event = getUpcomingTempleEvent();
+            if (!event) return;
+            const marker = `temple_activity_notice_${event.id || event.title.lo}_${event.start.toISOString().slice(0, 10)}`;
+            try {
+                if (sessionStorage.getItem(marker)) return;
+                sessionStorage.setItem(marker, 'seen');
+            } catch (error) {}
+            const language = getPreferredLanguage();
+            const copy = ACTIVITY_NOTICE_COPY[language] || ACTIVITY_NOTICE_COPY.lo;
+            window.setTimeout(() => {
+                const title = event.title[language] || event.title.lo;
+                showToast(`${copy.message}: ${title} · ${formatTempleEventDate(event, language)}`, copy.title, 'fa-calendar-days');
+            }, 1100);
         }
 
         function copyDhammaQuote() {
@@ -2411,6 +2801,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('preferred_lang') || 'lo';
     syncLanguageMenu(savedLang);
     applyLanguage(savedLang);
+    renderDevotees();
+    renderMeritDashboard();
+    initThemeToggle();
+    getRandomQuote(null, false);
+    updateDailyDhammaProgress();
+    updateEventCountdown();
+    notifyUpcomingActivity();
+    window.setInterval(updateDailyDhammaProgress, 60000);
+    window.setInterval(updateEventCountdown, 1000);
     initHomeGallerySlider();
     replaceSacredImageSources();
     initPageEnhancements();
