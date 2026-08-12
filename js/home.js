@@ -1032,7 +1032,7 @@ Object.assign(autoTranslations.en, {
     "ຕົກລົງ / ປິດ": "OK / Close",
     "ວັດເຊກະໝານກາງ": "Wat Xekaman Kang",
     "ວັດເຊກະພານກາງ": "Wat Xekaman Kang",
-    "ປະວັດຄວາມເປັນມາ": "History",
+    "ປະຫວັດຄວາມເປັນມາ": "History",
     "ສິ່ງສັກສິດ": "Sacred Sites",
     "ໄຕ້ທຽນອອນໄລນ໌": "Online Candle Offering",
     "ທຳມະຄຳສອນ": "Dhamma Teachings",
