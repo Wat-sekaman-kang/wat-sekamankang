@@ -982,7 +982,7 @@ const autoTranslations = {
 
         // ส่วนประวัติความเป็นมา (About Section)
         "ກ່ຽວກັບເຮົາ": "ABOUT US",
-        "ປະວັດຄວາມເປັນມາຂອງວັດ": "History of the Temple",
+        "ປະຫວັດຄວາມເປັນມາຂອງວັດ": "History of the Temple",
         "ວັດເຊກະພານກາງ ຕັ້ງຢູ່ບ້ານເຊກະພານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ ເປັນສາສະນະສະຖານທີ່ສຳຄັນອັນເປັນສູນລວມຈິດໃຈຂອງພຸດທະສາສະນິກະຊົນໃນເຂດລຸ່ມນ້ຳເຊກະພານ.": "Wat Sekaman Kang is located in Sekaman Village, Samakkixay District, Attapeu Province, Laos. It is a major Buddhist temple serving as a spiritual sanctuary for local communities.",
         "ວັດแห่งນີ້ເປັນສູນກາງໃນການປະກອບພິທີກຳທາງພຣະພຸດທະສາສະໜາ, ອົບຮົມສັ່ງສອນສີລະທຳ, ຕະຫຼອດຮອດການສືບສານປະເພນີອັນດີງາມຂອງທ້ອງຖິ່ນໃຫ້ຄົງຢູ່ສືບໄປ.": "The temple serves as a center for religious ceremonies, moral teachings, and preserving local cultural traditions for future generations.",
 
