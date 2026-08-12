@@ -641,19 +641,33 @@ function initImageModalAccessibility() {
         // Edit this schedule when the temple confirms a special event. Times use the local
         // temple time zone (Asia/Vientiane). The weekly meditation entry keeps the countdown
         // accurate year-round without needing to update a stale calendar date by hand.
+        // Confirmed annual merit festivals for 2026. The cards on the website describe
+        // each observance as an all-day event; the temple will announce ceremony times separately.
         const TEMPLE_EVENT_SCHEDULE = [
             {
-                id: 'weekly-dhamma-study',
-                type: 'weekly',
-                weekday: 0, // Sunday (0 = Sunday, 6 = Saturday)
-                hour: 14,
-                minute: 0,
-                endTime: '16:00',
-                title: { lo: 'ອົບຮົມສະມາທິ & ສຶກສາທຳ', th: 'อบรมสมาธิและศึกษาธรรม', en: 'Meditation & Dhamma study' },
-                location: { lo: 'ຫໍແຈກ (ສາລາການເປຣຽນ)', th: 'หอแจก (ศาลาการเปรียญ)', en: 'Dhamma hall' }
+                id: 'boun-khao-padap-din-2026',
+                type: 'fixed',
+                start: '2026-09-11T00:00:00+07:00',
+                allDay: true,
+                title: { lo: 'ບຸນເຂົ້າປະດັບດິນ', th: 'บุญข้าวประดับดิน', en: 'Boun Khao Padap Din' },
+                location: { lo: 'ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື', th: 'วัดเซกะมานกาง บ้านใหญ่เซกะมาน เมืองสามัคคีไช แขวงอัตตะปือ สปป.ลาว', en: 'Wat Xekaman Kang, Ban Yai Xekaman, Samakkhixay, Attapeu, Laos' }
+            },
+            {
+                id: 'boun-khao-salak-2026',
+                type: 'fixed',
+                start: '2026-09-26T00:00:00+07:00',
+                allDay: true,
+                title: { lo: 'ບຸນເຂົ້າສະຫຼາກ', th: 'บุญข้าวสลาก', en: 'Boun Khao Salak' },
+                location: { lo: 'ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື', th: 'วัดเซกะมานกาง บ้านใหญ่เซกะมาน เมืองสามัคคีไช แขวงอัตตะปือ สปป.ลาว', en: 'Wat Xekaman Kang, Ban Yai Xekaman, Samakkhixay, Attapeu, Laos' }
+            },
+            {
+                id: 'boun-ork-phansa-2026',
+                type: 'fixed',
+                start: '2026-10-26T00:00:00+07:00',
+                allDay: true,
+                title: { lo: 'ບຸນອອກພັນສາ', th: 'บุญออกพรรษา', en: 'Boun Ork Phansa' },
+                location: { lo: 'ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື', th: 'วัดเซกะมานกาง บ้านใหญ่เซกะมาน เมืองสามัคคีไช แขวงอัตตะปือ สปป.ลาว', en: 'Wat Xekaman Kang, Ban Yai Xekaman, Samakkhixay, Attapeu, Laos' }
             }
-            // Example for a confirmed, one-time event:
-            // { type: 'fixed', start: '2026-10-31T08:30:00+07:00', endTime: '17:00', title: { lo: '...', th: '...', en: '...' }, location: { lo: '...', th: '...', en: '...' } }
         ];
 
         const COUNTDOWN_COPY = {
@@ -690,11 +704,16 @@ function initImageModalAccessibility() {
                 timeZone: TEMPLE_TIME_ZONE,
                 weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
             }).format(event.start);
+
+            if (event.allDay) {
+                return date + ' · ' + (event.location[language] || event.location.lo);
+            }
+
             const startTime = new Intl.DateTimeFormat(locale, {
                 timeZone: TEMPLE_TIME_ZONE,
                 hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
             }).format(event.start);
-            return `${date} · ${startTime}${event.endTime ? `–${event.endTime}` : ''} · ${event.location[language] || event.location.lo}`;
+            return date + ' · ' + startTime + (event.endTime ? '–' + event.endTime : '') + ' · ' + (event.location[language] || event.location.lo);
         }
 
         function setCountdownValue(id, value) {
@@ -717,7 +736,8 @@ function initImageModalAccessibility() {
 
             document.getElementById('nextEventEyebrow').textContent = copy.eyebrow;
             document.getElementById('nextEventTitle').textContent = event.title[language] || event.title.lo;
-            document.getElementById('nextEventDate').textContent = `${formatTempleEventDate(event, language)} · ${copy.at}`;
+            const eventTimeLabel = event.allDay ? ({ lo: 'ຕະຫຼອດມື້', th: 'ตลอดวัน', en: 'All day' }[language] || 'ຕະຫຼອດມື້') : copy.at;
+            document.getElementById('nextEventDate').textContent = `${formatTempleEventDate(event, language)} · ${eventTimeLabel}`;
             [['countdownDays', days], ['countdownHours', hours], ['countdownMinutes', minutes], ['countdownSeconds', seconds]].forEach(([id, value]) => setCountdownValue(id, value));
             [['countdownDaysLabel', copy.days], ['countdownHoursLabel', copy.hours], ['countdownMinutesLabel', copy.minutes], ['countdownSecondsLabel', copy.seconds]].forEach(([id, label]) => {
                 const element = document.getElementById(id);
