@@ -1391,6 +1391,32 @@ Object.assign(autoTranslations.th, {
     "ດາວໂຫຼດໄຟລ໌ປະຕິທິນ .ics": "ดาวน์โหลดไฟล์ปฏิทิน (.ics)"
 });
 
+Object.assign(autoTranslations.en, {
+    "ສຳລັບຜູ້ມາເຢືອນ": "VISITOR INFORMATION",
+    "ຂໍ້ມູນສຳລັບຜູ້ມາຢ້ຽມຢາມ": "Visitor Information",
+    "ຂໍ້ມູນສຳຄັນສຳລັບການມາວັດເຊກະໝານກາງ": "Essential information for visiting Wat Xekaman Kang",
+    "ສະຖານທີ່": "Location",
+    "ເວລາເປີດ": "Opening hours",
+    "ການເດີນທາງ": "Directions",
+    "ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ": "Ban Yai Xekaman, Samakkhixay, Attapeu, Laos",
+    "ເປີດທຸກມື້ 24 ຊົ່ວໂມງ": "Open daily, 24 hours",
+    "ໃຊ້ປຸ່ມນີ້ເພື່ອເປີດເສັ້ນທາງໄປຫາວັດໃນ Google Maps.": "Use this button to open directions to the temple in Google Maps.",
+    "ນຳທາງດ້ວຍ Google Maps": "Navigate with Google Maps"
+});
+
+Object.assign(autoTranslations.th, {
+    "ສຳລັບຜູ້ມາເຢືອນ": "ข้อมูลสำหรับผู้มาเยือน",
+    "ຂໍ້ມູນສຳລັບຜູ້ມາຢ້ຽມຢາມ": "ข้อมูลสำหรับผู้มาเยือน",
+    "ຂໍ້ມູນສຳຄັນສຳລັບການມາວັດເຊກະໝານກາງ": "ข้อมูลสำคัญสำหรับการเดินทางมาวัดเซกะหมานกลาง",
+    "ສະຖານທີ່": "สถานที่",
+    "ເວລາເປີດ": "เวลาเปิด",
+    "ການເດີນທາງ": "การเดินทาง",
+    "ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ": "บ้านใหญ่เซกะหมาน, เมืองสามัคคีไช, แขวงอัตตะปือ, สปป.ลาว",
+    "ເປີດທຸກມື້ 24 ຊົ່ວໂມງ": "เปิดทุกวัน 24 ชั่วโมง",
+    "ໃຊ້ປຸ່ມນີ້ເພື່ອເປີດເສັ້ນທາງໄປຫາວັດໃນ Google Maps.": "ใช้ปุ่มนี้เพื่อเปิดเส้นทางไปยังวัดใน Google Maps",
+    "ນຳທາງດ້ວຍ Google Maps": "นำทางด้วย Google Maps"
+});
+
 // English counterparts for all 100 rotating Dhamma quotations, in QUOTES order.
 autoTranslations.en.quotes = [
     "Avoid all evil, cultivate good, and purify your mind — this is the teaching of all Buddhas.",
