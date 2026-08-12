@@ -1349,6 +1349,48 @@ Object.assign(autoTranslations.th, {
     "ຄຳອຸທິດສ່ວນບຸນ": "คำอุทิศส่วนกุศล"
 });
 
+Object.assign(autoTranslations.en, {
+    "2026 MERIT FESTIVAL CALENDAR": "2026 Merit Festival Calendar",
+    "ປະຕິທິນງານບຸນ ປະຈຳປີ 2026": "2026 Merit Festival Calendar",
+    "ກຳນົດວັນງານບຸນຕາມປະຕິທິນລາວ ພ້ອມເພີ່ມລົງໃນປະຕິທິນຂອງທ່ານໄດ້ທັນທີ": "Lao calendar dates for merit festivals, ready to add to your personal calendar.",
+    "ລະບຸເປັນງານຕະຫຼອດມື້; ເວລາເລີ່ມພິທີໃຫ້ຢືນຢັນກັບທາງວັດອີກຄັ້ງ.": "Listed as all-day events; please confirm the ceremony start time with the temple.",
+    "ງານບຸນປະຈຳປີ": "Annual Merit Festival",
+    "ວັນສຸກ · 11 ກັນຍາ 2026": "Friday · 11 September 2026",
+    "ວັນເສົາ · 26 ກັນຍາ 2026": "Saturday · 26 September 2026",
+    "ວັນຈັນ · 26 ຕຸລາ 2026": "Monday · 26 October 2026",
+    "ບຸນເຂົ້າປະດັບດິນ": "Boun Khao Padap Din",
+    "ບຸນເຂົ້າສະຫຼາກ": "Boun Khao Salak",
+    "ບຸນອອກພັນສາ": "Boun Ork Phansa",
+    "ຮ່ວມທຳບຸນອຸທິດສ່ວນກຸສົນໃຫ້ບັນພະບຸລຸດ ແລະ ສືບສານປະເພນີລາວ.": "Join in dedicating merit to ancestors and preserving Lao tradition.",
+    "ຮ່ວມຕັກບາດ ແລະ ຖວາຍສະຫຼາກພັດຕາຫານ ເພື່ອຮ່ວມສືບສານຮີດຄອງປະເພນີ.": "Join alms giving and the offering of food lots in keeping with tradition.",
+    "ຮ່ວມສືບສານປະເພນີບຸນອອກພັນສາ ແລະ ຮ່ວມທຳບຸນຕາມສັດທາ.": "Join the end-of-Buddhist-Lent tradition and make merit according to your faith.",
+    "ຕະຫຼອດມື້ · ເວລາພິທີຢືນຢັນກັບວັດ": "All day · Ceremony time to be confirmed with the temple",
+    "ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ": "Wat Xekaman Kang, Ban Yai Xekaman",
+    "ເພີ່ມໃສ່ Google Calendar": "Add to Google Calendar",
+    "ດາວໂຫຼດໄຟລ໌ປະຕິທິນ .ics": "Download calendar file (.ics)"
+});
+
+Object.assign(autoTranslations.th, {
+    "2026 MERIT FESTIVAL CALENDAR": "ปฏิทินงานบุญ ปี 2026",
+    "ປະຕິທິນງານບຸນ ປະຈຳປີ 2026": "ปฏิทินงานบุญ ประจำปี 2026",
+    "ກຳນົດວັນງານບຸນຕາມປະຕິທິນລາວ ພ້ອມເພີ່ມລົງໃນປະຕິທິນຂອງທ່ານໄດ້ທັນທີ": "กำหนดวันงานบุญตามปฏิทินลาว พร้อมเพิ่มลงในปฏิทินของท่านได้ทันที",
+    "ລະບຸເປັນງານຕະຫຼອດມື້; ເວລາເລີ່ມພິທີໃຫ້ຢືນຢັນກັບທາງວັດອີກຄັ້ງ.": "ระบุเป็นงานตลอดวัน โปรดยืนยันเวลาเริ่มพิธีกับทางวัดอีกครั้ง",
+    "ງານບຸນປະຈຳປີ": "งานบุญประจำปี",
+    "ວັນສຸກ · 11 ກັນຍາ 2026": "วันศุกร์ · 11 กันยายน 2026",
+    "ວັນເສົາ · 26 ກັນຍາ 2026": "วันเสาร์ · 26 กันยายน 2026",
+    "ວັນຈັນ · 26 ຕຸລາ 2026": "วันจันทร์ · 26 ตุลาคม 2026",
+    "ບຸນເຂົ້າປະດັບດິນ": "บุญข้าวประดับดิน",
+    "ບຸນເຂົ້າສະຫຼາກ": "บุญข้าวสลาก",
+    "ບຸນອອກພັນສາ": "บุญออกพรรษา",
+    "ຮ່ວມທຳບຸນອຸທິດສ່ວນກຸສົນໃຫ້ບັນພະບຸລຸດ ແລະ ສືບສານປະເພນີລາວ.": "ร่วมทำบุญอุทิศส่วนกุศลให้บรรพบุรุษ และสืบสานประเพณีลาว",
+    "ຮ່ວມຕັກບາດ ແລະ ຖວາຍສະຫຼາກພັດຕາຫານ ເພື່ອຮ່ວມສືບສານຮີດຄອງປະເພນີ.": "ร่วมตักบาตรและถวายสลากภัตตาหาร เพื่อสืบสานฮีตคองประเพณี",
+    "ຮ່ວມສືບສານປະເພນີບຸນອອກພັນສາ ແລະ ຮ່ວມທຳບຸນຕາມສັດທາ.": "ร่วมสืบสานประเพณีบุญออกพรรษา และร่วมทำบุญตามศรัทธา",
+    "ຕະຫຼອດມື້ · ເວລາພິທີຢືນຢັນກັບວັດ": "ตลอดวัน · เวลาพิธียืนยันกับทางวัด",
+    "ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ": "วัดเซกะหมานกลาง, บ้านใหญ่เซกะหมาน",
+    "ເພີ່ມໃສ່ Google Calendar": "เพิ่มลง Google Calendar",
+    "ດາວໂຫຼດໄຟລ໌ປະຕິທິນ .ics": "ดาวน์โหลดไฟล์ปฏิทิน (.ics)"
+});
+
 // English counterparts for all 100 rotating Dhamma quotations, in QUOTES order.
 autoTranslations.en.quotes = [
     "Avoid all evil, cultivate good, and purify your mind — this is the teaching of all Buddhas.",
