@@ -131,10 +131,9 @@
 
     <script>
         try {
-            const savedTempleTheme = localStorage.getItem('temple_theme');
-            if (savedTempleTheme === 'dark' || (!savedTempleTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark-mode');
-            }
+            // Always start in day mode, regardless of the device or a previous choice.
+            document.documentElement.classList.remove('dark-mode');
+            localStorage.removeItem('temple_theme');
         } catch (error) {
             // The website still works if browser storage is unavailable.
         }
