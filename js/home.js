@@ -1050,7 +1050,7 @@ Object.assign(autoTranslations.en, {
     "ເຊົ້າ 07:00 | ແລງ 18:00": "Morning 7:00 AM | Evening 6:00 PM",
     "ປະຕິບັດທຳ & ສະມາທິ": "Dhamma Practice & Meditation",
     "ທຸກໆວັນສີນ ແລະ ວັນອາທິດ": "Every observance day and Sunday",
-    "ປະວັດຄວາມເປັນມາ ວັດເຊກະໝານກາງ": "History of Wat Xekaman Kang",
+    "ປະຫວັດຄວາມເປັນມາ ວັດເຊກະໝານກາງ": "History of Wat Xekaman Kang",
     "ປີ ແຫ່ງຄວາມສັດທາ": "Years of Faith",
     "ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ດິນແດນອຸດົມສົມບູນດ້ວຍທຳມະຊາດ ແລະ ວັດທະນະທຳອັນງົດງາມ. ເປັນວັດເກົ່າແກ່ທີ່ສ້າງຂຶ້ນໂດຍຄວາມສັດທາຮ່ວມກັນຂອງພຸດທະສາສະນິກະຊົນ ເພື່ອເປັນສູນລວມຈິດໃຈ, ບ່ອນອົບຮົມສີລະທຳ ແລະ ບ່ອນສຶກສາພຣະທຳຄຳສອນຂອງອົງພຣະສຳມາສຳພຸດທະເຈົ້າ.": "Situated beside the Sekaman River in a land rich in nature and culture, this historic temple was built through the shared faith of Buddhists as a spiritual center, a place for moral training, and a place to study the Buddha's teachings.",
     "ຊື່ຂອງວັດ \"ເຊກະໝານກາງ\" ມີທີ່ມາຈາກທີ່ຕັ້ງທີ່ຢູ່ເຄິ່ງກາງຂອງລຸ່ມນ້ຳເຊກະໝານ ເຊິ່ງເປັນສາຍນ້ຳຫຼັກທີ່ລ້ຽງຊີວິດປະຊາຊົນ. ພຣະອຸໂບສົດ ແລະ ສິ່ງກໍ່ສ້າງພາຍໃນວັດໄດ້ຮັບການອອກແບບຕາມສະຖາປັດຕະຍະກຳລາວອັນເປັນເອກະລັກ ມີຊໍ່ຟ້າ, ໃບລະກາ, ແລະ ລວດລາຍກົບກຽວຢ່າງອ່ອນຊ້ອຍ.": "The name ‘Xekaman Kang’ comes from the temple's location in the middle of the Sekaman River basin, a vital waterway for the community. Its ordination hall and buildings feature distinctive Lao architecture, with elegant roof finials, decorative gables, and intricate carved motifs.",
