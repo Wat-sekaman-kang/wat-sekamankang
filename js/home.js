@@ -304,11 +304,19 @@ function initImageModalAccessibility() {
         /* ===================================================
            STREAMING_CHUNK:Implementing virtual merit state and local storage...
            =================================================== */
-        const DEFAULT_DEVOTEES = [
-            { name: "ທ່ານ ສົມພອນ + ຄອບຄົວ", wish: "ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ ສຸຂະພາບແຂງແຮງ", time: "5 ນາທີກ່ອນ", lotus: "🌸" },
-            { name: "ນາງ ມະລີວັນ", wish: "ຂໍໃຫ້ການຄ້າຂາຍຈະເລີນຮຸ່ງເຮືອງ", time: "18 ນາທີກ່ອນ", lotus: "🪷" },
-            { name: "ທ່ານ ບຸນມີ", wish: "ຂໍໃຫ້ແຄ້ວຄາດປອດໄພຈາກໂຣກໄພທັງປວງ", time: "1 ຊົ່ວໂມງກ່ອນ", lotus: "🌼" }
-        ];
+        const DEFAULT_DEVOTEES = [];
+
+        function isDemoDevotee(devotee) {
+            const name = String(devotee?.name || '').trim();
+            const wish = String(devotee?.wish || '').trim();
+            const combined = (name + ' ' + wish).toLowerCase();
+            const isLegacySample = (
+                (name === 'ທ່ານ ສົມພອນ + ຄອບຄົວ' && wish === 'ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ ສຸຂະພາບແຂງແຮງ') ||
+                (name === 'ນາງ ມະລີວັນ' && wish === 'ຂໍໃຫ້ການຄ້າຂາຍຈະເລີນຮຸ່ງເຮືອງ') ||
+                (name === 'ທ່ານ ບຸນມີ' && wish === 'ຂໍໃຫ້ແຄ້ວຄາດປອດໄພຈາກໂຣກໄພທັງປວງ')
+            );
+            return isLegacySample || /ທົດສອບ|ทดสอบ|\btest\b/i.test(combined);
+        }
 
         const MERIT_DASHBOARD_COPY = {
             lo: {
@@ -391,10 +399,16 @@ function initImageModalAccessibility() {
 
         function getDevoteeList() {
             const stored = localStorage.getItem('xekaman_devotees');
-            if (stored) {
-                try { return JSON.parse(stored); } catch (e) {}
+            if (!stored) return DEFAULT_DEVOTEES;
+            try {
+                const parsed = JSON.parse(stored);
+                if (!Array.isArray(parsed)) return DEFAULT_DEVOTEES;
+                const clean = parsed.filter(entry => entry && typeof entry === 'object' && !isDemoDevotee(entry));
+                if (clean.length !== parsed.length) localStorage.setItem('xekaman_devotees', JSON.stringify(clean));
+                return clean;
+            } catch (error) {
+                return DEFAULT_DEVOTEES;
             }
-            return DEFAULT_DEVOTEES;
         }
 
         function saveDevoteeList(list) {
@@ -405,6 +419,11 @@ function initImageModalAccessibility() {
             const devotees = getDevoteeList();
             const container = document.getElementById('recentDevoteesList');
             if (!container) return;
+            if (!devotees.length) {
+                container.innerHTML = '<div class="bg-laoMaroon/50 p-4 rounded-xl border border-laoGold/20 text-center text-amber-100/85 text-sm">' +
+                    escapeDynamicHtml(translateText('ຍັງບໍ່ມີລາຍການຮ່ວມເຮັດບຸນ')) + '</div>';
+                return;
+            }
             container.innerHTML = devotees.map(d => `
                 <div class="bg-laoMaroon/70 p-3 rounded-xl border border-laoGold/20 flex justify-between items-center gap-2">
                     <div class="min-w-0">
@@ -1521,6 +1540,251 @@ autoTranslations.en.quotes = [
     "Freedom from mental illness is freedom from defilements."
 ];
 
+// Expanded coverage for Thai and English across news, events, visitor information, forms, and footer content.
+const COMPLETE_HOME_TRANSLATIONS = {
+    "en": {
+        "ວັດເຊກະໝານກາງ | Wat Xekaman Kang | วัดเซกะมานกาง": "Wat Xekaman Kang | Buddhist Temple in Attapeu, Laos",
+        "ແຈ້ງເຕືອນກິດຈະກຳໃໝ່": "New activity reminder",
+        "ຂໍຕ້ອນຮັບສູ່": "Welcome to",
+        "ຍິນດີຕ້ອນຮັບທຸກທ່ານ": "Welcome, everyone",
+        "ຟັງສຽງຣະຄັງ": "Listen to the bell",
+        "ຟັງສຽງກອງ": "Listen to the drum",
+        "ວັນພຣະຕໍ່ໄປ: 15 ຄ່ຳ": "Next observance day: full moon",
+        "ປີ ແຫ່ງຄວາມສັດທາ": "years of faith",
+        "ທຳມະຊາດຮົມເຢັນ": "Peaceful natural setting",
+        "ຕັ້ງຢູ່ຕິດແຄມນ້ຳ": "Situated beside the river",
+        "ສູນຮວມສັດທາ": "A center of faith",
+        "ຮັກສາປະເພນີອັນດີງາມ": "Preserving cherished traditions",
+        "ເລີ່ມສະໄລດ໌": "Start slideshow",
+        "ຂ່າວສານຈາກວັດ": "News from the temple",
+        "ຕິດຕາມຂ່າວສານ ແລະ ກິດຈະກຳໃໝ່ຈາກວັດ": "Follow the latest news and activities from the temple",
+        "ຕັດຫຍ້າກຽມເຂົ້າພັນສາ": "Grounds preparation for Buddhist Lent",
+        "ຫໍກອງວັດ": "Temple drum tower",
+        "ຈັດສ້າງໃນປີ2005": "Built in 2005",
+        "ພາບກິດຈະກຳ 1": "Activity photo 1",
+        "ພາບກິດຈະກຳ 2": "Activity photo 2",
+        "ພາບກິດຈະກຳ 3": "Activity photo 3",
+        "ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ": "Photo from the temple activity gallery",
+        "ປະທັບໃນພຣະອຸໂບສົດ": "Enshrined in the ordination hall",
+        "ບ່ອນເກັບຮັກສາຄຳພີໂບຮານ": "A place preserving ancient scriptures",
+        "ໄຕ້ທຽນ & ຖວາຍດອກບົວອອນໄລນ໌": "Light a Candle & Offer a Lotus Online",
+        "ສົ່ງຜົນບຸນ ແລະ ຄຳອະທິຖານຂອງທ່ານ ເພື່ອຄວາມສົມຫວັງ, ຄວາມສະຫງົບສຸກ ແລະ ເປັນສິຣິມົງຄົນແກ່ຊີວິດ": "Offer your merit and prayer for fulfillment, peace, and blessings in life.",
+        "ກະລຸນາປ້ອນຊື່ ແລະ ຄຳອະທິຖານ ຈາກນັ້ນກົດປຸ່ມ \"ໄຕ້ທຽນ & ຖວາຍດອກບົວ\"": "Enter your name and prayer, then select “Light a Candle & Offer a Lotus”.",
+        "ລາຍຊື່ຜູ້ໄຕ້ທຽນຖວາຍດອກບົວບໍ່ດົນມານີ້": "Recent candle and lotus offerings",
+        "ລຶບປະວັດ": "Clear history",
+        "ຍັງບໍ່ມີລາຍການຮ່ວມເຮັດບຸນ": "No merit offerings have been recorded in this browser yet.",
+        "ທຳມະຄຳສອນປະຈຳວັນ": "Daily Dhamma teaching",
+        "ສຸ່ມຄຳສອນໃໝ່": "Show another teaching",
+        "ຄັດລອກຂໍ້ຄວາມ": "Copy text",
+        "ແບ່ງປັນ Facebook": "Share on Facebook",
+        "ສົ່ງທາງ WhatsApp": "Send via WhatsApp",
+        "ປະຕິທິນງານບຸນ ປະຈຳປີ 2026": "2026 Merit Festival Calendar",
+        "ກຳນົດວັນງານບຸນຕາມປະຕິທິນລາວ ພ້ອມເພີ່ມລົງໃນປະຕິທິນຂອງທ່ານໄດ້ທັນທີ": "Festival dates based on the Lao calendar, ready to add to your calendar.",
+        "ລະບຸເປັນງານຕະຫຼອດມື້; ເວລາເລີ່ມພິທີໃຫ້ຢືນຢັນກັບທາງວັດອີກຄັ້ງ.": "These are all-day events; please confirm ceremony start times with the temple.",
+        "ງານບຸນປະຈຳປີ": "Annual merit festival",
+        "ວັນສຸກ · 11 ກັນຍາ 2026": "Friday · 11 September 2026",
+        "ວັນເສົາ · 26 ກັນຍາ 2026": "Saturday · 26 September 2026",
+        "ວັນຈັນ · 26 ຕຸລາ 2026": "Monday · 26 October 2026",
+        "ຮ່ວມທຳບຸນອຸທິດສ່ວນກຸສົນໃຫ້ບັນພະບຸລຸດ ແລະ ສືບສານປະເພນີລາວ.": "Join in making merit for ancestors and preserving Lao tradition.",
+        "ຮ່ວມຕັກບາດ ແລະ ຖວາຍສະຫຼາກພັດຕາຫານ ເພື່ອຮ່ວມສືບສານຮີດຄອງປະເພນີ.": "Join alms offering and the traditional food offering ceremony.",
+        "ຮ່ວມສືບສານປະເພນີບຸນອອກພັນສາ ແລະ ຮ່ວມທຳບຸນຕາມສັດທາ.": "Join the End of Buddhist Lent tradition and make merit in faith.",
+        "ຕະຫຼອດມື້ · ເວລາພິທີຢືນຢັນກັບວັດ": "All day · ceremony time to be confirmed with the temple",
+        "ເພີ່ມໃສ່ Google Calendar": "Add to Google Calendar",
+        "ດາວໂຫຼດໄຟລ໌ປະຕິທິນ .ics": "Download calendar file (.ics)",
+        "ຮ່ວມເຮັດບຸນບໍລິຈາກ ບູລະນະວັດເຊກະໝານກາງ": "Make Merit and Donate to Restore Wat Xekaman Kang",
+        "ຂໍເຊີນຊວນສາທຸຊົນຜູ້ມີຈິດສັດທາ ຮ່ວມບໍລິຈາກທຶນຮັກສາສ້ອມແປງພຣະອຸໂບສົດ, ຄ່ານ້ຳ-ຄ່າໄຟ, ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ ແລະ ສ້າງສາທາລະນະປະໂຫຍດໃນຊຸມຊົນ.": "Everyone is invited to support temple restoration, utilities, monastic education, and community benefit activities.",
+        "ຮ່ວມສ້າງ ແລະ ບູລະນະສິມ/ພຣະອຸໂບສົດ": "Build and restore the ordination hall",
+        "ອຸປະຖຳການສຶກສາພຣະທຳມະວິນັຍ": "Support Dhamma and monastic education",
+        "ກອງທຶນສາທາລະນະສຸກ ແລະ ບຸນປະເພນີ": "Community welfare and traditional festivals fund",
+        "ສ້າງບັດອະນຸໂມທະນາບຸນ": "Create a merit appreciation card",
+        "ສະແກນ QR Code ເພື່ອຮ່ວມບໍລິຈາກ (BCEL One)": "Scan the QR code to donate (BCEL One)",
+        "ຊື່ບັນຊີ: Khamsavanh LEUAMTHININ Monk": "Account name: Venerable Khamsavanh LEUAMTHININ",
+        "ເລກບັນຊີ (LAK):": "Account number (LAK):",
+        "ເລກບັນຊີ (THB):": "Account number (THB):",
+        "ທະນາຄານ:": "Bank:",
+        "ທະນາຄານການຄ້າຕ່າງປະເທດລາວ (BCEL)": "Banque pour le Commerce Extérieur Lao (BCEL)",
+        "ຄັດລອກບັນຊີ LAK": "Copy LAK account number",
+        "ຄັດລອກບັນຊີ THB": "Copy THB account number",
+        "ພຣະອາຈານ ຄຳສະຫວັນ ເລື່ອມທິນິນ": "Venerable Khamsavanh Leuamthinin",
+        "ຄະນະກໍາມະການບໍລິຫານງານ ອພສ ເມືອງສາມັກຄີໄຊ": "Samakkhixay District Buddhist Administration Committee",
+        "ຄະນະກໍາມາທິການສຶກສາສົງເມືອງ": "District Sangha Education Committee",
+        "ສະໄໝທີ VIII (2025-2030)": "8th term (2025–2030)",
+        "ເຂົ້າເບິ່ງທຳນຽບສະມາຊິກພາຍໃນວັດ": "View the temple member directory",
+        "ສຳລັບຜູ້ມາເຢືອນ": "FOR VISITORS",
+        "ຂໍ້ມູນສຳລັບຜູ້ມາຢ້ຽມຢາມ": "Visitor Information",
+        "ຂໍ້ມູນສຳຄັນສຳລັບການມາວັດເຊກະໝານກາງ": "Essential information for visiting Wat Xekaman Kang",
+        "ສະຖານທີ່": "Location",
+        "ເວລາເປີດ": "Opening hours",
+        "ເປີດທຸກມື້ 24 ຊົ່ວໂມງ": "Open daily, 24 hours",
+        "ການເດີນທາງ": "Directions",
+        "ໃຊ້ປຸ່ມນີ້ເພື່ອເປີດເສັ້ນທາງໄປຫາວັດໃນ Google Maps.": "Use this button to open directions to the temple in Google Maps.",
+        "ນຳທາງດ້ວຍ Google Maps": "Navigate with Google Maps",
+        "ສົ່ງຂໍ້ຄວາມ ຫຼື ສອບຖາມຂໍ້ມູນ": "Send a Message or Enquiry",
+        "ຊື່ ແລະ ນາມສະກຸນ": "Full name",
+        "ເບີໂທລະສັບ": "Phone number",
+        "ຫົວຂໍ້": "Subject",
+        "ຂໍ້ຄວາມ": "Message",
+        "ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ": "Privacy policy",
+        "ສົ່ງຂໍ້ຄວາມ": "Send message",
+        "ລິ້ງຄ໌ດ່ວນ": "Quick links",
+        "ຄຳອຸທິດສ່ວນບຸນ": "Dedication of merit",
+        "ສ້າງຂຶ້ນດ້ວຍຄວາມສັດທາໃນພຣະພຸດທະສາສະໜາ 🇱🇦": "Built with faith in Buddhism 🇱🇦",
+        "ກັບຂຶ້ນເທິງສຸດ": "Back to top",
+        "ເປີດໂໝດກາງຄືນ": "Use dark mode",
+        "ຮູບກ່ອນໜ້າ": "Previous image",
+        "ຮູບຖັດໄປ": "Next image",
+        "ເລືອກຮູບສະໄລດ໌": "Choose a slideshow image",
+        "ຕົວຢ່າງ: ທ່ານ ທອງດີ + ຄອບຄົວ": "Example: Mr. Thongdy and family",
+        "ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ, ສຸຂະພາບແຂງແຮງ, ປາສະຈາກໂຣກໄພໄຂ້ເຈັບ...": "May my family have happiness, good health, and freedom from illness…",
+        "BACKGROUND & HISTORY": "BACKGROUND & HISTORY",
+        "NEWS & UPDATES": "NEWS & UPDATES",
+        "PHOTO GALLERY HIGHLIGHTS": "PHOTO GALLERY HIGHLIGHTS",
+        "VIRTUAL MERIT OFFERING": "VIRTUAL MERIT OFFERING",
+        "DHAMMA TEACHINGS": "DHAMMA TEACHINGS",
+        "2026 MERIT FESTIVAL CALENDAR": "2026 MERIT FESTIVAL CALENDAR",
+        "MAKE MERIT & DONATION": "MAKE MERIT & DONATION",
+        "LOCATION & CONTACT": "LOCATION & CONTACT",
+        "ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ": "Ban Yai Xekaman, Samakkhixay District, Attapeu Province, Laos",
+        "ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ": "Wat Xekaman Kang, Ban Yai Xekaman",
+        "ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື": "Wat Xekaman Kang, Ban Yai Xekaman, Samakkhixay, Attapeu, Laos",
+        "ຮູບ QR Code": "QR code image",
+        "ຮູບພຣະອາຈານ": "Photo of the Venerable",
+        "ພຣະອຸໂບສົດ": "Ordination hall",
+        "ພຣະປະທານ": "Principal Buddha image",
+        "ຫໍໄຕ": "Scripture library"
+    },
+    "th": {
+        "ວັດເຊກະໝານກາງ | Wat Xekaman Kang | วัดเซกะมานกาง": "วัดเซกะมานกลาง | วัดพุทธในแขวงอัตตะปือ สปป.ลาว",
+        "ແຈ້ງເຕືອນກິດຈະກຳໃໝ່": "แจ้งเตือนกิจกรรมใหม่",
+        "ຂໍຕ້ອນຮັບສູ່": "ขอต้อนรับสู่",
+        "ຍິນດີຕ້ອນຮັບທຸກທ່ານ": "ยินดีต้อนรับทุกท่าน",
+        "ຟັງສຽງຣະຄັງ": "ฟังเสียงระฆัง",
+        "ຟັງສຽງກອງ": "ฟังเสียงกลอง",
+        "ວັນພຣະຕໍ່ໄປ: 15 ຄ່ຳ": "วันพระถัดไป: 15 ค่ำ",
+        "ປີ ແຫ່ງຄວາມສັດທາ": "ปีแห่งศรัทธา",
+        "ຕັ້ງຢູ່ແຄມນ້ຳເຊກະໝານ ດິນແດນອຸດົມສົມບູນດ້ວຍທຳມະຊາດ ແລະ ວັດທະນະທຳອັນງົດງາມ. ເປັນວັດເກົ່າແກ່ທີ່ສ້າງຂຶ້ນໂດຍຄວາມສັດທາຮ່ວມກັນຂອງພຸດທະສາສະນິກະຊົນ ເພື່ອເປັນສູນລວມຈິດໃຈ, ບ່ອນອົບຮົມສີລະທຳ ແລະ ບ່ອນສຶກສາພຣະທຳຄຳສອນຂອງອົງພຣະສຳມາສຳພຸດທະເຈົ້າ.": "วัดตั้งอยู่ริมแม่น้ำเซกะมาน ท่ามกลางธรรมชาติและวัฒนธรรมอันงดงาม เป็นวัดเก่าแก่ที่สร้างขึ้นจากศรัทธาร่วมกันของพุทธศาสนิกชน เพื่อเป็นศูนย์รวมจิตใจ สถานที่อบรมศีลธรรม และศึกษาพระธรรมคำสอนของพระพุทธเจ้า",
+        "ຊື່ຂອງວັດ \"ເຊກະໝານກາງ\" ມີທີ່ມາຈາກທີ່ຕັ້ງທີ່ຢູ່ເຄິ່ງກາງຂອງລຸ່ມນ້ຳເຊກະໝານ ເຊິ່ງເປັນສາຍນ້ຳຫຼັກທີ່ລ້ຽງຊີວິດປະຊາຊົນ. ພຣະອຸໂບສົດ ແລະ ສິ່ງກໍ່ສ້າງພາຍໃນວັດໄດ້ຮັບການອອກແບບຕາມສະຖາປັດຕະຍະກຳລາວອັນເປັນເອກະລັກ ມີຊໍ່ຟ້າ, ໃບລະກາ, ແລະ ລວດລາຍກົບກຽວຢ່າງອ່ອນຊ້ອຍ.": "ชื่อ “เซกะมานกลาง” มาจากที่ตั้งบริเวณกึ่งกลางลุ่มน้ำเซกะมาน ซึ่งเป็นสายน้ำสำคัญของชุมชน พระอุโบสถและสิ่งก่อสร้างภายในวัดออกแบบตามสถาปัตยกรรมลาวอันเป็นเอกลักษณ์",
+        "ປັດຈຸບັນ, ວັດເຊກະໝານກາງ ບໍ່ພຽງແຕ່ເປັນສະຖານທີ່ປະກອບພິທີທາງສາສະໜາເທົ່ານັ້ນ, ແຕ່ຍັງເປັນສູນອະນຸລັກສິລະປະວັດທະນະທຳລາວ, ສະຖານທີ່ປະຕິບັດທຳຂອງປະຊາຊົນ ແລະ ຕ້ອນຮັບແຂກບ້ານແຂກເມືອງທີ່ມາຢ້ຽມຢາມດ້ວຍຄວາມອົບອຸ່ນ.": "ปัจจุบันวัดเซกะมานกลางไม่เพียงเป็นสถานที่ประกอบพิธีทางศาสนา แต่ยังเป็นศูนย์อนุรักษ์ศิลปวัฒนธรรมลาว สถานที่ปฏิบัติธรรม และต้อนรับผู้มาเยือนด้วยความอบอุ่น",
+        "ທຳມະຊາດຮົມເຢັນ": "ธรรมชาติร่มรื่น",
+        "ຕັ້ງຢູ່ຕິດແຄມນ້ຳ": "ตั้งอยู่ริมแม่น้ำ",
+        "ສູນຮວມສັດທາ": "ศูนย์รวมศรัทธา",
+        "ຮັກສາປະເພນີອັນດີງາມ": "สืบสานประเพณีอันดีงาม",
+        "ເລີ່ມສະໄລດ໌": "เริ่มสไลด์",
+        "ຂ່າວສານຈາກວັດ": "ข่าวสารจากวัด",
+        "ຕິດຕາມຂ່າວສານ ແລະ ກິດຈະກຳໃໝ່ຈາກວັດ": "ติดตามข่าวสารและกิจกรรมใหม่จากวัด",
+        "ຕັດຫຍ້າກຽມເຂົ້າພັນສາ": "ตัดหญ้าเตรียมเข้าพรรษา",
+        "ຫໍກອງວັດ": "หอกลองวัด",
+        "ຈັດສ້າງໃນປີ2005": "จัดสร้างในปี 2005",
+        "ພາບກິດຈະກຳ 1": "ภาพกิจกรรม 1",
+        "ພາບກິດຈະກຳ 2": "ภาพกิจกรรม 2",
+        "ພາບກິດຈະກຳ 3": "ภาพกิจกรรม 3",
+        "ຮູບພາບຈາກຄັງຮູບກິດຈະກຳຂອງວັດ": "ภาพจากคลังภาพกิจกรรมของวัด",
+        "ປະທັບໃນພຣະອຸໂບສົດ": "ประดิษฐานในพระอุโบสถ",
+        "ບ່ອນເກັບຮັກສາຄຳພີໂບຮານ": "สถานที่เก็บรักษาคัมภีร์โบราณ",
+        "ໄຕ້ທຽນ & ຖວາຍດອກບົວອອນໄລນ໌": "จุดเทียนและถวายดอกบัวออนไลน์",
+        "ສົ່ງຜົນບຸນ ແລະ ຄຳອະທິຖານຂອງທ່ານ ເພື່ອຄວາມສົມຫວັງ, ຄວາມສະຫງົບສຸກ ແລະ ເປັນສິຣິມົງຄົນແກ່ຊີວິດ": "ส่งผลบุญและคำอธิษฐานของท่าน เพื่อความสมหวัง ความสงบสุข และสิริมงคลแก่ชีวิต",
+        "ກະລຸນາປ້ອນຊື່ ແລະ ຄຳອະທິຖານ ຈາກນັ້ນກົດປຸ່ມ \"ໄຕ້ທຽນ & ຖວາຍດອກບົວ\"": "กรอกชื่อและคำอธิษฐาน จากนั้นกดปุ่ม “จุดเทียนและถวายดอกบัว”",
+        "ຊື່ ແລະ ນາມສະກຸນ ຜູ້ຮ່ວມເຮັດບຸນ": "ชื่อและนามสกุลผู้ร่วมทำบุญ",
+        "ເລືອກສີດອກບົວຖວາຍ": "เลือกสีดอกบัวถวาย",
+        "🌸 ດອກບົວສີຊົມພູ (ຄວາມເມດຕາ & ຄວາມຮັກ)": "🌸 ดอกบัวสีชมพู (เมตตาและความรัก)",
+        "🪷 ດອກບົວສີຂາວ (ຄວາມບໍລິສຸດ & ປັນຍາ)": "🪷 ดอกบัวสีขาว (ความบริสุทธิ์และปัญญา)",
+        "🌼 ດອກບົວສີເຫຼືອງ (ຄວາມຈະເລີນຮຸ່ງເຮືອງ)": "🌼 ดอกบัวสีเหลือง (ความเจริญรุ่งเรือง)",
+        "ຄຳອະທິຖານ / ຂໍພອນ": "คำอธิษฐาน / ขอพร",
+        "ໄຕ້ທຽນ & ຖວາຍດອກບົວ": "จุดเทียนและถวายดอกบัว",
+        "ລາຍຊື່ຜູ້ໄຕ້ທຽນຖວາຍດອກບົວບໍ່ດົນມານີ້": "รายชื่อผู้จุดเทียนและถวายดอกบัวล่าสุด",
+        "ລຶບປະວັດ": "ล้างประวัติ",
+        "ຍັງບໍ່ມີລາຍການຮ່ວມເຮັດບຸນ": "ยังไม่มีรายการร่วมทำบุญในอุปกรณ์นี้",
+        "ທຳມະຄຳສອນປະຈຳວັນ": "ธรรมะคำสอนประจำวัน",
+        "ສຸ່ມຄຳສອນໃໝ່": "สุ่มคำสอนใหม่",
+        "ຄັດລອກຂໍ້ຄວາມ": "คัดลอกข้อความ",
+        "ແບ່ງປັນ Facebook": "แชร์บน Facebook",
+        "ສົ່ງທາງ WhatsApp": "ส่งทาง WhatsApp",
+        "ປະຕິທິນງານບຸນ ປະຈຳປີ 2026": "ปฏิทินงานบุญ ปี 2026",
+        "ກຳນົດວັນງານບຸນຕາມປະຕິທິນລາວ ພ້ອມເພີ່ມລົງໃນປະຕິທິນຂອງທ່ານໄດ້ທັນທີ": "กำหนดวันงานบุญตามปฏิทินลาว พร้อมเพิ่มลงปฏิทินของท่านได้ทันที",
+        "ລະບຸເປັນງານຕະຫຼອດມື້; ເວລາເລີ່ມພິທີໃຫ້ຢືນຢັນກັບທາງວັດອີກຄັ້ງ.": "ระบุเป็นงานตลอดวัน กรุณายืนยันเวลาเริ่มพิธีกับทางวัดอีกครั้ง",
+        "ງານບຸນປະຈຳປີ": "งานบุญประจำปี",
+        "ວັນສຸກ · 11 ກັນຍາ 2026": "วันศุกร์ · 11 กันยายน 2026",
+        "ວັນເສົາ · 26 ກັນຍາ 2026": "วันเสาร์ · 26 กันยายน 2026",
+        "ວັນຈັນ · 26 ຕຸລາ 2026": "วันจันทร์ · 26 ตุลาคม 2026",
+        "ຮ່ວມທຳບຸນອຸທິດສ່ວນກຸສົນໃຫ້ບັນພະບຸລຸດ ແລະ ສືບສານປະເພນີລາວ.": "ร่วมทำบุญอุทิศส่วนกุศลให้บรรพบุรุษ และสืบสานประเพณีลาว",
+        "ຮ່ວມຕັກບາດ ແລະ ຖວາຍສະຫຼາກພັດຕາຫານ ເພື່ອຮ່ວມສືບສານຮີດຄອງປະເພນີ.": "ร่วมตักบาตรและถวายสลากภัต เพื่อสืบสานฮีตคองประเพณี",
+        "ຮ່ວມສືບສານປະເພນີບຸນອອກພັນສາ ແລະ ຮ່ວມທຳບຸນຕາມສັດທາ.": "ร่วมสืบสานประเพณีบุญออกพรรษา และร่วมทำบุญตามศรัทธา",
+        "ຕະຫຼອດມື້ · ເວລາພິທີຢືນຢັນກັບວັດ": "ตลอดวัน · เวลาเริ่มพิธียืนยันกับทางวัด",
+        "ເພີ່ມໃສ່ Google Calendar": "เพิ่มลง Google Calendar",
+        "ດາວໂຫຼດໄຟລ໌ປະຕິທິນ .ics": "ดาวน์โหลดไฟล์ปฏิทิน .ics",
+        "ຮ່ວມເຮັດບຸນບໍລິຈາກ ບູລະນະວັດເຊກະໝານກາງ": "ร่วมทำบุญบริจาคเพื่อบูรณะวัดเซกะมานกลาง",
+        "ຂໍເຊີນຊວນສາທຸຊົນຜູ້ມີຈິດສັດທາ ຮ່ວມບໍລິຈາກທຶນຮັກສາສ້ອມແປງພຣະອຸໂບສົດ, ຄ່ານ້ຳ-ຄ່າໄຟ, ທຶນການສຶກສາພຣະພິກຂຸ-ສາມະເນນ ແລະ ສ້າງສາທາລະນະປະໂຫຍດໃນຊຸມຊົນ.": "ขอเชิญผู้มีจิตศรัทธาร่วมบริจาคเพื่อบูรณะพระอุโบสถ ค่าน้ำค่าไฟ สนับสนุนการศึกษาพระภิกษุสามเณร และสร้างประโยชน์แก่ชุมชน",
+        "ຮ່ວມສ້າງ ແລະ ບູລະນະສິມ/ພຣະອຸໂບສົດ": "ร่วมสร้างและบูรณะสิม/พระอุโบสถ",
+        "ອຸປະຖຳການສຶກສາພຣະທຳມະວິນັຍ": "อุปถัมภ์การศึกษาพระธรรมวินัย",
+        "ກອງທຶນສາທາລະນະສຸກ ແລະ ບຸນປະເພນີ": "กองทุนสาธารณสุขและงานบุญประเพณี",
+        "ສ້າງບັດອະນຸໂມທະນາບຸນ": "สร้างบัตรอนุโมทนาบุญ",
+        "ສະແກນ QR Code ເພື່ອຮ່ວມບໍລິຈາກ (BCEL One)": "สแกน QR Code เพื่อร่วมบริจาค (BCEL One)",
+        "ຊື່ບັນຊີ: Khamsavanh LEUAMTHININ Monk": "ชื่อบัญชี: พระอาจารย์ Khamsavanh LEUAMTHININ",
+        "ເລກບັນຊີ (LAK):": "เลขบัญชี (LAK):",
+        "ເລກບັນຊີ (THB):": "เลขบัญชี (THB):",
+        "ທະນາຄານ:": "ธนาคาร:",
+        "ທະນາຄານການຄ້າຕ່າງປະເທດລາວ (BCEL)": "ธนาคารการค้าต่างประเทศลาว (BCEL)",
+        "ຄັດລອກບັນຊີ LAK": "คัดลอกบัญชี LAK",
+        "ຄັດລອກບັນຊີ THB": "คัดลอกบัญชี THB",
+        "ພຣະອາຈານ ຄຳສະຫວັນ ເລື່ອມທິນິນ": "พระอาจารย์คำสะหวัน เลื่อมทินิน",
+        "ຄະນະກໍາມະການບໍລິຫານງານ ອພສ ເມືອງສາມັກຄີໄຊ": "คณะกรรมการบริหารงาน อพส. เมืองสามัคคีไช",
+        "ຄະນະກໍາມາທິການສຶກສາສົງເມືອງ": "คณะกรรมาธิการศึกษาสงฆ์เมือง",
+        "ສະໄໝທີ VIII (2025-2030)": "สมัยที่ VIII (2025–2030)",
+        "ເຂົ້າເບິ່ງທຳນຽບສະມາຊິກພາຍໃນວັດ": "ดูทำเนียบสมาชิกภายในวัด",
+        "ສຳລັບຜູ້ມາເຢືອນ": "สำหรับผู้มาเยือน",
+        "ຂໍ້ມູນສຳລັບຜູ້ມາຢ້ຽມຢາມ": "ข้อมูลสำหรับผู้มาเยือน",
+        "ຂໍ້ມູນສຳຄັນສຳລັບການມາວັດເຊກະໝານກາງ": "ข้อมูลสำคัญสำหรับการมาเยือนวัดเซกะมานกลาง",
+        "ສະຖານທີ່": "สถานที่",
+        "ເວລາເປີດ": "เวลาเปิด",
+        "ເປີດທຸກມື້ 24 ຊົ່ວໂມງ": "เปิดทุกวัน 24 ชั่วโมง",
+        "ການເດີນທາງ": "การเดินทาง",
+        "ໃຊ້ປຸ່ມນີ້ເພື່ອເປີດເສັ້ນທາງໄປຫາວັດໃນ Google Maps.": "ใช้ปุ่มนี้เพื่อเปิดเส้นทางไปยังวัดใน Google Maps",
+        "ນຳທາງດ້ວຍ Google Maps": "นำทางด้วย Google Maps",
+        "ສົ່ງຂໍ້ຄວາມ ຫຼື ສອບຖາມຂໍ້ມູນ": "ส่งข้อความหรือสอบถามข้อมูล",
+        "ຊື່ ແລະ ນາມສະກຸນ": "ชื่อและนามสกุล",
+        "ເບີໂທລະສັບ": "เบอร์โทรศัพท์",
+        "ຫົວຂໍ້": "หัวข้อ",
+        "ຂໍ້ຄວາມ": "ข้อความ",
+        "ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ": "นโยบายความเป็นส่วนตัว",
+        "ວັດເກັບຂໍ້ມູນທີ່ທ່ານກອກໃນແບບຟອມນີ້ (ຊື່, ເບີໂທລະສັບ, ຫົວຂໍ້ ແລະ ຂໍ້ຄວາມ) ເພື່ອຮັບຂໍ້ສອບຖາມ ແລະ ຕິດຕໍ່ຕອບກັບເທົ່ານັ້ນ.": "วัดเก็บข้อมูลที่ท่านกรอกในแบบฟอร์มนี้ ได้แก่ ชื่อ เบอร์โทรศัพท์ หัวข้อ และข้อความ เพื่อรับและตอบกลับข้อสอบถามเท่านั้น",
+        "ບໍ່ຄວນສົ່ງລະຫັດຜ່ານ, ເລກບັດ, ຫຼື ຂໍ້ມູນທາງການເງິນຜ່ານແບບຟອມນີ້.": "ไม่ควรส่งรหัสผ่าน เลขบัตร หรือข้อมูลทางการเงินผ่านแบบฟอร์มนี้",
+        "ຂໍ້ມູນບໍ່ໄດ້ໃຊ້ເພື່ອການຕະຫຼາດ ຫຼື ຂາຍຕໍ່ໃຫ້ບຸກຄົນອື່ນ.": "ข้อมูลจะไม่ถูกใช้เพื่อการตลาดหรือขายต่อให้บุคคลอื่น",
+        "ທ່ານສາມາດຂໍແກ້ໄຂ ຫຼື ລຶບຂໍ້ມູນໄດ້ທີ່": "ท่านสามารถขอแก้ไขหรือลบข้อมูลได้ที่",
+        "ຫຼື ໂທ +856 20 9767 1723.": "หรือโทร +856 20 9767 1723",
+        "ຂ້ອຍຮັບຮູ້ ແລະ ຍິນຍອມໃຫ້ນຳຂໍ້ມູນນີ້ໄປໃຊ້ເພື່ອຕອບກັບຂໍ້ສອບຖາມຂອງຂ້ອຍ.": "ฉันรับทราบและยินยอมให้นำข้อมูลนี้ไปใช้เพื่อตอบกลับข้อสอบถามของฉัน",
+        "ສົ່ງຂໍ້ຄວາມ": "ส่งข้อความ",
+        "ລິ້ງຄ໌ດ່ວນ": "ลิงก์ด่วน",
+        "ຄຳອຸທິດສ່ວນບຸນ": "คำอุทิศส่วนกุศล",
+        "ສ້າງຂຶ້ນດ້ວຍຄວາມສັດທາໃນພຣະພຸດທະສາສະໜາ 🇱🇦": "สร้างขึ้นด้วยศรัทธาในพระพุทธศาสนา 🇱🇦",
+        "ກັບຂຶ້ນເທິງສຸດ": "กลับขึ้นบนสุด",
+        "ເປີດໂໝດກາງຄືນ": "เปิดโหมดกลางคืน",
+        "ຮູບກ່ອນໜ້າ": "รูปก่อนหน้า",
+        "ຮູບຖັດໄປ": "รูปถัดไป",
+        "ເລືອກຮູບສະໄລດ໌": "เลือกรูปสไลด์",
+        "ຕົວຢ່າງ: ທ່ານ ທອງດີ + ຄອບຄົວ": "ตัวอย่าง: ท่านทองดีและครอบครัว",
+        "ຂໍໃຫ້ຄອບຄົວມີຄວາມສຸກ, ສຸຂະພາບແຂງແຮງ, ປາສະຈາກໂຣກໄພໄຂ້ເຈັບ...": "ขอให้ครอบครัวมีความสุข สุขภาพแข็งแรง ปราศจากโรคภัยไข้เจ็บ…",
+        "BACKGROUND & HISTORY": "ความเป็นมา",
+        "NEWS & UPDATES": "ข่าวสารและกิจกรรม",
+        "PHOTO GALLERY HIGHLIGHTS": "ภาพเด่นจากคลังภาพ",
+        "VIRTUAL MERIT OFFERING": "ร่วมทำบุญออนไลน์",
+        "DHAMMA TEACHINGS": "ธรรมะคำสอน",
+        "2026 MERIT FESTIVAL CALENDAR": "ปฏิทินงานบุญ ปี 2026",
+        "MAKE MERIT & DONATION": "ร่วมทำบุญและบริจาค",
+        "LOCATION & CONTACT": "สถานที่และการติดต่อ",
+        "Choose website language": "เลือกภาษาเว็บไซต์",
+        "ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື, ສປປ ລາວ": "บ้านใหญ่เซกะมาน เมืองสามัคคีไช แขวงอัตตะปือ สปป.ลาว",
+        "ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ": "วัดเซกะมานกลาง บ้านใหญ่เซกะมาน",
+        "ວັດເຊກະໝານກາງ, ບ້ານໃຫຍ່ເຊກະໝານ, ເມືອງສາມັກຄີໄຊ, ແຂວງອັດຕະປື": "วัดเซกะมานกลาง บ้านใหญ่เซกะมาน เมืองสามัคคีไช แขวงอัตตะปือ สปป.ลาว",
+        "ຮູບ QR Code": "รูป QR Code",
+        "ຮູບພຣະອາຈານ": "รูปพระอาจารย์",
+        "ພຣະອຸໂບສົດ": "พระอุโบสถ",
+        "ພຣະປະທານ": "พระประธาน",
+        "ຫໍໄຕ": "หอไตร"
+    }
+};
+Object.assign(autoTranslations.en, COMPLETE_HOME_TRANSLATIONS.en);
+Object.assign(autoTranslations.th, COMPLETE_HOME_TRANSLATIONS.th);
+
 function getPreferredLanguage() {
     return localStorage.getItem('preferred_lang') || 'lo';
 }
@@ -1875,7 +2139,7 @@ const TEMPLE_NEWS_API_URL = 'https://script.google.com/macros/s/AKfycbxrS_whx41L
 function setTempleNewsStatus(message, isError = false) {
     const status = document.getElementById('templeNewsStatus');
     if (!status) return;
-    status.textContent = message;
+    status.textContent = translateText(message);
     status.classList.toggle('text-red-700', isError);
     status.classList.toggle('text-gray-500', !isError);
 }
@@ -1889,14 +2153,24 @@ function isSafeTempleNewsImage(value) {
     }
 }
 
+function getLocalizedNewsText(item, field) {
+    const language = getPreferredLanguage();
+    const value = item?.[field];
+    if (value && typeof value === 'object') return value[language] || value.lo || value.en || '';
+    const suffix = language.charAt(0).toUpperCase() + language.slice(1);
+    return item?.[field + '_' + language] || item?.[field + suffix] || translateText(value || '');
+}
+
 function createTempleNewsCard(item) {
     const card = document.createElement('article');
     card.className = 'overflow-hidden rounded-2xl border border-amber-200 bg-amber-50/40 shadow-md transition-shadow hover:shadow-xl';
+    const localizedTitle = getLocalizedNewsText(item, 'title') || translateText('ຂ່າວສານຈາກວັດ');
+    const localizedDetail = getLocalizedNewsText(item, 'detail');
 
     if (isSafeTempleNewsImage(item.image)) {
         const image = document.createElement('img');
         image.src = item.image;
-        image.alt = item.title || 'ຂ່າວສານຈາກວັດ';
+        image.alt = localizedTitle;
         image.loading = 'lazy';
         image.decoding = 'async';
         image.className = 'h-52 w-full object-cover';
@@ -1906,7 +2180,6 @@ function createTempleNewsCard(item) {
 
     const content = document.createElement('div');
     content.className = 'p-6';
-
     if (item.date) {
         const date = document.createElement('p');
         date.className = 'mb-2 text-xs font-bold tracking-wide text-laoGoldDark';
@@ -1916,16 +2189,15 @@ function createTempleNewsCard(item) {
 
     const title = document.createElement('h3');
     title.className = 'font-lao-serif text-xl font-bold text-laoMaroon';
-    title.textContent = item.title;
+    title.textContent = localizedTitle;
     content.append(title);
 
-    if (item.detail) {
+    if (localizedDetail) {
         const detail = document.createElement('p');
         detail.className = 'mt-3 whitespace-pre-line text-sm leading-relaxed text-gray-600';
-        detail.textContent = item.detail;
+        detail.textContent = localizedDetail;
         content.append(detail);
     }
-
     card.append(content);
     return card;
 }
