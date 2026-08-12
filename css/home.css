@@ -28,7 +28,7 @@ body {
             position: absolute;
             inset: 0;
             background: url('../wat-logo.jpg') center 48% / cover no-repeat;
-            opacity: .46;
+            opacity: .36;
             transform: scale(1.04);
             animation: hero-drift 18s ease-in-out infinite alternate;
         }
