@@ -1620,11 +1620,63 @@ function selectLanguage(lang) {
     location.reload();
 }
 
+const TEMPLE_CALENDAR_COPY = {
+    lo: {
+        templeName: 'ວັດເຊກະໝານກາງ',
+        details: 'ງານບຸນຕະຫຼອດມື້. ກະລຸນາຢືນຢັນເວລາເລີ່ມພິທີກັບທາງວັດອີກຄັ້ງ.'
+    },
+    th: {
+        templeName: 'วัดเซกะมานกลาง',
+        details: 'งานบุญตลอดวัน กรุณายืนยันเวลาเริ่มพิธีกับทางวัดอีกครั้ง'
+    },
+    en: {
+        templeName: 'Wat Xekaman Kang',
+        details: 'All-day merit festival. Please confirm the ceremony start time with the temple.'
+    }
+};
+
+function updateTempleCalendarLinks(lang = getPreferredLanguage()) {
+    const language = TEMPLE_EVENT_SCHEDULE[0]?.title[lang] ? lang : 'lo';
+    const copy = TEMPLE_CALENDAR_COPY[language] || TEMPLE_CALENDAR_COPY.lo;
+    const eventsById = new Map(TEMPLE_EVENT_SCHEDULE.map(event => [event.id, event]));
+
+    document.querySelectorAll('[data-calendar-event]').forEach(element => {
+        const event = eventsById.get(element.dataset.calendarEvent);
+        const start = element.dataset.calendarStart;
+        const end = element.dataset.calendarEnd;
+        if (!event || !start || !end) return;
+
+        const title = (event.title[language] || event.title.lo) + ' — ' + copy.templeName;
+        const location = event.location[language] || event.location.lo;
+
+        if (element.tagName === 'A') {
+            const params = new URLSearchParams({
+                action: 'TEMPLATE',
+                text: title,
+                dates: start + '/' + end,
+                details: copy.details,
+                location: location,
+                ctz: 'Asia/Vientiane'
+            });
+            element.href = 'https://calendar.google.com/calendar/render?' + params.toString();
+        } else if (element.tagName === 'BUTTON') {
+            element.dataset.calendarTitle = title;
+            element.dataset.calendarLocation = location;
+            element.dataset.calendarDescription = copy.details;
+        }
+    });
+}
+
 function applyLanguage(lang) {
-    if (lang === 'lo' || !autoTranslations[lang]) return;
-    document.documentElement.lang = lang;
-    document.title = translateText(document.title, lang);
-    translateDom(document.body, lang);
+    const language = autoTranslations[lang] ? lang : 'lo';
+    document.documentElement.lang = language;
+    if (language === 'lo') {
+        updateTempleCalendarLinks(language);
+        return;
+    }
+    document.title = translateText(document.title, language);
+    translateDom(document.body, language);
+    updateTempleCalendarLinks(language);
     renderDevotees();
 }
 
