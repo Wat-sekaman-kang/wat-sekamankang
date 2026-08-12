@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="lo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4A0E17">
+  <title>ບໍ່ພົບໜ້າ | ວັດເຊກະໝານກາງ</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Lao:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; color: #4A0E17; background: radial-gradient(circle at top, #fff9e6 0, #f8ead0 42%, #ead5b0 100%); font-family: "Noto Sans Lao", "Noto Sans Thai", sans-serif; }
+    main { width: min(100%, 680px); text-align: center; background: rgba(255,255,255,.92); border: 1px solid rgba(184,134,11,.28); border-radius: 28px; padding: clamp(32px, 7vw, 64px); box-shadow: 0 24px 70px rgba(74,14,23,.16); }
+    img { width: 88px; height: 88px; object-fit: contain; border-radius: 50%; border: 4px solid #f3e5ab; background: #fff; }
+    .eyebrow { margin: 20px 0 4px; color: #9c6b08; font-size: .9rem; font-weight: 700; letter-spacing: .05em; }
+    h1 { margin: 0; color: #4A0E17; font-family: "Noto Serif Lao", "Noto Sans Lao", serif; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.2; }
+    p { max-width: 510px; margin: 16px auto 0; color: #694c3e; font-size: 1.05rem; line-height: 1.8; }
+    .home-link { display: inline-flex; align-items: center; justify-content: center; margin-top: 28px; min-height: 48px; padding: 12px 22px; border-radius: 999px; color: #fff; background: #4A0E17; box-shadow: 0 8px 18px rgba(74,14,23,.2); font-weight: 700; text-decoration: none; }
+    .home-link:hover, .home-link:focus-visible { background: #2D080E; outline: 3px solid #d4af37; outline-offset: 3px; }
+    .languages { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 28px; }
+    .languages button { cursor: pointer; min-height: 38px; border: 1px solid #d4af37; border-radius: 999px; padding: 7px 14px; color: #6a4702; background: #fffdf5; font: inherit; }
+    .languages button[aria-pressed="true"] { color: #fff; background: #9c6b08; border-color: #9c6b08; }
+    footer { margin-top: 24px; color: #8d7666; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="wat-logo.jpg" alt="ວັດເຊກະໝານກາງ">
+    <p class="eyebrow">404</p>
+    <h1 data-i18n="heading">ບໍ່ພົບໜ້າທີ່ທ່ານກຳລັງຊອກຫາ</h1>
+    <p data-i18n="message">ລິ້ງກ໌ນີ້ອາດຖືກປ່ຽນ ຫຼື ໜ້ານີ້ບໍ່ມີແລ້ວ ກະລຸນາກັບໄປໜ້າຫຼັກຂອງວັດ.</p>
+    <a class="home-link" href="/" data-i18n="home">ກັບໄປໜ້າຫຼັກ</a>
+    <div class="languages" aria-label="Choose language">
+      <button type="button" data-lang="lo" aria-pressed="true">ລາວ</button>
+      <button type="button" data-lang="th" aria-pressed="false">ไทย</button>
+      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    </div>
+    <footer data-i18n="footer">ວັດເຊກະໝານກາງ · ເມືອງສາມັກຄີໄຊ ແຂວງອັດຕະປື</footer>
+  </main>
+  <script>
+    const translations = {
+      lo: { title: "ບໍ່ພົບໜ້າ | ວັດເຊກະໝານກາງ", heading: "ບໍ່ພົບໜ້າທີ່ທ່ານກຳລັງຊອກຫາ", message: "ລິ້ງກ໌ນີ້ອາດຖືກປ່ຽນ ຫຼື ໜ້ານີ້ບໍ່ມີແລ້ວ ກະລຸນາກັບໄປໜ້າຫຼັກຂອງວັດ.", home: "ກັບໄປໜ້າຫຼັກ", footer: "ວັດເຊກະໝານກາງ · ເມືອງສາມັກຄີໄຊ ແຂວງອັດຕະປື" },
+      th: { title: "ไม่พบหน้านี้ | วัดเซกะหมานกลาง", heading: "ไม่พบหน้าที่คุณกำลังหา", message: "ลิงก์นี้อาจถูกเปลี่ยน หรือหน้านี้ไม่มีอยู่แล้ว กรุณากลับไปยังหน้าหลักของวัด", home: "กลับหน้าหลัก", footer: "วัดเซกะหมานกลาง · เมืองสามัคคีไช แขวงอัตตะปือ" },
+      en: { title: "Page not found | Wat Xekaman Kang", heading: "We could not find this page", message: "This link may have changed or the page no longer exists. Please return to the temple homepage.", home: "Back to homepage", footer: "Wat Xekaman Kang · Samakkhixay, Attapeu, Laos" }
+    };
+    function setLanguage(language) {
+      const text = translations[language];
+      document.documentElement.lang = language;
+      document.title = text.title;
+      document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = text[element.dataset.i18n]; });
+      document.querySelectorAll("[data-lang]").forEach((button) => { button.setAttribute("aria-pressed", String(button.dataset.lang === language)); });
+    }
+    document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => setLanguage(button.dataset.lang)));
+  </script>
+</body>
+</html>
