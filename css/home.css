@@ -20,13 +20,6 @@ body {
             font-family: 'Playfair Display', Georgia, serif;
             letter-spacing: -.02em;
         }
-        html[lang="en"] header .font-lao-serif {
-            letter-spacing: 0;
-        }
-        html[lang="en"] header .font-sans {
-            font-family: 'Inter', Arial, sans-serif;
-            letter-spacing: .08em;
-        }
         html[lang="en"] #home h1 {
             letter-spacing: .025em;
             text-transform: uppercase;
