@@ -830,7 +830,10 @@ function resetContactFormTimer(form) {
 
 function initContactFormProtection() {
     const form = document.getElementById('contactForm');
+    if (!form) return;
+
     resetContactFormTimer(form);
+    form.addEventListener('submit', handleContactSubmit);
 }
 
 function handleContactSubmit(e) {
