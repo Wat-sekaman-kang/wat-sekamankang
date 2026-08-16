@@ -14,7 +14,7 @@
                 vassa: 5,
                 education: "ນັກທຳຊັ້ນຕີ",
                 duty: "ບໍລິຫານຈັດການກິດຈະການພາຍໃນວັດທັງໝົດ",
-                imageUrl: "images/Monk1.jpg" // ປ່ຽນຊື່ໄຟລ໌ໃຫ້ກົງກັບຮູບໃນໂຟນເດີ images ຂອງທ່ານ
+                imageUrl: "images/monk1.jpg" // ປ່ຽນຊື່ໄຟລ໌ໃຫ້ກົງກັບຮູບໃນໂຟນເດີ images ຂອງທ່ານ
             },
             {
                 year: "2567",
@@ -26,7 +26,7 @@
                 vassa: 3,
                 education: "ມໍຕົ້ນ",
                 duty: "ຜູ້ຊ່ວຍວຽກບໍລິຫານ",
-                imageUrl: "images/Monk2.jpg"
+                imageUrl: "images/monk2.jpg"
             },
             {
                 year: "2567",
@@ -38,7 +38,7 @@
                 vassa: 2,
                 education: "ມໍປາຍ",
                 duty: "ວຽກເອກະສານ ແລະ ວຽກງານປະຊາສຳພັນ",
-                imageUrl: "images/Monk3.jpg"
+                imageUrl: "images/monk3.jpg"
             },
             {
                 year: "2567",
@@ -50,7 +50,7 @@
                 vassa: 2,
                 education: "ນັກທຳຕີ",
                 duty: "ເບິ່ງແຍງຄວາມສະອາດ ແລະ ເສນາສະນະ",
-                imageUrl: "images/Monk4.jpg"
+                imageUrl: "images/monk4.jpg"
             },
             {
                 year: "2567",
@@ -62,19 +62,31 @@
                 vassa: 1,
                 education: "ມໍຕົ້ນ / ມ.3",
                 duty: "ສຶກສາພະປະລິຍັດຕິທຳ",
-                imageUrl: "images/Monk4.jpg"
+                imageUrl: "images/monk5.jpg"
             },
             {
                 year: "2567",
                 id: 106,
-                name: "ພໍ່ໃຫຍ່ ເສື້ອຂາວ",
-                position: "ສ່ຽວຮັກຄູບາສາທິດ",
+                name: "ພໍ່ໃຫຍ່ດຳ",
+                position: "ສີລາວັດ",
                 rankLevel: 6,
-                age: 60,
+                age: 90,
                 vassa: "-",
-                education: "ສາຍຕູ້",
-                duty: "ນຳພາແມ່ອອກເວົ້າພື້ນພຣະ ແລະ ຈັບຜຶດພຣະ",
-                imageUrl: "images/layman1.jpg"
+                education: "",
+                duty: "ນຳພາແມ່ອອກໄຫວພຣະສູກມົນ",
+                imageUrl: "images/layman.jpg"
+            },
+                {
+                year: "2567",
+                id: 106,
+                name: "ພໍ່ໃຫຍ່ ວີໄຊ",
+                position: "ສີລາວັດ",
+                rankLevel: 7,
+                age: 65,
+                vassa: "-",
+                education: "",
+                duty: "ນຳພາແມ່ອອກໄຫວພຣະສູກມົນ",
+                imageUrl: "images/layman.jpg"
             },
 
             // ข้อมูลปี 2566
